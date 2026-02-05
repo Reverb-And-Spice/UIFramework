@@ -502,7 +502,7 @@
 
 	<ItemGroup>
 		<Compile Include="debugHelpers.cs" />
-		<Compile Include="MelonTemplate.cs" />
+		<Compile Include="UIFramework.cs" />
 	</ItemGroup>
 	
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">

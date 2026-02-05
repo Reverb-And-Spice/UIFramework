@@ -2,21 +2,23 @@
 using Il2CppTMPro;
 using RumbleModdingAPI;
 using UnityEngine;
+using MelonLoader;
 
 namespace UIFramework
 {
-	public partial class UIFramework
+	internal static class Debug
 	{
-		private bool debugMode = true;
+		private static bool debugMode = true;
+		private static string lastDiffLogMessage = string.Empty;
 
-		private GameObject DebugUi;
-		private TextMeshPro DebugUiText;
-		private GameObject PlayerUi;
+		private static GameObject DebugUi;
+		private static TextMeshPro DebugUiText;
+		private static GameObject PlayerUi;
 
 		/// <summary>
 		/// Creates a debug screen in front of the player 
 		/// </summary>
-		private void BuildDebugScreen()
+		internal static void BuildDebugScreen()
 		{
 			PlayerUi = PlayerManager.Instance.LocalPlayer.Controller.gameObject.transform.GetChild(6).GetChild(0).gameObject;
 			DebugUi = Calls.Create.NewText("Placeholder text. You shouldn't be seeing this without some UE Shenanigans\n or decompiled code. Unless I (probably) told you about this.", 1f, Color.white, new Vector3(0f, 0.1f, 1f), Quaternion.Euler(0, 0, 0));
@@ -32,7 +34,7 @@ namespace UIFramework
 		/// updates the debug screen text
 		/// </summary>
 		/// <param name="message"></param>
-		private void UpdateDebugScreen(string message)
+		internal static void UpdateDebugScreen(string message)
 		{
 			if (Calls.IsMapInitialized()) { DebugUiText.text = message; }
 		}
@@ -42,7 +44,7 @@ namespace UIFramework
 		/// <param name="message"></param>
 		/// <param name="debugOnly"></param>
 		/// <param name="logLevel"></param>
-		private void DiffLog(string message, bool debugOnly = true, int logLevel = 0)
+		internal static void DiffLog(string message, bool debugOnly = true, int logLevel = 0)
 		{
 			if (message != lastDiffLogMessage)
 			{
@@ -56,20 +58,20 @@ namespace UIFramework
 		/// <param name="message"></param>
 		/// <param name="debugOnly"></param>
 		/// <param name="logLevel"></param>
-		private void Log(string message, bool debugOnly = false, int logLevel = 0)
+		internal static void Log(string message, bool debugOnly = false, int logLevel = 0)
 		{
 			if (!debugMode && debugOnly)
 				return;
 			switch (logLevel)
 			{
 				case 1:
-					LoggerInstance.Warning(message);
+					Melon<UIFramework>.Logger.Warning(message);
 					break;
 				case 2:
-					LoggerInstance.Error(message);
+					Melon<UIFramework>.Logger.Error(message);
 					break;
 				default:
-					LoggerInstance.Msg(message);
+					Melon<UIFramework>.Logger.Msg(message);
 					break;
 			}
 		}

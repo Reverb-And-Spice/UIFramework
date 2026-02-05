@@ -19,7 +19,7 @@ namespace UIFramework
 	public partial class UIFramework : MelonMod
 	{
 		private string CurrentScene = "";
-		private string lastDiffLogMessage = string.Empty;
+		
 		public override void OnInitializeMelon()
 		{
 			Calls.onAMapInitialized += OnMapInitialized;
@@ -29,12 +29,12 @@ namespace UIFramework
 		private void OnMapInitialized(string sceneName)
 		{
 			CurrentScene = sceneName;
-			BuildDebugScreen();
+			
 
 		}
 		public override void OnUpdate()
 		{
-			DiffLog($"");
+			Debug.DiffLog($"");
 
 		}
 
