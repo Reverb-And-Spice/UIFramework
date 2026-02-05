@@ -1,5 +1,4 @@
 ﻿using MelonLoader;
-using RumbleModdingAPI;
 
 [assembly: MelonInfo(typeof(UIFramework.UIFramework), UIFramework.BuildInfo.Name, UIFramework.BuildInfo.Version, UIFramework.BuildInfo.Author)]
 [assembly: MelonGame("Buckethead Entertainment", "RUMBLE")]
@@ -12,7 +11,7 @@ namespace UIFramework
 	public static class BuildInfo
 	{
 		public const string Name = "UIFramework";
-		public const string Author = "Author";
+		public const string Author = "Blankochan, iListen2Sound, TacoSlayer36";
 		public const string Version = "1.0.0";
 	}
 
@@ -22,16 +21,10 @@ namespace UIFramework
 		
 		public override void OnInitializeMelon()
 		{
-			Calls.onAMapInitialized += OnMapInitialized;
+
 			LoggerInstance.Msg("Initialized.");
 		}
 
-		private void OnMapInitialized(string sceneName)
-		{
-			CurrentScene = sceneName;
-			
-
-		}
 		public override void OnUpdate()
 		{
 			Debug.DiffLog($"");

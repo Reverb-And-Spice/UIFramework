@@ -1,6 +1,4 @@
-﻿using Il2CppRUMBLE.Managers;
-using Il2CppTMPro;
-using RumbleModdingAPI;
+﻿using Il2CppTMPro;
 using UnityEngine;
 using MelonLoader;
 
@@ -15,7 +13,7 @@ namespace UIFramework
 		private static TextMeshPro DebugUiText;
 		private static GameObject PlayerUi;
 
-		/// <summary>
+		/*/// <summary>
 		/// Creates a debug screen in front of the player 
 		/// </summary>
 		internal static void BuildDebugScreen()
@@ -37,7 +35,9 @@ namespace UIFramework
 		internal static void UpdateDebugScreen(string message)
 		{
 			if (Calls.IsMapInitialized()) { DebugUiText.text = message; }
-		}
+		}*/
+
+
 		/// <summary>
 		/// Call in OnUpdate to monitor variables per frame but only logs if they change
 		/// </summary>
