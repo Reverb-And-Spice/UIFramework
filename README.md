@@ -50,7 +50,7 @@ UI.Register(TestCategory2);
 ### Quick layout mockup
 <sup>No it will not look like this. I just needed to show the layout</sup>
 
-![UI Mockup](misc/Mockup.png)
+![UI Mockup](Misc/Mockup.png)
 
 -----
 
