@@ -52,7 +52,9 @@ UI.Register(TestCategory2);
 ## Proposal for custom interface usage
 
 ### Option 1: Copy Melonpreferences process
-Do we want interface creation to resemble MelonPreferences? Gives users a familiar pattern but does add a few steps
+> [!NOTE]
+> Do we want interface creation to resemble MelonPreferences? Gives users a familiar pattern but does add a few steps
+
 ```
 public class UI_Category
 {
@@ -94,8 +96,11 @@ Entry1_Click(Button1 sender)
 
 #### Option 2.5: Fluent style
 
+> [!NOTE] 
+> should we do WinForms style sender and event args to refer back to the caller?
+
 ```
-public void Button1_Click(Button1 sender, Params p) //should we do WinForms style sender and event args to refer back to the caller?
+public void Button1_Click(Button1 sender, Params p)
 {
 
 }
