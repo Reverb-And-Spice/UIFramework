@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
@@ -6,8 +6,6 @@
 		<RootNamespace>UIFramework</RootNamespace>
 		<LangVersion>default</LangVersion>
 		<IsPackable>false</IsPackable>
-		<AssemblyVersion>1.0.0.0</AssemblyVersion>
-		<FileVersion>1.0.0.0</FileVersion>
 		<NeutralLanguage>en-US</NeutralLanguage>
 		<AssemblyName>UIFramework</AssemblyName>
 		<LangVersion>latest</LangVersion>
@@ -496,12 +494,13 @@
 	</ItemGroup>
 
 	<PropertyGroup>
-		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 		<EnableDefaultCompileItems>false</EnableDefaultCompileItems>
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Compile Include="Controls.cs" />
 		<Compile Include="debugHelpers.cs" />
+		<Compile Include="FluentBuilder.cs" />
 		<Compile Include="UIFramework.cs" />
 	</ItemGroup>
 	
