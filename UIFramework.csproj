@@ -10,6 +10,11 @@
 		<AssemblyName>UIFramework</AssemblyName>
 		<LangVersion>latest</LangVersion>
 		<ImplicitUsings>enable</ImplicitUsings>
+
+		
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+
 	</PropertyGroup>
 
 	<ItemGroup>
