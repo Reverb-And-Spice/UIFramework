@@ -6,10 +6,23 @@ using System.Threading.Tasks;
 
 namespace UIFramework
 {
-	internal abstract class FluentBuilder
+
+	public class ControlBuilder<TControl> where TControl : Control, new()
 	{
-		public abstract Control Build();
+		protected TControl _control;
+
+		public ControlBuilder()
+		{
+			_control = new TControl();
+		}
+
+		public ControlBuilder WithText(string text)
+		{
+			_control.SetText(text);
+			return this;
+		}
+
 	}
 
-	
+
 }

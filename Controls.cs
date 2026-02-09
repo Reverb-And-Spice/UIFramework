@@ -7,13 +7,14 @@ using System.Threading.Tasks;
 namespace UIFramework
 {
 	///<summary>
-	/// 
+	/// DO NOT IMPLEMENT EVENT HANDLERS
+	/// Currently, the inputs will be handled by the save button
 	///</summary>
 	internal abstract class Control
 	{
-		internal GameObject Go {get; set;}
+		internal GameObject Go {get; set;} = new GameObject;
 
-		internal void SetText()
+		internal void SetText(string text)
 		{
 
 		}
@@ -23,6 +24,8 @@ namespace UIFramework
 	///</summary>
 	internal class VTab : Control
 	{
+		CategoryBar CatBar {get; set;}
+
 
 	}
 
@@ -31,15 +34,7 @@ namespace UIFramework
 	///</summary>
 	internal class HTab : Control
 	{
-		
-	}
-
-	///<summary>
-	/// 
-	///</summary>
-	internal class Section : Control
-	{
-
+		BodyPanel Body {get; set;}
 	}
 
 	///<summary>
@@ -67,7 +62,7 @@ namespace UIFramework
 	}
 
 	///<summary>
-	/// 
+	///  
 	///</summary>
 	internal class TextBlock : Control
 	{
@@ -88,7 +83,7 @@ namespace UIFramework
 	///<summary>
 	/// 
 	///</summary>
-	internal class ModList : LayoutPanel
+	internal class ModsBar : LayoutPanel
 	{
 
 	}
@@ -96,7 +91,7 @@ namespace UIFramework
 	///<summary>
 	/// 
 	///</summary>
-	internal class CategoryList : LayoutPanel
+	internal class CategoryBar : LayoutPanel
 	{
 
 	}
@@ -110,12 +105,12 @@ namespace UIFramework
 	}
 
 	///<summary>
-	/// 
+	/// Defines the entry in the main body that represents a melon preference entry
 	///</summary>
 	internal class Setting
 	{
 		internal string Description {get; set;}
-		internal Inputs InputType {get; set;}
+		internal Control Interactable {get; set;}
 		internal string Identifier {get; set;}
 
 	}
