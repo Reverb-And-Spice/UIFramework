@@ -77,7 +77,7 @@ namespace UIFramework
 	///<summary>
 	/// 
 	///</summary>
-	internal abstract class LayoutPanel
+	internal abstract class LayoutPanel : Control
 	{
 		internal void Add(Control control)
 		{

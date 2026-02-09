@@ -666,6 +666,7 @@
 		<Compile Include="debugHelpers.cs" />
 		<Compile Include="FluentBuilder.cs" />
 		<Compile Include="UIFramework.cs" />
+		<Compile Include="enums.cs" />
 	</ItemGroup>
 	
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">

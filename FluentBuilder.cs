@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace UIFramework
 {
-	internal class FluentBuilder
+	internal abstract class FluentBuilder
 	{
-
+		public abstract Control Build();
 	}
+
+	
 }
