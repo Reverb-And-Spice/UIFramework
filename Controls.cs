@@ -9,7 +9,7 @@ namespace UIFramework
 	///<summary>
 	/// 
 	///</summary>
-	internal class Control
+	internal abstract class Control
 	{
 		internal GameObject Go {get; set;}
 
@@ -77,7 +77,7 @@ namespace UIFramework
 	///<summary>
 	/// 
 	///</summary>
-	internal class LayoutPanel
+	internal abstract class LayoutPanel
 	{
 		internal void Add(Control control)
 		{
@@ -117,6 +117,6 @@ namespace UIFramework
 		internal string Description {get; set;}
 		internal Inputs InputType {get; set;}
 		internal string Identifier {get; set;}
-		
+
 	}
 }
