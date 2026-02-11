@@ -662,7 +662,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Compile Include="Controls.cs" />
+		<Compile Include="Preferences.cs" />
 		<Compile Include="debugHelpers.cs" />
 		<Compile Include="FluentBuilder.cs" />
 		<Compile Include="UIFramework.cs" />

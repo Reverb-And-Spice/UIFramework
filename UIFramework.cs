@@ -28,11 +28,7 @@ namespace UIFramework
 		public override void OnUpdate()
 		{
 			Debug.DiffLog($"");
-
 		}
-
-
-
 
 	}
 }

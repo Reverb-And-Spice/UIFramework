@@ -76,5 +76,20 @@ namespace UIFramework
 			}
 		}
 
+		internal static void Msg(string message)
+		{
+			Log(message, false, 0);
+		}
+
+		internal static void Warning(string message)
+		{
+			Log(message, false, 1);
+		}
+
+		internal static void Error(string message)
+		{
+			Log(message, false 2);
+		}
+
 	}
 }
