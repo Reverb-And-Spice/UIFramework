@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace UIFramework
 {
-
+/*
 	public class ControlBuilder<TControl> where TControl : Control, new()
 	{
 		protected TControl _control;
@@ -24,5 +24,5 @@ namespace UIFramework
 
 	}
 
-
+*/
 }
