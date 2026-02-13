@@ -88,7 +88,7 @@ namespace UIFramework
 
 		internal static void Error(string message)
 		{
-			Log(message, false 2);
+			Log(message, false, 2);
 		}
 
 	}
