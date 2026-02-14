@@ -65,13 +65,13 @@ namespace UIFramework
 			switch (logLevel)
 			{
 				case 1:
-					Melon<UIFramework>.Logger.Warning(message);
+					Melon<Core>.Logger.Warning(message);
 					break;
 				case 2:
-					Melon<UIFramework>.Logger.Error(message);
-					break;
+					Melon<Core>.Logger.Error(message);
+					break;1
 				default:
-					Melon<UIFramework>.Logger.Msg(message);
+					Melon<Core>.Logger.Msg(message);
 					break;
 			}
 		}
