@@ -69,7 +69,7 @@ namespace UIFramework
 					break;
 				case 2:
 					Melon<Core>.Logger.Error(message);
-					break;1
+					break;
 				default:
 					Melon<Core>.Logger.Msg(message);
 					break;

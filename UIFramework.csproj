@@ -32,7 +32,7 @@
 		<Compile Include="Preferences.cs" />
 		<Compile Include="debugHelpers.cs" />
 		<Compile Include="FluentBuilder.cs" />
-		<Compile Include="UIFramework.cs" />
+		<Compile Include="Core.cs" />
 		<Compile Include="enums.cs" />
 	</ItemGroup>
 	
