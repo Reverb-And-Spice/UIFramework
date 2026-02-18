@@ -29,11 +29,21 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="Assets\uiframework" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Include="GameObjectManager.cs" />
+		<Compile Include="Helpers.cs" />
 		<Compile Include="Preferences.cs" />
 		<Compile Include="debugHelpers.cs" />
 		<Compile Include="FluentBuilder.cs" />
 		<Compile Include="Core.cs" />
 		<Compile Include="enums.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="Assets\uiframework" />
 	</ItemGroup>
 	
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
