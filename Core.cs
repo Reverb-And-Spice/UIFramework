@@ -19,7 +19,7 @@ namespace UIFramework
 		/// <summary></summary>
 		public const string Name = "UIFramework";
 		/// <summary></summary>
-		public const string Author = "Blankochan, iListen2Sound, TacoSlayer36";
+		public const string Author = "Reverb && Spice";
 		/// <summary></summary>
 		public const string Version = "1.0.0";
 	}
