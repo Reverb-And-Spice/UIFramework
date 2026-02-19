@@ -11,12 +11,16 @@ namespace UIFramework
 {
 	public class UIFramework
     {
+        
+        internal static GameObject ModRegistryPanel;
+        internal static GameObject CatRegistryPanel;
+        internal static GameObject PrefRegistryPanel;
 
-        static List<ModEntry> RegisteredMods = new();
+        static List<ModEntry> RegisteredMods {get; set;} = new();
 
         public static void Register(MelonMod modInstance, params MelonPreferences_Category[] categories)
         {
-            
+            RegisteredMods.Add(new ModEntry(modInstance, new List<MelonPreferences_Category>(categories)));
         }
     }
 
@@ -31,17 +35,11 @@ namespace UIFramework
             Mod = modInstance;
             Categories = categories;
 
-        }
+            
 
+        }           
 
-        public class PrefCategory
-        {
-
-            public class PrefEntry
-            {
-
-            }
-        }
+              
         
     }
 }
