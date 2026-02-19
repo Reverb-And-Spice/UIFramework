@@ -15,6 +15,6 @@ namespace UIFramework
 		/// <param name="text">The string to normalize. Cannot be null.</param>
 		/// <returns>A normalized string with all spaces removed, trimmed, and converted to lowercase.</returns>
 		///<remarks>Returns empty string if input only contains whitespace</remarks>
-		public static string Normal(this string text) => text.ToLower().Trim().Replace(" ", "");
+		public static string ToNormal(this string text) => text.ToLower().Trim().Replace(" ", "");
 	}
 }

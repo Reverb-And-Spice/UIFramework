@@ -42,25 +42,24 @@ namespace UIFramework
 
 		public override void OnSceneWasLoaded(int buildIndex, string sceneName)
 		{
-			CurrentScene = sceneName.Normal();
+			CurrentScene = sceneName.ToNormal();
 			if (CurrentScene == "loader")
 			{
-				
+
 			}
 
-			if(CurrentScene == "gym" && isFirstLoad) FirstGymLoad();
-			
+			if (CurrentScene == "gym" && isFirstLoad) FirstGymLoad();
+
 		}
-		
+
 		internal void FirstGymLoad()
 		{
 			LoadAssetBundle();
-			foreach (var tmpugui in UiAssets.GetComponentsInChildren<TextMeshProUGUI>(true))
-				tmpugui.font = Resources.Load<TMP_FontAsset>("Fonts & Materials/Arial SDF");
+			
 		}
 
-		
-		
+
+
 
 	}
 }

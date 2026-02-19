@@ -1,4 +1,4 @@
-﻿using Il2CppInterop.Runtime.InteropTypes.Arrays;
+﻿	using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using Il2CppTMPro;
 using MelonLoader;
 using System;
@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace UIFramework
 {
@@ -20,8 +21,15 @@ namespace UIFramework
 		{
 			UiAssets = GameObject.Instantiate(LoadAssetFromStream<GameObject>(this, "UIFramework.Assets.uiframework", "UIFramework"));
 			GameObject.DontDestroyOnLoad(UiAssets);
-			UiAssets.SetActive(false);
+			foreach (var tmpugui in UiAssets.GetComponentsInChildren<TextMeshProUGUI>(true))
+			{
+				//tmpugui.font = Resources.Load<TMP_FontAsset>("Fonts & Materials/Arial SDF");
+				tmpugui.SetLayoutDirty();
+			}
+			//UiAssets.SetActive(false);
 
+			RectTransform rect = UiAssets.transform.GetChild(0).gameObject.GetComponent<RectTransform>();
+			LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
 		}
 
 
@@ -40,6 +48,7 @@ namespace UIFramework
 
 		internal static Il2CppSystem.IO.Stream ConvertToIl2CppStream(System.IO.Stream stream)
 		{
+			
 			Il2CppSystem.IO.MemoryStream Il2CppStream = new Il2CppSystem.IO.MemoryStream();
 
 			const int bufferSize = 4096;

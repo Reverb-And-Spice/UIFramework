@@ -6,6 +6,8 @@
 		<RootNamespace>UIFramework</RootNamespace>
 		<AssemblyName>UIFramework</AssemblyName>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<EmbedDocumentation>true</EmbedDocumentation>
+
 
 
 	</PropertyGroup>
@@ -14,28 +16,14 @@
 		<Reference Include="G:\SteamLibrary\steamapps\common\RUMBLE\MelonLoader\net6\**\*.dll" Private="false" />
 		<Reference Include="G:\SteamLibrary\steamapps\common\RUMBLE\MelonLoader\net35\**\*.dll" Private="false" />
 		<Reference Include="G:\SteamLibrary\steamapps\common\RUMBLE\MelonLoader\Il2CppAssemblies\**\*.dll" Private="false" />
-
+		
+		
+		<None Remove="Assets\uiframework" />
+		<EmbeddedResource Include="Assets\uiframework" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <None Remove="Assets\uiframework" />
-	</ItemGroup>
 
-	<ItemGroup>
-		<Compile Include="GameObjectManager.cs" />
-		<Compile Include="Helpers.cs" />
-		<Compile Include="Preferences.cs" />
-		<Compile Include="debugHelpers.cs" />
-		<Compile Include="FluentBuilder.cs" />
-		<Compile Include="Core.cs" />
-		<Compile Include="enums.cs" />
-		<Compile Include="Framework.cs" />
-	</ItemGroup>
 
-	<ItemGroup>
-	  <EmbeddedResource Include="Assets\uiframework" />
-	</ItemGroup>
-	
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 		<Exec Command="COPY &quot;$(TargetPath)&quot; &quot;G:\SteamLibrary\steamapps\common\RUMBLE\Mods&quot;" />
 	</Target>
