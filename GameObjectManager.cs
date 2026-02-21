@@ -1,13 +1,16 @@
-﻿	using Il2CppInterop.Runtime.InteropTypes.Arrays;
+﻿using Il2CppInterop.Runtime.InteropTypes.Arrays;
+using Il2CppSystem.IO;
 using Il2CppTMPro;
 using MelonLoader;
-using System;
+//using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using static Il2CppSystem.DateTimeParse;
 
 namespace UIFramework
 {
@@ -19,20 +22,40 @@ namespace UIFramework
 
 		private void LoadAssetBundle()
 		{
+			Debug.Log("LoadingUIFramework AssetBundle", true);
 			UiAssets = GameObject.Instantiate(LoadAssetFromStream<GameObject>(this, "UIFramework.Assets.uiframework", "UIFramework"));
 			GameObject.DontDestroyOnLoad(UiAssets);
 			foreach (var tmpugui in UiAssets.GetComponentsInChildren<TextMeshProUGUI>(true))
 			{
-				//tmpugui.font = Resources.Load<TMP_FontAsset>("Fonts & Materials/Arial SDF");
-				tmpugui.SetLayoutDirty();
-			}
-			//UiAssets.SetActive(false);
+				tmpugui.font = Resources.Load<TMP_FontAsset>("Fonts & Materials/Arial SDF");
 
-			RectTransform rect = UiAssets.transform.GetChild(0).gameObject.GetComponent<RectTransform>();
-			LayoutRebuilder.ForceRebuildLayoutImmediate(rect);
+
+				var font = Resources.Load<Il2CppTMPro.TMP_FontAsset>("Fonts & Materials/Arial SDF");
+				if (font != null)
+				{
+					tmpugui.font = font;
+					tmpugui.fontSharedMaterial = font.material;
+					tmpugui.SetVerticesDirty();
+					tmpugui.SetMaterialDirty();
+				}
+
+				//tmpugui.SetLayoutDirty();
+			}
+
+			//Refresh(UiAssets, alsoFixCommonIssues: true);
+
+			// 4) If your LayoutGroups weren’t updating, force a proper rebuild
+			/*Canvas.ForceUpdateCanvases();
+			var rts = UiAssets.GetComponentsInChildren<RectTransform>(true);
+			foreach (var rt in rts) UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(rt);
+			Canvas.ForceUpdateCanvases();*/
+			ApplyAndRebuild(UiAssets);
+
+
+
 		}
 
-
+		#region Ulvak Generated
 		internal static T LoadAssetFromStream<T>(MelonMod instance, string path, string assetName) where T : UnityEngine.Object
 		{
 			using (System.IO.Stream bundleStream = instance.MelonAssembly.Assembly.GetManifestResourceStream(path))
@@ -48,7 +71,7 @@ namespace UIFramework
 
 		internal static Il2CppSystem.IO.Stream ConvertToIl2CppStream(System.IO.Stream stream)
 		{
-			
+
 			Il2CppSystem.IO.MemoryStream Il2CppStream = new Il2CppSystem.IO.MemoryStream();
 
 			const int bufferSize = 4096;
@@ -64,6 +87,53 @@ namespace UIFramework
 			Il2CppStream.Flush();
 			return Il2CppStream;
 		}
+		#endregion
 
+		#region AIGenerated
+
+		public static void ApplyAndRebuild(GameObject root)
+		{
+
+
+			if (root == null) return;
+
+			// 1) Configure TMP Components
+			var tmps = root.GetComponentsInChildren<TextMeshProUGUI>(true);
+			foreach (var t in tmps)
+			{
+				if (t == null) continue;
+
+				t.enableWordWrapping = true;
+				// Overflow mode ensures text wraps and fills the space, 
+				// rather than cutting off or masking.
+				t.overflowMode = TextOverflowModes.Overflow;
+
+				// Ensure this is not set to shrink the text
+				t.enableAutoSizing = false;
+			}
+
+			// 2) Force Layout Update
+			// Instead of forcing individual RectTransforms, we find the 
+			// top-most parent that has a layout group or is the root 
+			// and force a complete rebuild.
+			Canvas.ForceUpdateCanvases();
+
+			// This finds all LayoutGroups and ContentSizeFitters in the root
+			// and forces them to re-evaluate their children's sizes.
+			var layouts = root.GetComponentsInChildren<LayoutGroup>(true);
+			foreach (var l in layouts)
+			{
+				LayoutRebuilder.ForceRebuildLayoutImmediate(l.transform as RectTransform);
+			}
+
+			// Final pass to make sure everything is clean
+			Canvas.ForceUpdateCanvases();
+
+
+		}
+
+		#endregion
 	}
+
+
 }

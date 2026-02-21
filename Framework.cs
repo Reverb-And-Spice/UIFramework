@@ -10,36 +10,53 @@ using UnityEngine;
 namespace UIFramework
 {
 	public class UIFramework
-    {
-        
-        internal static GameObject ModRegistryPanel;
-        internal static GameObject CatRegistryPanel;
-        internal static GameObject PrefRegistryPanel;
+	{
 
-        static List<ModEntry> RegisteredMods {get; set;} = new();
+		internal static GameObject ModRegistryPanel;
+		internal static GameObject CatRegistryPanel;
+		internal static GameObject PrefRegistryPanel;
 
-        public static void Register(MelonMod modInstance, params MelonPreferences_Category[] categories)
-        {
-            RegisteredMods.Add(new ModEntry(modInstance, new List<MelonPreferences_Category>(categories)));
-        }
-    }
+		static List<ModEntry> RegisteredMods { get; set; } = new();
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="modInstance"></param>
+		/// <param name="categories"></param>
+		public static void Register(MelonMod modInstance, params MelonPreferences_Category[] categories)
+		{
+			RegisteredMods.Add(new ModEntry(modInstance, new List<MelonPreferences_Category>(categories)));
+		}
+	}
 
-    public class ModEntry
-    {
-        public MelonMod Mod {get; set;}
-        public List<MelonPreferences_Category> Categories {get; set;}
+	/// <summary>
+	/// 
+	/// </summary>
+	public class ModEntry
+	{
+		/// <summary>
+		/// 
+		/// </summary>
+		public MelonMod Mod { get; set; }
+		/// <summary>
+		/// 
+		/// </summary>
+		public List<MelonPreferences_Category> Categories { get; set; }
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="modInstance"></param>
+		/// <param name="categories"></param>
+		public ModEntry(MelonMod modInstance, List<MelonPreferences_Category> categories)
+		{
+			Mod = modInstance;
+			Categories = categories;
 
 
-        public ModEntry(MelonMod modInstance, List<MelonPreferences_Category> categories)
-        {
-            Mod = modInstance;
-            Categories = categories;
 
-            
+		}
 
-        }           
 
-              
-        
-    }
+
+	}
 }

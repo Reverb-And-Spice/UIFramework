@@ -6,7 +6,7 @@
 		<RootNamespace>UIFramework</RootNamespace>
 		<AssemblyName>UIFramework</AssemblyName>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<EmbedDocumentation>true</EmbedDocumentation>
+		<EmbedDocumentation>true</EmbedDocumentation> <!-- Don't actually know if this works lol	-->
 
 
 

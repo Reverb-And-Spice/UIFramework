@@ -50,6 +50,8 @@ namespace UIFramework
 
 			if (CurrentScene == "gym" && isFirstLoad) FirstGymLoad();
 
+			if (CurrentScene.Contains("map")) ;
+				UiAssets.SetActive(false); //Remove on final product
 		}
 
 		internal void FirstGymLoad()
