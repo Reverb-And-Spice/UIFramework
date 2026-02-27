@@ -3,7 +3,7 @@ using Il2CppPlayFab.ClientModels;
 using Il2CppTMPro;
 using MelonLoader;
 using UnityEngine;
-
+using static UIFramework.Debug;
 
 [assembly: MelonInfo(typeof(UIFramework.Core), UIFramework.BuildInfo.Name, UIFramework.BuildInfo.Version, UIFramework.BuildInfo.Author)]
 [assembly: MelonGame("Buckethead Entertainment", "RUMBLE")]
@@ -50,14 +50,18 @@ namespace UIFramework
 
 			if (CurrentScene == "gym" && isFirstLoad) FirstGymLoad();
 
-			if (CurrentScene.Contains("map")) ;
+			if (CurrentScene.Contains("map") || CurrentScene == "park")
 				UiAssets.SetActive(false); //Remove on final product
+			
+			
 		}
 
 		internal void FirstGymLoad()
 		{
 			LoadAssetBundle();
-			
+
+
+			isFirstLoad = false;
 		}
 
 

@@ -19,12 +19,22 @@ namespace UIFramework
 
 
 		internal GameObject UiAssets;
+		internal GameObject ModDisplayList;
+		internal GameObject CatDisplayList;
+		internal GameObject PrefDisplayList;
+
+		internal GameObject ModTab;
+		internal GameObject CatTab;
+
+		internal GameObject TextPrefab;
+		internal GameObject BoolPrefab;
+		internal GameObject IntPrefab;
+		internal GameObject FloatPrefab;
 
 		private void LoadAssetBundle()
 		{
 			Debug.Log("LoadingUIFramework AssetBundle", true);
 			UiAssets = GameObject.Instantiate(LoadAssetFromStream<GameObject>(this, "UIFramework.Assets.uiframework", "UIFramework"));
-			GameObject.DontDestroyOnLoad(UiAssets);
 			foreach (var tmpugui in UiAssets.GetComponentsInChildren<TextMeshProUGUI>(true))
 			{
 				tmpugui.font = Resources.Load<TMP_FontAsset>("Fonts & Materials/Arial SDF");
@@ -38,7 +48,6 @@ namespace UIFramework
 					tmpugui.SetVerticesDirty();
 					tmpugui.SetMaterialDirty();
 				}
-
 				//tmpugui.SetLayoutDirty();
 			}
 
@@ -51,8 +60,33 @@ namespace UIFramework
 			Canvas.ForceUpdateCanvases();*/
 			ApplyAndRebuild(UiAssets);
 
+			GameObject.DontDestroyOnLoad(UiAssets);
+
+			ModDisplayList = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "ModRegCont")?.gameObject;
+			CatDisplayList = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "CatRegCont")?.gameObject;
+			PrefDisplayList = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefRegCont")?.gameObject;
+
+			ModTab = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "ModEntry")?.gameObject;
+			CatTab = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "CategoryTab")?.gameObject;
+
+			TextPrefab = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryText")?.gameObject;
+			BoolPrefab = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryBoolean")?.gameObject;
+			IntPrefab = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryInt")?.gameObject;
+			FloatPrefab = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryFloat")?.gameObject;
+
+			
+
+			
 
 
+
+			//UI Test Section
+			GameObject testMod = GameObject.Instantiate(ModTab, ModDisplayList.transform);
+			GameObject testCat = GameObject.Instantiate(CatTab, CatDisplayList.transform);
+			GameObject testPref = GameObject.Instantiate(TextPrefab, PrefDisplayList.transform);
+			GameObject.Instantiate(BoolPrefab, PrefDisplayList.transform);
+			GameObject.Instantiate(IntPrefab, PrefDisplayList.transform);
+			GameObject.Instantiate(FloatPrefab, PrefDisplayList.transform);
 		}
 
 		#region Ulvak Generated
@@ -111,7 +145,7 @@ namespace UIFramework
 				// Ensure this is not set to shrink the text
 				t.enableAutoSizing = false;
 			}
-
+/*
 			// 2) Force Layout Update
 			// Instead of forcing individual RectTransforms, we find the 
 			// top-most parent that has a layout group or is the root 
@@ -120,15 +154,15 @@ namespace UIFramework
 
 			// This finds all LayoutGroups and ContentSizeFitters in the root
 			// and forces them to re-evaluate their children's sizes.
-			var layouts = root.GetComponentsInChildren<LayoutGroup>(true);
+			*//*var layouts = root.GetComponentsInChildren<LayoutGroup>(true);
 			foreach (var l in layouts)
 			{
 				LayoutRebuilder.ForceRebuildLayoutImmediate(l.transform as RectTransform);
-			}
+			}*//*
 
 			// Final pass to make sure everything is clean
 			Canvas.ForceUpdateCanvases();
-
+*/
 
 		}
 
