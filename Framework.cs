@@ -56,7 +56,14 @@ namespace UIFramework
 
 		}
 
+		/// <summary>
+		/// Test Component lol
+		/// </summary>
+		[RegisterTypeInIl2Cpp]
+		public class TestComponent : MonoBehaviour
+		{
+			public string test { get; set; }
 
-
+		}
 	}
 }

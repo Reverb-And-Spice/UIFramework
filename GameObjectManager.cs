@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Events;
 using static Il2CppSystem.DateTimeParse;
 
 namespace UIFramework
@@ -30,6 +31,8 @@ namespace UIFramework
 		internal static GameObject BoolPrefab;
 		internal static GameObject IntPrefab;
 		internal static GameObject FloatPrefab;
+
+		internal static Button MainActionButton;
 
 		internal static void LoadAssetBundle()
 		{
@@ -74,11 +77,14 @@ namespace UIFramework
 			IntPrefab = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryInt")?.gameObject;
 			FloatPrefab = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryFloat")?.gameObject;
 
+			MainActionButton = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "MainActionButton")?.gameObject.GetComponent<Button>();
+
+
 			
 
-			
+			MainActionButton.onClick.AddListener(MainButtonClick);
 
-
+			ModEntry.TestComponent test = ModDisplayList.AddComponent<ModEntry.TestComponent>();
 
 			//UI Test Section
 			GameObject testMod = GameObject.Instantiate(ModTab, ModDisplayList.transform);
@@ -88,6 +94,11 @@ namespace UIFramework
 			GameObject.Instantiate(IntPrefab, PrefDisplayList.transform);
 			GameObject.Instantiate(FloatPrefab, PrefDisplayList.transform);
 		}
+
+		static UnityAction MainButtonClick = new System.Action(() =>
+		{
+			Debug.Log("Main Action Button Clicked!", true, 0);
+		});
 
 		#region Ulvak Generated
 		internal static T LoadAssetFromStream<T>(MelonMod instance, string path, string assetName) where T : UnityEngine.Object
