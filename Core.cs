@@ -51,7 +51,7 @@ namespace UIFramework
 			if (CurrentScene == "gym" && isFirstLoad) FirstGymLoad();
 
 			if (CurrentScene.Contains("map") || CurrentScene == "park")
-				AssetManager.UiAssets.SetActive(false); //Remove on final product
+				Prefabs.UiAssets.SetActive(false); //Remove on final product
 			
 			
 		}

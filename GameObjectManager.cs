@@ -14,7 +14,7 @@ using static Il2CppSystem.DateTimeParse;
 
 namespace UIFramework
 {
-	internal static partial class AssetManager
+	internal static partial class Prefabs
 	{
 
 
