@@ -14,24 +14,24 @@ using static Il2CppSystem.DateTimeParse;
 
 namespace UIFramework
 {
-	public partial class Core
+	internal static partial class AssetManager
 	{
 
 
-		internal GameObject UiAssets;
-		internal GameObject ModDisplayList;
-		internal GameObject CatDisplayList;
-		internal GameObject PrefDisplayList;
+		internal static GameObject UiAssets;
+		internal static GameObject ModDisplayList;
+		internal static GameObject CatDisplayList;
+		internal static GameObject PrefDisplayList;
 
-		internal GameObject ModTab;
-		internal GameObject CatTab;
+		internal static GameObject ModTab;
+		internal static GameObject CatTab;
 
-		internal GameObject TextPrefab;
-		internal GameObject BoolPrefab;
-		internal GameObject IntPrefab;
-		internal GameObject FloatPrefab;
+		internal static GameObject TextPrefab;
+		internal static GameObject BoolPrefab;
+		internal static GameObject IntPrefab;
+		internal static GameObject FloatPrefab;
 
-		private void LoadAssetBundle()
+		private static void LoadAssetBundle()
 		{
 			Debug.Log("LoadingUIFramework AssetBundle", true);
 			UiAssets = GameObject.Instantiate(LoadAssetFromStream<GameObject>(this, "UIFramework.Assets.uiframework", "UIFramework"));
@@ -163,7 +163,6 @@ namespace UIFramework
 			// Final pass to make sure everything is clean
 			Canvas.ForceUpdateCanvases();
 */
-
 		}
 
 		#endregion
