@@ -31,10 +31,10 @@ namespace UIFramework
 		internal static GameObject IntPrefab;
 		internal static GameObject FloatPrefab;
 
-		private static void LoadAssetBundle()
+		internal static void LoadAssetBundle()
 		{
 			Debug.Log("LoadingUIFramework AssetBundle", true);
-			UiAssets = GameObject.Instantiate(LoadAssetFromStream<GameObject>(this, "UIFramework.Assets.uiframework", "UIFramework"));
+			UiAssets = GameObject.Instantiate(LoadAssetFromStream<GameObject>(Core.Instance, "UIFramework.Assets.uiframework", "UIFramework"));
 			foreach (var tmpugui in UiAssets.GetComponentsInChildren<TextMeshProUGUI>(true))
 			{
 				tmpugui.font = Resources.Load<TMP_FontAsset>("Fonts & Materials/Arial SDF");
@@ -125,7 +125,7 @@ namespace UIFramework
 
 		#region AIGenerated
 
-		public static void ApplyAndRebuild(GameObject root)
+		internal static void ApplyAndRebuild(GameObject root)
 		{
 
 

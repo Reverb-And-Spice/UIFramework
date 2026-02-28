@@ -23,9 +23,13 @@ namespace UIFramework
 		/// <summary></summary>
 		public const string Version = "1.0.0";
 	}
+
+	
 	/// <summary></summary>
 	public partial class Core : MelonMod
 	{
+		internal static Core Instance;
+
 		internal string CurrentScene = "";
 		internal bool isFirstLoad = true;
 		/// <summary></summary>
@@ -33,6 +37,7 @@ namespace UIFramework
 		{
 
 			LoggerInstance.Msg("Initialized.");
+			Instance = this;
 		}
 		/// <summary></summary>
 		public override void OnUpdate()
@@ -58,7 +63,7 @@ namespace UIFramework
 
 		internal void FirstGymLoad()
 		{
-			LoadAssetBundle();
+			Prefabs.LoadAssetBundle();
 
 
 			isFirstLoad = false;
