@@ -9,37 +9,37 @@ using UnityEngine;
 
 namespace UIFramework
 {
-    /// <summary>
-    /// </summary>
+	/// <summary>
+	/// </summary>
 	internal class UIFController
 	{
-        internal UIFModel MainModel = new();
+		internal UIFModel MainModel = new();
 
-        internal void DisplayMods()
-        {
-            foreach(kvp modToCat in MainModel.ModModelsDict)
-            {
-                
-            }
-        }
-        internal class Mod 
-        {
-            internal MelonMod Instance;
-            internal GameObject TabButton;
+		internal void DisplayMods()
+		{
+			foreach (KeyValuePair<MelonMod, UIFModel.Mod> modToCat in MainModel.ModModelsDict)
+			{
 
-            public Mod(MelonMod instance, GameObject tabButton)
-            {
-                Instance = instance;
-                TabButton = tabButton;
-            }
-        }
-        internal class Category
-        {
+			}
+		}
+		internal class Mod
+		{
+			internal MelonMod Instance;
+			internal GameObject TabButton;
 
-        }
-        internal class PreferenceEntry
-        {
-            
-        }
-    }
+			public Mod(MelonMod instance, GameObject tabButton)
+			{
+				Instance = instance;
+				TabButton = tabButton;
+			}
+		}
+		internal class Category
+		{
+
+		}
+		internal class PreferenceEntry
+		{
+
+		}
+	}
 }
