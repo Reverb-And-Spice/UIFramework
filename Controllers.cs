@@ -11,13 +11,29 @@ namespace UIFramework
 {
     /// <summary>
     /// </summary>
-	internal class Controller
+	internal class UIFController
 	{
-        internal class Mod : MonoBehaviour
+        internal UIFModel MainModel = new();
+
+        internal void DisplayMods()
         {
-            
+            foreach(kvp modToCat in MainModel.ModModelsDict)
+            {
+                
+            }
         }
-        internal class Category : MonoBehaviour
+        internal class Mod 
+        {
+            internal MelonMod Instance;
+            internal GameObject TabButton;
+
+            public Mod(MelonMod instance, GameObject tabButton)
+            {
+                Instance = instance;
+                TabButton = tabButton;
+            }
+        }
+        internal class Category
         {
 
         }

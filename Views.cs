@@ -12,7 +12,7 @@ namespace UIFramework
     /// <summary>
     /// Custom components that will serve as views in this MVP/MVC-ish pattern
     /// </summary>
-	internal class View
+	internal class UIFView
 	{
         [RegisterTypeInIl2Cpp]
         internal class Mod : MonoBehaviour
