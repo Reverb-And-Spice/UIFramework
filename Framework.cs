@@ -16,7 +16,8 @@ namespace UIFramework
 		internal static GameObject CatRegistryPanel;
 		internal static GameObject PrefRegistryPanel;
 
-		static List<ModEntry> RegisteredMods { get; set; } = new();
+
+		internal static UIFModel ModelInstance = new();
 		/// <summary>
 		/// 
 		/// </summary>
@@ -24,8 +25,25 @@ namespace UIFramework
 		/// <param name="categories"></param>
 		public static void Register(MelonMod modInstance, params MelonPreferences_Category[] categories)
 		{
-			RegisteredMods.Add(new ModEntry(modInstance, new List<MelonPreferences_Category>(categories)));
+			ModelInstance.AddToDict(modInstance, new UIFModel.Mod(modInstance, categories.ToList()));
+
+
 		}
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="modInstance"></param>
+		/// <param name="categories"></param>
+		public static void Register(MelonMod modInstance, List<MelonPreferences_Category> categories)
+		{
+			ModelInstance.AddToDict(modInstance, new UIFModel.Mod(modInstance, categories));
+		}
+
+
+
+
+
+
 	}
 
 
@@ -36,38 +54,37 @@ namespace UIFramework
 	/// <summary>
 	/// 
 	/// </summary>
-	public class ModEntry
+	internal class UIFModel
 	{
-		/// <summary>
-		/// 
-		/// </summary>
-		public MelonMod Mod { get; set; }
-		/// <summary>
-		/// 
-		/// </summary>
-		public List<MelonPreferences_Category> Categories { get; set; }
+		internal List<Mod> ModModelsList = new();
+		internal Dictionary<MelonMod, Mod> ModModelsDict = new();
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="modInstance"></param>
-		/// <param name="categories"></param>
-		public ModEntry(MelonMod modInstance, List<MelonPreferences_Category> categories)
+		internal void AddToDict(MelonMod modInstance, Mod model)
 		{
-			Mod = modInstance;
-			Categories = categories;
+			ModModelsDict[modInstance] = model;
+		}
+		internal class Mod
+		{
+			internal MelonMod Instance { get; set; }
+			internal List<MelonPreferences_Category> CatList = new();
 
 
+			internal Mod(MelonMod instance, List<MelonPreferences_Category> catList)
+			{
+				Instance = instance;
+				CatList = catList;
+			}
 
 		}
 
-		/// <summary>
-		/// Test Component lol
-		/// </summary>
-		[RegisterTypeInIl2Cpp]
-		public class TestComponent : MonoBehaviour
+		internal class Categories
 		{
-			public string test { get; set; }
+			internal MelonPreferences_Category category;
+
+
+		}
+		internal class PreferenceEntry
+		{
 
 		}
 	}

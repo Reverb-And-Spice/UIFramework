@@ -84,7 +84,15 @@ namespace UIFramework
 
 			MainActionButton.onClick.AddListener(MainButtonClick);
 
-			ModEntry.TestComponent test = ModDisplayList.AddComponent<ModEntry.TestComponent>();
+			//ModEntry.TestComponent test = ModDisplayList.AddComponent<ModEntry.TestComponent>();
+
+			//Add the appropriate components to each prefab for later use
+			TextPrefab.AddComponent<UIFView.PrefText>();
+			BoolPrefab.AddComponent<UIFView.PrefBool>();
+			IntPrefab.AddComponent<UIFView.PrefInt>();
+			FloatPrefab.AddComponent<UIFView.PrefFloat>();
+			ModTab.AddComponent<UIFView.Mod>();
+
 
 			//UI Test Section
 			GameObject testMod = GameObject.Instantiate(ModTab, ModDisplayList.transform);
