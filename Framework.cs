@@ -25,7 +25,7 @@ namespace UIFramework
 		/// <param name="categories"></param>
 		public static void Register(MelonMod modInstance, params MelonPreferences_Category[] categories)
 		{
-			ModelInstance.AddToDict(modInstance, new UIFModel.Mod(modInstance, categories.ToList()));
+			ModelInstance.AddToList(new UIFModel.Mod(modInstance, categories.ToList()));
 		}
 		/// <summary>
 		/// 
@@ -34,7 +34,7 @@ namespace UIFramework
 		/// <param name="categories"></param>
 		public static void Register(MelonMod modInstance, List<MelonPreferences_Category> categories)
 		{
-			ModelInstance.AddToDict(modInstance, new UIFModel.Mod(modInstance, categories));
+			ModelInstance.AddToList(new UIFModel.Mod(modInstance, categories));
 		}
 
 		internal static void BuildUIInitial()
@@ -50,35 +50,64 @@ namespace UIFramework
 	internal class UIFModel
 	{
 		internal List<Mod> ModModelsList = new();
-		internal Dictionary<MelonMod, Mod> ModModelsDict = new();
+		//internal Dictionary<MelonMod, Mod> ModModelsDict = new();
 
-		internal void AddToDict(MelonMod modInstance, Mod model)
+		internal void AddToList(Mod model)
 		{
-			ModModelsDict[modInstance] = model;
+			//ModModelsDict[modInstance] = model;
+			ModModelsList.Add(model);
+
 		}
-		internal class Mod
+
+		internal interface IModelable
+		{
+
+		}
+
+		internal class Mod : IModelable
 		{
 			internal MelonMod Instance { get; set; }
-			internal List<MelonPreferences_Category> CatList = new();
+			internal string ModName {get{ return Instance.Info.Name;}}
 
+			internal List<Category> catModelList = new();
 
 			internal Mod(MelonMod instance, List<MelonPreferences_Category> catList)
 			{
-				Instance = instance;
-				CatList = catList;
+				foreach (MelonPreferences_Category cat in catList)
+				{
+					catModelList.Add(new Category(cat));
+				}
 			}
 
 		}
 
-		internal class Category
+		internal class Category : IModelable
 		{
-			internal MelonPreferences_Category category;
+			internal MelonPreferences_Category MelonCategory;
 
+			internal List<PreferenceEntry> Entries = new ();
+			internal Category(MelonPreferences_Category cat)
+			{
+				MelonCategory = cat;
+				foreach (MelonPreferences_Entry entry in MelonCategory.Entries)
+				{
+					Entries.Add(new PreferenceEntry(entry));
+				}
+			}
 
 		}
 		internal class PreferenceEntry
 		{
+			internal MelonPreferences_Entry MelonEntry;
 
+			internal string Description {get{return MelonEntry.Description;}}
+			internal string Identifier {get{return MelonEntry.Identifier;}}
+			internal string DisplayName {get{return MelonEntry.DisplayName;}}
+
+			internal PreferenceEntry(MelonPreferences_Entry prefEntry)
+			{
+				MelonEntry = prefEntry;
+			}
 		}
 	}
 }

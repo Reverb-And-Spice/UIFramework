@@ -91,13 +91,21 @@ namespace UIFramework
 			BoolPrefab.AddComponent<UIFView.PrefBool>();
 			IntPrefab.AddComponent<UIFView.PrefInt>();
 			FloatPrefab.AddComponent<UIFView.PrefFloat>();
-			ModTab.AddComponent<UIFView.Mod>();
+
+			UIFView.Mod baseModTabController = ModTab.AddComponent<UIFView.Mod>();
+			Button ModButton = ModTab.GetComponent<Button>();
+			ModButton.onClick.AddListener(baseModTabController.OnSelect);
+
+			UIFView.Category baseCatTabController = CatTab.AddComponent<UIFView.Category>();
+			Button CatButton = ModTab.GetComponent<Button>();
+			CatButton.onClick.AddListener(baseCatTabController.OnSelect);
+
 
 			//Add the component to the container sections
 			ModDisplayList.AddComponent<UIFView.ModListView>();
 			CatDisplayList.AddComponent<UIFView.CatListView>();
 			PrefDisplayList.AddComponent<UIFView.PrefListView>();
-			
+
 
 
 			//UI Test Section
