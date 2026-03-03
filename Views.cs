@@ -6,13 +6,17 @@ using System.Threading.Tasks;
 
 using MelonLoader;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.UI;
 using Il2CppTMPro;
+using MelonLoader.Logging;
+using MonoMod.ModInterop;
 namespace UIFramework
 {
 	/// <summary>
 	/// Custom components that will serve as views in this MVP/MVC-ish pattern
 	/// </summary>
-	public class UIFView
+	public class UIFController
 	{
 
 		internal abstract class ContainerView : MonoBehaviour
@@ -24,57 +28,64 @@ namespace UIFramework
 
 			private void Infanticide()
 			{
-				while(this.gameObject.transform.ChildCount > 0)
+				while(this.gameObject.transform.childCount > 0)
 				{
 					Destroy(this.transform.GetChild(0));
 				}
 			} 
 
-			internal abstract void BuildFromModelList(List<UIFramework.Imodelable> modelList);
+			internal abstract void BuildFromModelList(List<UIFModel.IModelable> modelList);
 
 		}
 
 		[RegisterTypeInIl2Cpp]
-		internal class ModListView : ContainerView
+		internal class ModList : ContainerView
 		{
-			internal override void BuildFromModelList(List<UIFramework.Imodelable> modelList)
+			internal override void BuildFromModelList(List<UIFModel.IModelable> modelList)
 			{
 				foreach(Mod melon in modelList)
 				{
 					GameObject tab = GameObject.Instantiate(Prefabs.ModTab);
-					Mod ViewController = tab.GetComponent<UIFView.Mod>();
-					tab.Label = ViewController.ModName;
+					UIFController.Mod ViewController = tab.GetComponent<UIFController.Mod>();
+					ViewController.Label = ViewController.ModName;
 
 				}
 			}
 		}
 
 		[RegisterTypeInIl2Cpp]
-		internal class CatListView : ContainerView
+		internal class CatList : ContainerView
 		{
-			
+			internal override void BuildFromModelList(List<UIFModel.IModelable> modelList)
+			{
+
+			}
 		}
 
 		[RegisterTypeInIl2Cpp]
-		internal class PrefListView : ContainerView
+		internal class PrefList : ContainerView
 		{
+			internal override void BuildFromModelList(List<UIFModel.IModelable> modelList)
+			{
 
+			}
 		}
 
 
 
-		internal abstract class TabButtonView : MonoBehaviour
+		internal abstract class TabButtonController : MonoBehaviour
 		{
 			internal string Label { set { this.gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
-			internal ColorARGB TabColor {set;}
+			internal ColorARGB TabColor { get;  set; }
 			
 			
 		}
 
 		[RegisterTypeInIl2Cpp]
-		internal class Mod : TabButtonView
+		internal class Mod : TabButtonController
 		{
 			internal UIFModel.Mod Model {get; set;}
+			internal string ModName { get; set;}
 			internal UnityAction OnSelect = new System.Action(() => 
 			{
 				

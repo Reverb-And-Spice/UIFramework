@@ -87,24 +87,24 @@ namespace UIFramework
 			//ModEntry.TestComponent test = ModDisplayList.AddComponent<ModEntry.TestComponent>();
 
 			//Add the appropriate components to each prefab for later use
-			TextPrefab.AddComponent<UIFView.PrefText>();
-			BoolPrefab.AddComponent<UIFView.PrefBool>();
-			IntPrefab.AddComponent<UIFView.PrefInt>();
-			FloatPrefab.AddComponent<UIFView.PrefFloat>();
+			TextPrefab.AddComponent<UIFController.PrefText>();
+			BoolPrefab.AddComponent<UIFController.PrefBool>();
+			IntPrefab.AddComponent<UIFController.PrefInt>();
+			FloatPrefab.AddComponent<UIFController.PrefFloat>();
 
-			UIFView.Mod baseModTabController = ModTab.AddComponent<UIFView.Mod>();
+			UIFController.Mod baseModTabController = ModTab.AddComponent<UIFController.Mod>();
 			Button ModButton = ModTab.GetComponent<Button>();
 			ModButton.onClick.AddListener(baseModTabController.OnSelect);
 
-			UIFView.Category baseCatTabController = CatTab.AddComponent<UIFView.Category>();
+			UIFController.Category baseCatTabController = CatTab.AddComponent<UIFController.Category>();
 			Button CatButton = ModTab.GetComponent<Button>();
 			CatButton.onClick.AddListener(baseCatTabController.OnSelect);
 
 
 			//Add the component to the container sections
-			ModDisplayList.AddComponent<UIFView.ModListView>();
-			CatDisplayList.AddComponent<UIFView.CatListView>();
-			PrefDisplayList.AddComponent<UIFView.PrefListView>();
+			ModDisplayList.AddComponent<UIFController.ModList>();
+			CatDisplayList.AddComponent<UIFController.CatList>();
+			PrefDisplayList.AddComponent<UIFController.PrefList>();
 
 
 

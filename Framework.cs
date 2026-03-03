@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 using MelonLoader;
 using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace UIFramework
 {
