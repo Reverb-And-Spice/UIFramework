@@ -47,12 +47,12 @@ namespace UIFramework
 	/// <summary>
 	/// 
 	/// </summary>
-	internal class UIFModel
+	public class UIFModel
 	{
-		internal List<Mod> ModModelsList = new();
+		public List<Mod> ModModelsList = new();
 		//internal Dictionary<MelonMod, Mod> ModModelsDict = new();
 
-		internal void AddToList(Mod model)
+		public void AddToList(Mod model)
 		{
 			//ModModelsDict[modInstance] = model;
 			ModModelsList.Add(model);
@@ -64,7 +64,7 @@ namespace UIFramework
 
 		}
 
-		internal class Mod : IModelable
+		public class Mod : IModelable
 		{
 			internal MelonMod Instance { get; set; }
 			internal string ModName {get{ return Instance.Info.Name;}}
@@ -81,7 +81,7 @@ namespace UIFramework
 
 		}
 
-		internal class Category : IModelable
+		public class Category : IModelable
 		{
 			internal MelonPreferences_Category MelonCategory;
 
@@ -96,13 +96,13 @@ namespace UIFramework
 			}
 
 		}
-		internal class PreferenceEntry
+		public class PreferenceEntry
 		{
 			internal MelonPreferences_Entry MelonEntry;
 
-			internal string Description {get{return MelonEntry.Description;}}
-			internal string Identifier {get{return MelonEntry.Identifier;}}
-			internal string DisplayName {get{return MelonEntry.DisplayName;}}
+			public string Description {get{return MelonEntry.Description;}}
+			public string Identifier {get{return MelonEntry.Identifier;}}
+			public string DisplayName {get{return MelonEntry.DisplayName;}}
 
 			internal PreferenceEntry(MelonPreferences_Entry prefEntry)
 			{
