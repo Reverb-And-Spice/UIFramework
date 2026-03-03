@@ -72,7 +72,6 @@ namespace UIFramework
 		}
 
 
-
 		internal abstract class TabButtonController : MonoBehaviour
 		{
 			internal string Label { set { this.gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
@@ -110,24 +109,32 @@ namespace UIFramework
 		}
 
 
-
 		[RegisterTypeInIl2Cpp]
 		internal class PrefText : PreferenceEntry
 		{
 
 		}
+
 		[RegisterTypeInIl2Cpp]
 		internal class PrefBool : PreferenceEntry
 		{
 
 		}
+
 		[RegisterTypeInIl2Cpp]
 		internal class PrefInt : PreferenceEntry
 		{
 
 		}
+
 		[RegisterTypeInIl2Cpp]
 		internal class PrefFloat : PreferenceEntry
+		{
+
+		}
+
+		[RegisterTypeInIl2Cpp]
+		internal class PrefMulti : PreferenceEntry
 		{
 
 		}

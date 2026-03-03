@@ -38,6 +38,8 @@ namespace UIFramework
 		{
 			Debug.Log("LoadingUIFramework AssetBundle", true);
 			UiAssets = GameObject.Instantiate(LoadAssetFromStream<GameObject>(Core.Instance, "UIFramework.Assets.uiframework", "UIFramework"));
+
+			//Taco generated (text won't work witout this for some reason)
 			foreach (var tmpugui in UiAssets.GetComponentsInChildren<TextMeshProUGUI>(true))
 			{
 				tmpugui.font = Resources.Load<TMP_FontAsset>("Fonts & Materials/Arial SDF");
@@ -157,7 +159,10 @@ namespace UIFramework
 		#endregion
 
 		#region AIGenerated
-
+		/// <summary>
+		/// Wrapping gets disabled when loading and this reenables it
+		/// </summary>
+		/// <param name="root"></param>
 		internal static void ApplyAndRebuild(GameObject root)
 		{
 
@@ -178,24 +183,25 @@ namespace UIFramework
 				// Ensure this is not set to shrink the text
 				t.enableAutoSizing = false;
 			}
-/*
+
 			// 2) Force Layout Update
 			// Instead of forcing individual RectTransforms, we find the 
 			// top-most parent that has a layout group or is the root 
 			// and force a complete rebuild.
 			Canvas.ForceUpdateCanvases();
 
-			// This finds all LayoutGroups and ContentSizeFitters in the root
+			/*
+			 * this part of the code didn't work but doesn't seem to be needed?
+			 * // This finds all LayoutGroups and ContentSizeFitters in the root
 			// and forces them to re-evaluate their children's sizes.
-			*//*var layouts = root.GetComponentsInChildren<LayoutGroup>(true);
+			//var layouts = root.GetComponentsInChildren<LayoutGroup>(true);
 			foreach (var l in layouts)
 			{
 				LayoutRebuilder.ForceRebuildLayoutImmediate(l.transform as RectTransform);
-			}*//*
-
+			}*/
 			// Final pass to make sure everything is clean
 			Canvas.ForceUpdateCanvases();
-*/
+
 		}
 
 		#endregion
