@@ -26,8 +26,6 @@ namespace UIFramework
 		public static void Register(MelonMod modInstance, params MelonPreferences_Category[] categories)
 		{
 			ModelInstance.AddToDict(modInstance, new UIFModel.Mod(modInstance, categories.ToList()));
-
-
 		}
 		/// <summary>
 		/// 
@@ -39,17 +37,12 @@ namespace UIFramework
 			ModelInstance.AddToDict(modInstance, new UIFModel.Mod(modInstance, categories));
 		}
 
+		internal static void BuildUIInitial()
+		{
 
-
-
-
+		}
 
 	}
-
-
-
-
-
 
 	/// <summary>
 	/// 
@@ -77,7 +70,7 @@ namespace UIFramework
 
 		}
 
-		internal class Categories
+		internal class Category
 		{
 			internal MelonPreferences_Category category;
 

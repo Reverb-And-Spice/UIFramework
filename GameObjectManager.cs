@@ -93,6 +93,12 @@ namespace UIFramework
 			FloatPrefab.AddComponent<UIFView.PrefFloat>();
 			ModTab.AddComponent<UIFView.Mod>();
 
+			//Add the component to the container sections
+			ModDisplayList.AddComponent<UIFView.ModListView>();
+			CatDisplayList.AddComponent<UIFView.CatListView>();
+			PrefDisplayList.AddComponent<UIFView.PrefListView>();
+			
+
 
 			//UI Test Section
 			GameObject testMod = GameObject.Instantiate(ModTab, ModDisplayList.transform);
