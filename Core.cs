@@ -25,7 +25,9 @@ namespace UIFramework
 	}
 
 	
-	/// <summary></summary>
+	/// <summary>
+	/// 
+	/// </summary>
 	public partial class Core : MelonMod
 	{
 		internal static Core Instance;
@@ -65,6 +67,7 @@ namespace UIFramework
 		{
 			Prefabs.LoadAssetBundle();
 
+			UIFramework.BuildModList();
 
 			isFirstLoad = false;
 		}

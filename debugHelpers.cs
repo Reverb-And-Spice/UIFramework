@@ -76,6 +76,11 @@ namespace UIFramework
 			}
 		}
 
+		internal static void Deb(string message)
+		{
+			Log(message, true, 0);
+		}
+
 		internal static void Msg(string message)
 		{
 			Log(message, false, 0);

@@ -11,6 +11,9 @@ using UnityEngine.UI;
 
 namespace UIFramework
 {
+	/// <summary>
+	/// primary public facing class, modders will interact with this to register their preferences and build the UI.
+	/// </summary>
 	public class UIFramework
 	{
 
@@ -27,7 +30,7 @@ namespace UIFramework
 		/// <param name="categories"></param>
 		public static void Register(MelonMod modInstance, params MelonPreferences_Category[] categories)
 		{
-			ModelInstance.AddToList(new UIFModel.Mod(modInstance, categories.ToList()));
+			ModelInstance.AddToList(new UIFModel.ModelMod(modInstance, categories.ToList()));
 		}
 		/// <summary>
 		/// 
@@ -36,79 +39,104 @@ namespace UIFramework
 		/// <param name="categories"></param>
 		public static void Register(MelonMod modInstance, List<MelonPreferences_Category> categories)
 		{
-			ModelInstance.AddToList(new UIFModel.Mod(modInstance, categories));
+			ModelInstance.AddToList(new UIFModel.ModelMod(modInstance, categories));
 		}
 
-		internal static void BuildUIInitial()
+		internal static void BuildModList()
 		{
+			/*foreach (UIFModel.ModelMod mod in ModelInstance.ModModelsList)
+			{
+				GameObject tab = GameObject.Instantiate(Prefabs.ModTab,Prefabs.ModDisplayList.transform);
+				UIFController.Mod ViewController = tab.GetComponent<UIFController.Mod>();
 
+				ViewController.Model = mod;
+				ViewController.TargetContainer = CatRegistryPanel;
+
+
+			}*/
+			//ModRegistryPanel.GetComponent<UIFController.ModList>().BuildFromModelList(ModelInstance.ModModelsList.Cast<UIFModel.BaseListSources>().ToList());
 		}
 
 	}
 
 	/// <summary>
+	/// Models define how the UI is built. The heirarchy is simple and follows melonpreferences basic structure
+	/// ModelMod ->  ModelCategory -> ModelEntry
+	/// Modders can use the default model just by calling UIF.Register(modInstance, categories) in their OnLateInitializeMelon. 
+	/// The default model will use simple input methods: bools will be toggles, strings will be text input fields and so would numerics.
+	/// More options will eventually be available: sliders, dropdowns, multi checkboxes, radio buttons, etc.
+	/// 
+	/// Those will be developed after the default model is functional
+	/// 
 	/// 
 	/// </summary>
 	public class UIFModel
 	{
-		public List<Mod> ModModelsList = new();
-		//internal Dictionary<MelonMod, Mod> ModModelsDict = new();
 
-		public void AddToList(Mod model)
+		public List<ModelMod> ModModelsList = new();
+
+		public void AddToList(ModelMod model)
 		{
 			//ModModelsDict[modInstance] = model;
 			ModModelsList.Add(model);
 
 		}
 
-		internal interface IModelable
+		public abstract class BaseListSources
 		{
-
+			internal List<BaseListSources> subModels = new ();
+			
 		}
 
-		public class Mod : IModelable
+		public class ModelMod : BaseListSources
 		{
 			internal MelonMod Instance { get; set; }
 			internal string ModName {get{ return Instance.Info.Name;}}
 
-			internal List<Category> catModelList = new();
+			//internal List<BaseListSources> catModelList = new();
+			
 
-			internal Mod(MelonMod instance, List<MelonPreferences_Category> catList)
+			internal ModelMod(MelonMod instance, List<MelonPreferences_Category> catList)
 			{
+				Instance = instance;
+
 				foreach (MelonPreferences_Category cat in catList)
 				{
-					catModelList.Add(new Category(cat));
+					subModels.Add(new ModelCategory(cat));
 				}
 			}
 
 		}
 
-		public class Category : IModelable
+		public class ModelCategory : BaseListSources
 		{
-			internal MelonPreferences_Category MelonCategory;
+			internal MelonPreferences_Category PrefCat;
 
-			internal List<PreferenceEntry> Entries = new ();
-			internal Category(MelonPreferences_Category cat)
+			internal List<ModelEntry> Entries = new ();
+			internal ModelCategory(MelonPreferences_Category cat)
 			{
-				MelonCategory = cat;
-				foreach (MelonPreferences_Entry entry in MelonCategory.Entries)
+				PrefCat = cat;
+				foreach (MelonPreferences_Entry entry in PrefCat.Entries)
 				{
-					Entries.Add(new PreferenceEntry(entry));
+					Entries.Add(new ModelEntry(entry));
 				}
 			}
 
 		}
-		public class PreferenceEntry
+		/// <summary>
+		/// 
+		/// </summary>
+		public class ModelEntry
 		{
-			internal MelonPreferences_Entry MelonEntry;
+			internal MelonPreferences_Entry PrefEntry;
 
-			public string Description {get{return MelonEntry.Description;}}
-			public string Identifier {get{return MelonEntry.Identifier;}}
-			public string DisplayName {get{return MelonEntry.DisplayName;}}
+			public string Description {get{return PrefEntry.Description;}}
+			public string Identifier {get{return PrefEntry.Identifier;}}
+			public string DisplayName {get{return PrefEntry.DisplayName;}}
 
-			internal PreferenceEntry(MelonPreferences_Entry prefEntry)
+			internal ModelEntry(MelonPreferences_Entry prefEntry)
 			{
-				MelonEntry = prefEntry;
+				PrefEntry = prefEntry;
 			}
 		}
 	}

@@ -96,11 +96,11 @@ namespace UIFramework
 
 			UIFController.Mod baseModTabController = ModTab.AddComponent<UIFController.Mod>();
 			Button ModButton = ModTab.GetComponent<Button>();
-			ModButton.onClick.AddListener(baseModTabController.OnSelect);
+			//ModButton.onClick.AddListener(baseModTabController.OnSelect);
 
 			UIFController.Category baseCatTabController = CatTab.AddComponent<UIFController.Category>();
 			Button CatButton = ModTab.GetComponent<Button>();
-			CatButton.onClick.AddListener(baseCatTabController.OnSelect);
+			//CatButton.onClick.AddListener(baseCatTabController.OnSelect);
 
 
 			//Add the component to the container sections
@@ -111,12 +111,14 @@ namespace UIFramework
 
 
 			//UI Test Section
+			/*
 			GameObject testMod = GameObject.Instantiate(ModTab, ModDisplayList.transform);
 			GameObject testCat = GameObject.Instantiate(CatTab, CatDisplayList.transform);
 			GameObject testPref = GameObject.Instantiate(TextPrefab, PrefDisplayList.transform);
 			GameObject.Instantiate(BoolPrefab, PrefDisplayList.transform);
 			GameObject.Instantiate(IntPrefab, PrefDisplayList.transform);
 			GameObject.Instantiate(FloatPrefab, PrefDisplayList.transform);
+			*/
 		}
 
 		static UnityAction MainButtonClick = new System.Action(() =>
