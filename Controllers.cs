@@ -35,17 +35,27 @@ namespace UIFramework
 				}
 			}
 
-			/*internal virtual void BuildFromModelList(List<UIFModel.BaseListSources> modelList)
+			internal void BuildFromModelList(List<UIFModel.BaseListSources> modelList)
 			{
+				ContainerReset();
+				foreach (UIFModel.ModelMod mod in modelList)
+				{
+					GameObject tab = GameObject.Instantiate(Prefabs.ModTab, this.gameObject.transform);
+					UIFController.Mod ViewController = tab.GetComponent<UIFController.Mod>();
 
-			}*/
+					ViewController.Model = mod;
+					//ViewController.TargetContainer = Prefabs.CatDisplayList.GetComponent<CatList>();
+
+
+				}
+			}
 
 		}
 
 		[RegisterTypeInIl2Cpp]
 		internal class ModList : ContainerView
 		{
-			internal void BuildFromModelList(List<UIFModel.BaseListSources> modelList)
+			/*internal void BuildFromModelList(List<UIFModel.BaseListSources> modelList)
 			{
 				ContainerReset();
 				foreach (UIFModel.ModelMod mod in modelList)
@@ -58,7 +68,7 @@ namespace UIFramework
 
 
 				}
-			}
+			}*/
 		}
 
 		[RegisterTypeInIl2Cpp]
@@ -92,6 +102,17 @@ namespace UIFramework
 		[RegisterTypeInIl2Cpp]
 		internal abstract class TabButtonController : MonoBehaviour
 		{
+			internal UIFModel.BaseListSources _model;
+			internal UIFModel.BaseListSources Model
+			{
+				get { return _model; }
+				set
+				{
+					_model = value;
+					//Label = _model.ModName;
+
+				}
+			}
 			internal string Label { set { this.gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
 			internal ColorARGB TabColor { get; set; }
 			internal ContainerView TargetContainer;
@@ -104,7 +125,25 @@ namespace UIFramework
 			/// </summary>
 			internal void PopTarget()
 			{
+				switch (this)
+				{
+					case Mod mod:
+						TargetContainer = Prefabs.CatDisplayList.GetComponent<CatList>();
+						break;
+					case Category cat:
+						TargetContainer = Prefabs.PrefDisplayList.GetComponent<PrefList>();
+						break;
+				}
 
+
+				//
+				//10:13:48.791] [Il2CppInterop] Exception in IL2CPP-to-Managed trampoline, not passing it to il2cpp: System.InvalidCastException: Unable to cast object of type 'ModelCategory' to type 'ModelMod'.
+				//at UIFramework.UIFController.ContainerView.BuildFromModelList(List`1 modelList)
+				//at UIFramework.UIFController.TabButtonController.PopTarget()
+				//at UIFramework.UIFController.TabButtonController.OnSelect()
+				//at(il2cpp delegate trampoline) System.Void_System.Action(IntPtr, Il2CppMethodInfo * )
+				//
+				TargetContainer.BuildFromModelList(_model.subModels);
 			}
 
 
@@ -119,15 +158,7 @@ namespace UIFramework
 		[RegisterTypeInIl2Cpp]
 		internal class Mod : TabButtonController
 		{
-			internal UIFModel.ModelMod _model;
-			internal UIFModel.ModelMod Model 
-			{
-				get { return _model; } 
-				set {
-					_model = value;
-					//Label = _model.ModName;
-
-				} }
+			
 			internal string ModName { get; set; }
 
 			
@@ -138,13 +169,13 @@ namespace UIFramework
 		}
 
 		[RegisterTypeInIl2Cpp]
-		internal class Category : MonoBehaviour
+		internal class Category : TabButtonController
 		{
-			public UIFModel.ModelCategory Model { get; set; }
+			/*public UIFModel.ModelCategory Model { get; set; }
 			internal UnityAction OnSelect = new System.Action(() =>
 			{
 
-			});
+			});*/
 		}
 		[RegisterTypeInIl2Cpp]
 		public abstract class PreferenceEntry : MonoBehaviour
