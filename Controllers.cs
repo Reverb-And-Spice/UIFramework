@@ -45,7 +45,7 @@ namespace UIFramework
 		[RegisterTypeInIl2Cpp]
 		internal class ModList : ContainerView
 		{
-			/*internal void BuildFromModelList(UIFModel.ModelMod[] modelList)
+			internal void BuildFromModelList(List<UIFModel.BaseListSources> modelList)
 			{
 				ContainerReset();
 				foreach (UIFModel.ModelMod mod in modelList)
@@ -54,11 +54,11 @@ namespace UIFramework
 					UIFController.Mod ViewController = tab.GetComponent<UIFController.Mod>();
 
 					ViewController.Model = mod;
-					ViewController.TargetContainer = Prefabs.CatDisplayList.GetComponent<CatList>();
+					//ViewController.TargetContainer = Prefabs.CatDisplayList.GetComponent<CatList>();
 
 
 				}
-			}*/
+			}
 		}
 
 		[RegisterTypeInIl2Cpp]
@@ -92,9 +92,9 @@ namespace UIFramework
 		[RegisterTypeInIl2Cpp]
 		internal abstract class TabButtonController : MonoBehaviour
 		{
-			/*internal string Label { set { this.gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
+			internal string Label { set { this.gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
 			internal ColorARGB TabColor { get; set; }
-			internal ContainerView TargetContainer { get; set; }
+			internal ContainerView TargetContainer;
 			internal void OnSelect()
 			{
 				PopTarget();
@@ -112,7 +112,7 @@ namespace UIFramework
 			{
 				this.gameObject.GetComponent<Button>().onClick.AddListener((UnityAction)OnSelect);
 			}
-*/
+
 
 		}
 

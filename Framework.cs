@@ -21,7 +21,7 @@ namespace UIFramework
 		internal static GameObject CatRegistryPanel;
 		internal static GameObject PrefRegistryPanel;
 
-
+		
 		internal static UIFModel ModelInstance = new();
 		/// <summary>
 		/// 
@@ -44,6 +44,7 @@ namespace UIFramework
 
 		internal static void BuildModList()
 		{
+
 			/*foreach (UIFModel.ModelMod mod in ModelInstance.ModModelsList)
 			{
 				GameObject tab = GameObject.Instantiate(Prefabs.ModTab,Prefabs.ModDisplayList.transform);
@@ -54,7 +55,7 @@ namespace UIFramework
 
 
 			}*/
-			//ModRegistryPanel.GetComponent<UIFController.ModList>().BuildFromModelList(ModelInstance.ModModelsList.Cast<UIFModel.BaseListSources>().ToList());
+			Prefabs.ModDisplayList.GetComponent<UIFController.ModList>().BuildFromModelList(ModelInstance.ModModelsList.Cast<UIFModel.BaseListSources>().ToList());
 		}
 
 	}
