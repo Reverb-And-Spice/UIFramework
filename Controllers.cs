@@ -19,6 +19,9 @@ namespace UIFramework
 	/// </summary>
 	public class UIFController
 	{
+		/// <summary>
+		///
+		/// </summary>
 		[RegisterTypeInIl2Cpp]
 		internal class ContainerView : MonoBehaviour
 		{
@@ -52,6 +55,9 @@ namespace UIFramework
 
 		}
 
+		/// <summary>
+		///
+		/// </summary>
 		[RegisterTypeInIl2Cpp]
 		internal class ModList : ContainerView
 		{
@@ -71,6 +77,9 @@ namespace UIFramework
 			}*/
 		}
 
+		/// <summary>
+		///
+		/// </summary>
 		[RegisterTypeInIl2Cpp]
 		internal class CatList : ContainerView
 		{
