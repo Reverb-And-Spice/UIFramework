@@ -25,7 +25,6 @@ private MelonPreferences_Entry<float> TestEntry21;
 private MelonPreferences_Entry<bool> TestEntry22;
 
 
-
 TestCategory1 = MelonPreferences.CreateCategory("Test Cat 1");
 TestCategory1.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
 TestEntry11 = TestCategory1.CreateEntry("Entry 1-1", "Test Val", null, "Test String");
@@ -40,10 +39,8 @@ TestEntry22 = TestCategory1.CreateEntry("Entry 2-2", true, null, "Test bool");
 
 #### Registering MelonPreferences_Category to UI Framework
 ```
-UI.Register(TestCategory1);
-UI.Register(TestCategory2);
+UIFramework.Register(this, TestCategory1, TestCategory2);
 ```
-
 
 
 -----
@@ -51,11 +48,64 @@ UI.Register(TestCategory2);
 <sup>No it will not look like this. I just needed to show the layout</sup>
 
 ![UI Mockup](Misc/Mockup.png)
-
 -----
 
-## Proposal for custom interface usage
+## Design Pattern
 
+## MVC/MVP-Inspired coding pattern
+
+The intention is to have full separation of UI and data logic. Make the UI itself disposable while the model would be the one source of truth it can be rebuilt from every time.
+
+
+## Model: 
+The model serves as the basis of the structure of the interface. 
+There is one main model instance but in theory, you can create your own model instances for custom behaviours or if you wanna make your own windows.
+
+Models should avoid references to the view or the controllers as much as possible. 
+
+### Mod
+Represents a mod instance in the model. Each mod instance can have one entry in the model. 
+
+### Adapters
+#### Category
+A wrapper/adapter class around a MelonPreferences_Category type. While the framework is based on MelonPreferences, it should be possible for modders to make their own settings system as long as they expose a compatible interface for the adapter. 
+
+##### Entry
+A wrapper/adapter class around a MelonPreferences_Category type. 
+
+### Controllers: 
+Custom components added to the ugui game objects that controls them based on the model
+
+### View: 
+The actual interface the user interacts with. 
+
+## UI Creation
+### Standard
+Standard registration automatically creates a UI for the mod. 
+`UI.Register(this, TestCategory1, TestCategory2);`
+Standard registration gives you default input controls in the UI for each type.
+<sup>Default input controls could change between versions</sup>
+
+Defaults: 
+|Type|Input control|
+|---|---|
+|string|Standard Text Input|
+|int|Text Input with numeric filter|
+|float|Text input with numeric filter and decimal support|
+|bool|toggle|
+|enum|Dropdown|
+|enum \[flags\]|Multi-checkboxes|
+
+### Custom
+#### You can design your own models before registration
+(Assuming you already created the melonpreferences structure)
+UIFModel.Mod MyMod = new();
+
+TestEntry1.
+
+
+## (OLD) Proposal for custom interface usage
+<details>
 ### Option 1: Copy Melonpreferences process
 > [!NOTE]
 > Do we want interface creation to resemble MelonPreferences? Gives users a familiar pattern but does add a few steps
@@ -136,3 +186,4 @@ TestTab1 = new UI.Tab("Title Text)
     ).Build();
     
 ```
+</details>
