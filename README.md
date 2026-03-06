@@ -96,12 +96,16 @@ Defaults:
 |enum|Dropdown|
 |enum \[flags\]|Multi-checkboxes|
 
-### Custom
+### Custom model proposal
 #### You can design your own models before registration
 (Assuming you already created the melonpreferences structure)
 UIFModel.Mod MyMod = new();
 
-TestEntry1.
+
+```
+UIFModel.CatModel catAdapter1 = new UIFModel(TestCategory1);
+catAdapter1.SetEntryControls("Test Entry1", ControlType.Slider);
+```
 
 
 ## (OLD) Proposal for custom interface usage
