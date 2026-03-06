@@ -20,7 +20,7 @@ namespace UIFramework
 	public class UIFController
 	{
 		[RegisterTypeInIl2Cpp]
-		internal abstract class ContainerView : MonoBehaviour
+		internal class ContainerView : MonoBehaviour
 		{
 			protected void ContainerReset()
 			{
@@ -41,7 +41,7 @@ namespace UIFramework
 				foreach (UIFModel.ModelMod mod in modelList)
 				{
 					GameObject tab = GameObject.Instantiate(Prefabs.ModTab, this.gameObject.transform);
-					UIFController.Mod ViewController = tab.GetComponent<UIFController.Mod>();
+					UIFController.TabButtonController ViewController = tab.GetComponent<UIFController.TabButtonController>();
 
 					ViewController.Model = mod;
 					//ViewController.TargetContainer = Prefabs.CatDisplayList.GetComponent<CatList>();
@@ -100,7 +100,7 @@ namespace UIFramework
 		}
 
 		[RegisterTypeInIl2Cpp]
-		internal abstract class TabButtonController : MonoBehaviour
+		internal class TabButtonController : MonoBehaviour
 		{
 			internal UIFModel.BaseListSources _model;
 			internal UIFModel.BaseListSources Model
@@ -159,7 +159,7 @@ namespace UIFramework
 		internal class Mod : TabButtonController
 		{
 			
-			internal string ModName { get; set; }
+			internal string ModNameq { get; set; }
 
 			
 
@@ -178,7 +178,7 @@ namespace UIFramework
 			});*/
 		}
 		[RegisterTypeInIl2Cpp]
-		public abstract class PreferenceEntry : MonoBehaviour
+		public class PreferenceEntry : MonoBehaviour
 		{
 			public string Description { set { this.gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
 			public string Label { set { this.gameObject.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
