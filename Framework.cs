@@ -86,7 +86,7 @@ namespace UIFramework
 		public abstract class BaseListSources
 		{
 			internal List<BaseListSources> subModels = new ();
-			
+			internal abstract string Name { get; }
 		}
 
 		public class ModelMod : BaseListSources
@@ -94,8 +94,10 @@ namespace UIFramework
 			internal MelonMod Instance { get; set; }
 			internal string ModName {get{ return Instance.Info.Name;}}
 
+			internal override string Name => ModName;
+
 			//internal List<BaseListSources> catModelList = new();
-			
+
 
 			internal ModelMod(MelonMod instance, List<MelonPreferences_Category> catList)
 			{
@@ -112,6 +114,8 @@ namespace UIFramework
 		public class ModelCategory : BaseListSources
 		{
 			internal MelonPreferences_Category PrefCat;
+			internal override string Name => PrefCat.Identifier;
+			
 
 			internal List<ModelEntry> Entries = new ();
 			internal ModelCategory(MelonPreferences_Category cat)
@@ -121,15 +125,17 @@ namespace UIFramework
 				{
 					Entries.Add(new ModelEntry(entry));
 				}
+				subModels.AddRange(Entries);
 			}
 
 		}
 		/// <summary>
 		/// 
 		/// </summary>
-		public class ModelEntry
+		public class ModelEntry : BaseListSources
 		{
 			internal MelonPreferences_Entry PrefEntry;
+			internal override string Name { get { return PrefEntry.Identifier; } }
 
 			public string Description {get{return PrefEntry.Description;}}
 			public string Identifier {get{return PrefEntry.Identifier;}}
