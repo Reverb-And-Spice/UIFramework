@@ -55,7 +55,7 @@ namespace UIFramework
 
 
 			}*/
-			Prefabs.ModDisplayList.GetComponent<UIFController.ModList>().BuildFromModelList(ModelInstance.ModModelsList.Cast<UIFModel.BaseListSources>().ToList());
+			Prefabs.ModDisplayList.GetComponent<UIFController.Sidebar>().BuildFromModelList(ModelInstance.ModModelsList.Cast<UIFModel.BaseModel>().ToList());
 		}
 
 	}
@@ -83,20 +83,20 @@ namespace UIFramework
 
 		}
 
-		public abstract class BaseListSources
+		public abstract class BaseModel
 		{
-			internal List<BaseListSources> subModels = new ();
+			internal List<BaseModel> subModels = new ();
 			internal abstract string Name { get; }
 		}
 
-		public class ModelMod : BaseListSources
+		public class ModelMod : BaseModel
 		{
 			internal MelonMod Instance { get; set; }
-			internal string ModName {get{ return Instance.Info.Name;}}
+			internal string ModName => Instance.Info.Name;
 
 			internal override string Name => ModName;
 
-			//internal List<BaseListSources> catModelList = new();
+			//internal List<BaseModel> catModelList = new();
 
 
 			internal ModelMod(MelonMod instance, List<MelonPreferences_Category> catList)
@@ -111,7 +111,7 @@ namespace UIFramework
 
 		}
 
-		public class ModelCategory : BaseListSources
+		public class ModelCategory : BaseModel
 		{
 			internal MelonPreferences_Category PrefCat;
 			internal override string Name => PrefCat.Identifier;
@@ -123,28 +123,42 @@ namespace UIFramework
 				PrefCat = cat;
 				foreach (MelonPreferences_Entry entry in PrefCat.Entries)
 				{
-					Entries.Add(new ModelEntry(entry));
+					subModels.Add(new ModelEntry(entry));
 				}
-				subModels.AddRange(Entries);
+				
 			}
 
 		}
 		/// <summary>
 		/// 
 		/// </summary>
-		public class ModelEntry : BaseListSources
+		public class ModelEntry : BaseModel
 		{
 			internal MelonPreferences_Entry PrefEntry;
-			internal override string Name { get { return PrefEntry.Identifier; } }
+			internal override string Name => PrefEntry.Identifier; 
 
-			public string Description {get{return PrefEntry.Description;}}
-			public string Identifier {get{return PrefEntry.Identifier;}}
-			public string DisplayName {get{return PrefEntry.DisplayName;}}
+			public string Description => PrefEntry.Description;
+			public string Identifier => PrefEntry.Identifier;
+			public string DisplayName => PrefEntry.DisplayName;
+
+			public InputType InputType { get; set; } = InputType.TextField; 
 
 			internal ModelEntry(MelonPreferences_Entry prefEntry)
 			{
 				PrefEntry = prefEntry;
 			}
 		}
+	}
+
+	public enum InputType
+	{
+		TextField,
+		Toggle,
+		NumericInt,
+		NumericFloat,
+		Slider,
+		Dropdown,
+		MultiCheckbox,
+		RadioButton
 	}
 }

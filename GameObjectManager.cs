@@ -104,8 +104,8 @@ namespace UIFramework
 
 
 			//Add the component to the container sections
-			ModDisplayList.AddComponent<UIFController.ModList>();
-			CatDisplayList.AddComponent<UIFController.CatList>();
+			ModDisplayList.AddComponent<UIFController.Sidebar>();
+			CatDisplayList.AddComponent<UIFController.TopBar>();
 			PrefDisplayList.AddComponent<UIFController.PrefList>();
 
 
@@ -125,6 +125,19 @@ namespace UIFramework
 		{
 			Debug.Log("Main Action Button Clicked!", true, 0);
 		});
+
+		static GameObject GetInputPrefab(InputType type)
+		{
+			return type switch
+			{
+				InputType.TextField => TextPrefab,
+				InputType.Toggle => BoolPrefab,
+				InputType.NumericInt => IntPrefab,
+				InputType.NumericFloat => FloatPrefab,
+				
+				_ => null
+			};
+		}
 
 		#region Ulvak Generated
 		internal static T LoadAssetFromStream<T>(MelonMod instance, string path, string assetName) where T : UnityEngine.Object

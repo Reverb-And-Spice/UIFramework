@@ -21,13 +21,17 @@ namespace UIFramework
 	/// <summary>
 	/// Custom components that will serve as views in this MVP/MVC-ish pattern
 	/// </summary>
+	/// <remarks>I may have gone a little crazy with inheritance</remarks>
 	public class UIFController
 	{
+		internal interface IModelController
+		{
+			public UIFModel.BaseModel Model { get; set; }
+		}
 		/// <summary>
 		///
 		/// </summary>
-
-		internal class ContainerView : MonoBehaviour
+		internal class ListArea : MonoBehaviour
 		{
 			protected void ContainerReset()
 			{
@@ -36,24 +40,40 @@ namespace UIFramework
 
 			protected void Infanticide()
 			{
-				while (this.gameObject.transform.childCount > 0)
+				for (int i = this.transform.childCount - 1; i >= 0; i--)
 				{
-					Destroy(this.transform.GetChild(0));
+					GameObject.Destroy(this.transform.GetChild(i).gameObject);
 				}
 			}
 
-			protected virtual GameObject TabPrefab { get; }
+			protected virtual GameObject UIPrefab { get; }
 
-			internal void BuildFromModelList(List<UIFModel.BaseListSources> modelList)
+			internal void BuildFromModelList(List<UIFModel.BaseModel> modelList)
 			{
 				ContainerReset();
-				foreach (UIFModel.BaseListSources mod in modelList)
+				foreach (UIFModel.BaseModel model in modelList)
 				{
-					GameObject tab = GameObject.Instantiate(TabPrefab, this.gameObject.transform);
-					UIFController.TabButtonController ViewController = tab.GetComponent<UIFController.TabButtonController>();
+					GameObject uiElement = GameObject.Instantiate(UIPrefab, this.gameObject.transform);
 
-					ViewController.Model = mod;
-					//ViewController.TargetContainer = Prefabs.CatDisplayList.GetComponent<CatList>();
+					IModelController ViewController;
+
+					switch (model)
+					{
+						case UIFModel.ModelMod modModel:
+						case UIFModel.ModelCategory catModel:
+							ViewController = uiElement.GetComponent<UIFController.TabButtonController>();
+							break;
+						case UIFModel.ModelEntry entryModel:
+							ViewController = uiElement.GetComponent<UIFController.PreferenceEntry>();
+							break;
+						default:
+							Warning($"No view found for model type {model.GetType()}");
+							continue;
+					}
+					if(ViewController != null)
+					{
+						ViewController.Model = model;
+					}
 
 
 				}
@@ -65,55 +85,39 @@ namespace UIFramework
 		///
 		/// </summary>
 		[RegisterTypeInIl2Cpp]
-		internal class ModList : ContainerView
+		internal class Sidebar : ListArea
 		{
-			protected override GameObject TabPrefab { get { return Prefabs.ModTab; } }
-			/*internal void BuildFromModelList(List<UIFModel.BaseListSources> modelList)
-			{
-				ContainerReset();
-				foreach (UIFModel.ModelMod mod in modelList)
-				{
-					GameObject tab = GameObject.Instantiate(Prefabs.ModTab, Prefabs.ModDisplayList.transform);
-					UIFController.Mod ViewController = tab.GetComponent<UIFController.Mod>();
+			protected override GameObject UIPrefab { get { return Prefabs.ModTab; } }
 
-					ViewController.Model = mod;
-					//ViewController.TargetContainer = Prefabs.CatDisplayList.GetComponent<CatList>();
-
-
-				}
-			}*/
 		}
 
 		/// <summary>
 		///
 		/// </summary>
 		[RegisterTypeInIl2Cpp]
-		internal class CatList : ContainerView
+		internal class TopBar : ListArea
 		{
-			//[10:13:42.231][Il2CppInterop] Exception in IL2CPP-to-Managed trampoline, not passing it to il2cpp: System.NullReferenceException: Object reference not set to an instance of an object.
-			//at UIFramework.UIFController.ContainerView.BuildFromModelList(List`1 modelList)
-			//at UIFramework.UIFController.Category.PopTarget()
-			//at UIFramework.UIFController.TabButtonController.OnSelect()
-			//at(il2cpp delegate trampoline) System.Void_System.Action(IntPtr, Il2CppMethodInfo*)
-			protected override GameObject TabPrefab { get { return Prefabs.CatTab; } }
+			protected override GameObject UIPrefab { get { return Prefabs.CatTab; } }
+
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		[RegisterTypeInIl2Cpp]
+		
+		internal class PrefList : ListArea
+		{
+			protected override GameObject UIPrefab { get { return Prefabs.TextPrefab; } }
 
 		}
 
-		[RegisterTypeInIl2Cpp]
-		internal class PrefList : ContainerView
+
+
+
+		internal class TabButtonController : MonoBehaviour, IModelController
 		{
-			protected override GameObject TabPrefab { get { return Prefabs.TextPrefab; } }
-
-		}
-
-
-
-
-		[RegisterTypeInIl2Cpp]
-		internal class TabButtonController : MonoBehaviour
-		{
-			internal UIFModel.BaseListSources _model;
-			internal virtual UIFModel.BaseListSources Model
+			internal UIFModel.BaseModel _model;
+			public virtual UIFModel.BaseModel Model
 			{
 				get { return _model; }
 				set
@@ -126,7 +130,7 @@ namespace UIFramework
 
 			internal string Label { set { this.gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
 			internal ColorARGB TabColor { get; set; }
-			internal ContainerView TargetContainer;
+			internal ListArea TargetContainer;
 			internal void OnSelect()
 			{
 				PopTarget();
@@ -139,7 +143,7 @@ namespace UIFramework
 				switch (this)
 				{
 					case Mod mod:
-						TargetContainer = Prefabs.CatDisplayList.GetComponent<CatList>();
+						TargetContainer = Prefabs.CatDisplayList.GetComponent<TopBar>();
 						break;
 					case Category cat:
 						TargetContainer = Prefabs.PrefDisplayList.GetComponent<PrefList>();
@@ -167,7 +171,7 @@ namespace UIFramework
 
 			internal override void PopTarget()
 			{
-				TargetContainer = Prefabs.CatDisplayList.GetComponent<CatList>();
+				TargetContainer = Prefabs.CatDisplayList.GetComponent<TopBar>();
 				TargetContainer.BuildFromModelList(Model.subModels);
 			}
 
@@ -185,11 +189,24 @@ namespace UIFramework
 			}
 
 		}
-		[RegisterTypeInIl2Cpp]
-		public class PreferenceEntry : MonoBehaviour
+		
+		public class PreferenceEntry : MonoBehaviour, IModelController
 		{
-			public string Description { set { this.gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
-			public string Label { set { this.gameObject.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
+			internal UIFModel.ModelEntry _model;
+			public UIFModel.BaseModel Model 
+			{ 
+				get { return _model; } 
+				set 
+				{ 
+					_model = (UIFModel.ModelEntry) value; 
+					DescriptionText = _model.Description;
+					IdentifierText = _model.Identifier;
+				}
+			}
+			public InputType InputType { get; set; }
+			public string DescriptionText { set { this.gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
+			public string IdentifierText { set { this.gameObject.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
+			
 
 		}
 		[RegisterTypeInIl2Cpp]
@@ -208,19 +225,19 @@ namespace UIFramework
 		[RegisterTypeInIl2Cpp]
 		internal class PrefInt : TextInputEntry
 		{
-			public int Value { get { return int.Parse(textField.text); } }
+			public int Value => int.Parse(textField.text);
 		}
 
 		[RegisterTypeInIl2Cpp]
 		internal class PrefFloat : TextInputEntry
 		{
-			public float Value { get { return float.Parse(textField.text); } }
+			public float Value => float.Parse(textField.text);
 		}
 
 		[RegisterTypeInIl2Cpp]
 		internal class PrefBool : PreferenceEntry
 		{
-			public bool value { get { return this.gameObject.transform.Find("Panel/Toggle").gameObject.GetComponent<Toggle>().isOn; } }
+			public bool value => this.gameObject.transform.Find("Panel/Toggle").gameObject.GetComponent<Toggle>().isOn;
 		}
 
 		[RegisterTypeInIl2Cpp]
