@@ -40,6 +40,12 @@ namespace UIFramework
 
 			LoggerInstance.Msg("Initialized.");
 			Instance = this;
+			
+		}
+		public override void OnLateInitializeMelon()
+		{
+			Preferences.InitializePrefs();
+			UIFramework.Register(this, Preferences.CatUIFramework, Preferences.Experimental);
 		}
 		/// <summary></summary>
 		public override void OnUpdate()
