@@ -57,7 +57,6 @@ namespace UIFramework
 			}*/
 			Prefabs.ModDisplayList.GetComponent<UIFController.Sidebar>().BuildFromModelList(ModelInstance.ModModelsList.Cast<UIFModel.BaseModel>().ToList());
 		}
-
 	}
 
 	/// <summary>
@@ -150,6 +149,7 @@ namespace UIFramework
 		}
 	}
 
+	
 	public enum InputType
 	{
 		TextField,

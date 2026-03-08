@@ -17,9 +17,12 @@ namespace UIFramework
 {
 	internal static partial class Prefabs
 	{
-
+		
 
 		internal static GameObject UiAssets;
+		internal static GameObject PrefabSources = new GameObject("Prefabs");
+
+		internal static GameObject MainCanvasSource;
 		internal static GameObject ModDisplayList;
 		internal static GameObject CatDisplayList;
 		internal static GameObject PrefDisplayList;
@@ -66,6 +69,8 @@ namespace UIFramework
 			ApplyAndRebuild(UiAssets);
 
 			GameObject.DontDestroyOnLoad(UiAssets);
+			MainCanvasSource = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "UICanvas")?.gameObject;
+			
 
 			ModDisplayList = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "ModRegCont")?.gameObject;
 			CatDisplayList = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "CatRegCont")?.gameObject;
@@ -109,7 +114,7 @@ namespace UIFramework
 			PrefDisplayList.AddComponent<UIFController.PrefList>();
 
 
-
+			//UiAssets.SetActive(false);
 			//UI Test Section
 			/*
 			GameObject testMod = GameObject.Instantiate(ModTab, ModDisplayList.transform);
