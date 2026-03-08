@@ -26,10 +26,16 @@ namespace UIFramework
 	{
 		internal interface IModelController
 		{
+			/// <summary>
+			/// Reference to the model the controller works from.  
+			/// </summary>
 			public UIFModel.BaseModel Model { get; set; }
 		}
 		/// <summary>
-		///
+		/// Areas where UI elements are shown to the user. 
+		/// 1. Mod list Sidebar 
+		/// 2. Category tab top bar
+		/// 3. Entries Content area
 		/// </summary>
 		internal class ListArea : MonoBehaviour
 		{
@@ -47,16 +53,24 @@ namespace UIFramework
 			}
 
 			protected virtual GameObject UIPrefab { get; }
+			protected virtual GameObject GetUIPrefabForModel(UIFModel.BaseModel model)
+			{
 
+			}
+
+			///	<summary>
+			/// Builds UI from a list of models
+			/// </summary>
 			internal void BuildFromModelList(List<UIFModel.BaseModel> modelList)
 			{
 				ContainerReset();
 				foreach (UIFModel.BaseModel model in modelList)
 				{
-					GameObject uiElement = GameObject.Instantiate(UIPrefab, this.gameObject.transform);
+					GameObject uiElement = GameObject.Instantiate(GetUIPrefabForModel(model), this.gameObject.transform);
 
 					IModelController ViewController;
 
+					//Retrieve the appropriate game object controller component depending on the model type
 					switch (model)
 					{
 						case UIFModel.ModelMod modModel:
@@ -87,7 +101,11 @@ namespace UIFramework
 		[RegisterTypeInIl2Cpp]
 		internal class Sidebar : ListArea
 		{
-			protected override GameObject UIPrefab { get { return Prefabs.ModTab; } }
+			//protected override GameObject UIPrefab { get { return Prefabs.ModTab; } }
+			protected override GameObject GetUIPrefabForModel(UIFModel.BaseModel model) 
+			{
+				return Prefabs.ModTab;
+			}
 
 		}
 
@@ -97,7 +115,11 @@ namespace UIFramework
 		[RegisterTypeInIl2Cpp]
 		internal class TopBar : ListArea
 		{
-			protected override GameObject UIPrefab { get { return Prefabs.CatTab; } }
+			//protected override GameObject UIPrefab { get { return Prefabs.CatTab; } }
+			protected override GameObject GetUIPrefabForModel(UIFModel.BaseModel model) 
+			{
+				return Prefabs.CatTab;
+			}
 
 		}
 		/// <summary>
@@ -107,7 +129,29 @@ namespace UIFramework
 		
 		internal class PrefList : ListArea
 		{
-			protected override GameObject UIPrefab { get { return Prefabs.TextPrefab; } }
+			//protected override GameObject UIPrefab { get { return Prefabs.TextPrefab; } }
+			protected override GameObject GetUIPrefabForModel(UIFModel.ModelEntry model = null) 
+			{
+				UIFModel.ModelEntry entry = (UIFModel.ModelEntry) model;
+			// 	internal static GameObject TextPrefab;
+			// internal static GameObject BoolPrefab;
+			// internal static GameObject IntPrefab;
+			// internal static GameObject FloatPrefab;
+		 		switch(entry.InputType)
+				{
+					case InputType.TextField:
+						return Prefabs.Text;
+					case InputType.Toggle:
+						return BoolPrefab;
+					case InputType.NumericInt:
+						return IntPrefab;
+					case InputType.NumericFloat:
+						return FloatPrefab;
+					default:
+						return TextField;
+
+				}
+			}
 
 		}
 
