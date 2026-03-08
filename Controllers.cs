@@ -39,6 +39,8 @@ namespace UIFramework
 		/// </summary>
 		internal class ListArea : MonoBehaviour
 		{
+			private UIFModel.BaseModel _model;
+			public UIFModel.BaseModel Model => model;
 			protected void ContainerReset()
 			{
 				Infanticide();
@@ -52,7 +54,12 @@ namespace UIFramework
 				}
 			}
 
-			protected virtual GameObject UIPrefab { get; }
+			public virtual void SetModel(UIFModel.BaseModel model)
+			{
+				_model = model;
+				BuildFromModelList(model.subModels)
+			}
+			//protected virtual GameObject UIPrefab { get; }
 			protected virtual GameObject GetUIPrefabForModel(UIFModel.BaseModel model)
 			{
 
@@ -194,7 +201,7 @@ namespace UIFramework
 						break;
 				}
 
-				TargetContainer.BuildFromModelList(Model.subModels);
+				TargetContainer.SetModel(_model);
 			}
 
 
