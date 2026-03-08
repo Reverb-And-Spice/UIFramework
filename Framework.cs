@@ -145,6 +145,28 @@ namespace UIFramework
 			internal ModelEntry(MelonPreferences_Entry prefEntry)
 			{
 				PrefEntry = prefEntry;
+				switch(prefEntry.BoxedValue)
+				{
+					case bool:
+						InputType = InputType.Toggle;
+						break;
+					case string:
+						InputType = InputType.TextField;
+						break;
+					case int:
+						InputType = InputType.NumericInt;
+						break;
+					case float:
+					case double:
+						InputType = InputType.NumericFloat;
+						break;
+					default:
+						InputType = InputType.TextField;
+						break;
+
+
+				}
+
 			}
 		}
 	}

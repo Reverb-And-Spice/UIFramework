@@ -40,7 +40,7 @@ namespace UIFramework
 		internal class ListArea : MonoBehaviour
 		{
 			private UIFModel.BaseModel _model;
-			public UIFModel.BaseModel Model => model;
+			public UIFModel.BaseModel Model => _model;
 			protected void ContainerReset()
 			{
 				Infanticide();
@@ -57,12 +57,12 @@ namespace UIFramework
 			public virtual void SetModel(UIFModel.BaseModel model)
 			{
 				_model = model;
-				BuildFromModelList(model.subModels)
+				BuildFromModelList(model.subModels);
 			}
 			//protected virtual GameObject UIPrefab { get; }
 			protected virtual GameObject GetUIPrefabForModel(UIFModel.BaseModel model)
 			{
-
+				return Prefabs.ModTab;
 			}
 
 			///	<summary>
@@ -137,7 +137,7 @@ namespace UIFramework
 		internal class PrefList : ListArea
 		{
 			//protected override GameObject UIPrefab { get { return Prefabs.TextPrefab; } }
-			protected override GameObject GetUIPrefabForModel(UIFModel.ModelEntry model = null) 
+			protected override GameObject GetUIPrefabForModel(UIFModel.BaseModel model = null) 
 			{
 				UIFModel.ModelEntry entry = (UIFModel.ModelEntry) model;
 			// 	internal static GameObject TextPrefab;
@@ -147,15 +147,15 @@ namespace UIFramework
 		 		switch(entry.InputType)
 				{
 					case InputType.TextField:
-						return Prefabs.Text;
+						return Prefabs.TextPrefab;
 					case InputType.Toggle:
-						return BoolPrefab;
+						return Prefabs.BoolPrefab;
 					case InputType.NumericInt:
-						return IntPrefab;
+						return Prefabs.IntPrefab;
 					case InputType.NumericFloat:
-						return FloatPrefab;
+						return Prefabs.FloatPrefab;
 					default:
-						return TextField;
+						return Prefabs.TextPrefab;
 
 				}
 			}
