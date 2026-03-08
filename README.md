@@ -3,15 +3,19 @@
 We want people to be able to implement this as easy and painless as possible. 
 
 This will not be diegetic.
-## Relevant Docs 
-https://melonwiki.xyz/#/modders/preferences?id=melon-preferences
+
+## Minimum Viable Product
+Able to create a ui from melonpreferences, take in inputs, load, and save them
+
+## End goal
+A modular UI where people can create their own instances and be interactable in VR with optional panels that can be pinned in scenes.
 
 ## As melon preferences interface
 
 ### Example Usage
 
 **<details><summary> Standard Melon preferences declaration</summary>**
-    
+https://melonwiki.xyz/#/modders/preferences?id=melon-preferences
 ```
 private const string USER_DATA = "UserData/TestMod/";
 private const string CONFIG_FILE = "config.cfg";
@@ -52,21 +56,25 @@ UIFramework.Register(this, TestCategory1, TestCategory2);
 
 ## Design Pattern
 
-## MVC/MVP-Inspired coding pattern
+## MVC/MVP(ish)-Inspired Coding Pattern
 
-The intention is to have full separation of UI and data logic. Make the UI itself disposable while the model would be the one source of truth it can be rebuilt from every time.
+The intention is to have separation of UI and data logic. Make the UI itself disposable while the model would be the one source of truth it can be rebuilt from every time.
+
+This also allows it to be modular where other modders can make their own model instance and spin up their own UI for it with a separate panel from everyone else's.
 
 
 ## Model: 
 The model serves as the basis of the structure of the interface. 
 There is one main model instance but in theory, you can create your own model instances for custom behaviours or if you wanna make your own windows.
 
-Models should avoid references to the view or the controllers as much as possible. 
+Models should avoid references to the view or the controllers as much as possible. This includes event subscribers.
 
-### Mod
-Represents a mod instance in the model. Each mod instance can have one entry in the model. 
 
-### Adapters
+
+### Adapters:
+#### Mod
+A mod instance in the model. Each mod instance can have one entry in the model. 
+
 #### Category
 A wrapper/adapter class around a MelonPreferences_Category type. While the framework is based on MelonPreferences, it should be possible for modders to make their own settings system as long as they expose a compatible interface for the adapter. 
 
@@ -75,6 +83,7 @@ A wrapper/adapter class around a MelonPreferences_Category type.
 
 ### Controllers: 
 Custom components added to the ugui game objects that controls them based on the model
+Each controller has a reference to the model they're supposed to represent to the user. 
 
 ### View: 
 The actual interface the user interacts with. 
@@ -86,15 +95,22 @@ Standard registration automatically creates a UI for the mod.
 Standard registration gives you default input controls in the UI for each type.
 <sup>Default input controls could change between versions</sup>
 
-Defaults: 
+#### Defaults: 
 |Type|Input control|
 |---|---|
 |string|Standard Text Input|
 |int|Text Input with numeric filter|
 |float|Text input with numeric filter and decimal support|
 |bool|toggle|
+
+#### Future features
+|Type|Input control|
+|---|---|
 |enum|Dropdown|
 |enum \[flags\]|Multi-checkboxes|
+|Int, float, double|slider|
+
+
 
 ### Custom model proposal
 #### You can design your own models before registration
@@ -104,7 +120,7 @@ UIFModel.Mod MyMod = new();
 
 ```
 UIFModel.CatModel catAdapter1 = new UIFModel(TestCategory1);
-catAdapter1.SetEntryControls("Test Entry1", ControlType.Slider);
+catAdapter1.FindEntry("Test Entry1").InputType.Slider;
 ```
 
 
@@ -139,7 +155,8 @@ TestText1 = TestTab1.CreateEntry("Test Textbox 1", "Default Text", null, "This i
 ```
 
 ### Option 2: Create our own
-
+> [!NOTE] 
+> These options are not compatible with current implementations
 ```
 private UI.Tab TestTab1 = new UI.Tab("Title text");
 private UI.Button Entry1 = new UI.Button();
@@ -155,8 +172,7 @@ Entry1_Click(Button1 sender)
 
 #### Option 2.5: Fluent style
 
-> [!NOTE] 
-> should we do WinForms style sender and event args to refer back to the caller?
+
 
 ```
 public void Button1_Click(Button1 sender, Params p)
