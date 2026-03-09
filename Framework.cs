@@ -84,21 +84,21 @@ namespace UIFramework
 
 		public abstract class BaseModel
 		{
-			internal List<BaseModel> subModels = new ();
-			internal abstract string Name { get; }
+			public List<BaseModel> subModels = new ();
+			public abstract string Name { get; }
 		}
 
 		public class ModelMod : BaseModel
 		{
-			internal MelonMod Instance { get; set; }
-			internal string ModName => Instance.Info.Name;
+			public MelonMod Instance { get; set; }
+			public string ModName => Instance.Info.Name;
 
-			internal override string Name => ModName;
+			public override string Name => ModName;
 
 			//internal List<BaseModel> catModelList = new();
 
 
-			internal ModelMod(MelonMod instance, List<MelonPreferences_Category> catList)
+			public ModelMod(MelonMod instance, List<MelonPreferences_Category> catList)
 			{
 				Instance = instance;
 
@@ -112,12 +112,12 @@ namespace UIFramework
 
 		public class ModelCategory : BaseModel
 		{
-			internal MelonPreferences_Category PrefCat;
-			internal override string Name => PrefCat.Identifier;
+			public MelonPreferences_Category PrefCat;
+			public override string Name => PrefCat.Identifier;
 			
 
-			internal List<ModelEntry> Entries = new ();
-			internal ModelCategory(MelonPreferences_Category cat)
+			public List<ModelEntry> Entries = new ();
+			public ModelCategory(MelonPreferences_Category cat)
 			{
 				PrefCat = cat;
 				foreach (MelonPreferences_Entry entry in PrefCat.Entries)
@@ -133,8 +133,8 @@ namespace UIFramework
 		/// </summary>
 		public class ModelEntry : BaseModel
 		{
-			internal MelonPreferences_Entry PrefEntry;
-			internal override string Name => PrefEntry.Identifier; 
+			public MelonPreferences_Entry PrefEntry;
+			public override string Name => PrefEntry.Identifier; 
 
 			public string Description => PrefEntry.Description;
 			public string Identifier => PrefEntry.Identifier;
@@ -142,7 +142,7 @@ namespace UIFramework
 
 			public InputType InputType { get; set; } = InputType.TextField; 
 
-			internal ModelEntry(MelonPreferences_Entry prefEntry)
+			public ModelEntry(MelonPreferences_Entry prefEntry)
 			{
 				PrefEntry = prefEntry;
 				switch(prefEntry.BoxedValue)

@@ -22,7 +22,7 @@ namespace UIFramework
 		internal static GameObject UiAssets;
 		internal static GameObject PrefabSources = new GameObject("Prefabs");
 
-		internal static GameObject MainCanvasSource;
+		public static GameObject MainCanvasSource;
 		internal static GameObject ModDisplayList;
 		internal static GameObject CatDisplayList;
 		internal static GameObject PrefDisplayList;
@@ -30,10 +30,10 @@ namespace UIFramework
 		internal static GameObject ModTab;
 		internal static GameObject CatTab;
 
-		internal static GameObject TextPrefab;
-		internal static GameObject BoolPrefab;
-		internal static GameObject IntPrefab;
-		internal static GameObject FloatPrefab;
+		public static GameObject TextPrefab;
+		public static GameObject BoolPrefab;
+		public static GameObject IntPrefab;
+		public static GameObject FloatPrefab;
 
 		internal static Button MainActionButton;
 
