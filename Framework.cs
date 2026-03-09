@@ -88,6 +88,10 @@ namespace UIFramework
 			public abstract string Name { get; }
 		}
 
+		public class RootModel : BaseModel
+		{
+			
+		}
 		public class ModelMod : BaseModel
 		{
 			public MelonMod Instance { get; set; }

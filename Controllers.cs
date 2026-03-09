@@ -31,6 +31,32 @@ namespace UIFramework
 			/// </summary>
 			public UIFModel.BaseModel Model { get; set; }
 		}
+
+		[RegisterTypeInIl2Cpp]
+		public class WindowController : MonoBehaviour, IModelController
+		{
+			public UIFModel.BaseModel Model {get; set;}
+
+			public GameObject MainCanvas;
+			public GameObject ModRegistryPanel;
+			public GameObject CatRegistryPanel;
+			public GameObject PrefRegistryPanel;
+
+			
+			void Awake()
+			{
+				MainCanvas = Prefabs.MainCanvas;
+				ModDisplayList = MainCanvas.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "ModRegCont")?.gameObject;
+				CatDisplayList = MainCanvas.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "CatRegCont")?.gameObject;
+				PrefDisplayList = MainCanvas.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefRegCont")?.gameObject;
+
+
+
+			}
+
+
+		}
+
 		/// <summary>
 		/// Areas where UI elements are shown to the user. 
 		/// 1. Mod list Sidebar 
