@@ -50,7 +50,14 @@ namespace UIFramework
 		/// <summary></summary>
 		public override void OnUpdate()
 		{
-			Debug.DiffLog($"");
+			DiffLog($"");
+			if(Input.GetKey(KeyCode.LeftAlt))
+			{
+				if(Input.GetKeyDown(KeyCode.F9))
+				{
+					UIFramework.MainWindow.SetActive(!UIFramework.MainWindow.activeSelf);
+				}
+			}
 		}
 
 		public override void OnSceneWasLoaded(int buildIndex, string sceneName)
@@ -75,6 +82,8 @@ namespace UIFramework
 
 			UIFramework.BuildModList();
 
+			UIFramework.InitializeUIObjects();
+			UIFramework.BuildUI();
 			isFirstLoad = false;
 		}
 
@@ -82,4 +91,4 @@ namespace UIFramework
 
 
 	}
-}
+}	

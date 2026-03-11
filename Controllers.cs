@@ -13,9 +13,9 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using static MelonLoader.MelonLogger;
-using static UIFramework.UIFController;
+//using static UIFramework.UIFController;
 using static Unity.Collections.AllocatorManager;
+using static UIFramework.Debug;
 namespace UIFramework
 {
 	/// <summary>
@@ -24,29 +24,77 @@ namespace UIFramework
 	/// <remarks>I may have gone a little crazy with inheritance</remarks>
 	public class UIFController
 	{
-		internal interface IModelController
+		public interface IModelController
 		{
 			/// <summary>
 			/// Reference to the model the controller works from.  
 			/// </summary>
-			public UIFModel.BaseModel Model { get; set; }
+			public UIFModel.ModelBase Model { get; set; }
 		}
+		/// <summary>
+		/// 
+		/// </summary>
+		[RegisterTypeInIl2Cpp]
+		public class WindowController : MonoBehaviour
+		{
+			public UIFModel.RootModel _model;
+			public UIFModel.ModelBase Model { get { return _model; } }
+
+			public GameObject MainCanvas;
+			public Sidebar ModRegistryPanel;
+			public TopBar CatRegistryPanel;
+			public PrefList PrefRegistryPanel;
+
+
+
+
+			void Awake()
+			{
+				Log("WindowController Awake", true, 1);
+
+				//_model = new UIFModel.RootModel();
+			}
+
+			public void SetModel(UIFModel.RootModel model)
+			{
+				MainCanvas = this.gameObject;
+				ModRegistryPanel = MainCanvas.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "ModRegCont")?.gameObject.GetComponent<Sidebar>();
+				CatRegistryPanel = MainCanvas.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "CatRegCont")?.gameObject.GetComponent<TopBar>();
+				PrefRegistryPanel = MainCanvas.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefRegCont")?.gameObject.GetComponent<PrefList>();
+
+				_model = model;
+				BuildModList();
+			}
+			public void BuildModList()
+			{
+				ModRegistryPanel.ContainerReset();
+				
+				CatRegistryPanel.GetComponent<TopBar>().ContainerReset();
+				PrefRegistryPanel.GetComponent<PrefList>().ContainerReset();
+
+				ModRegistryPanel.SetModel(_model);
+
+
+			}
+
+		}
+
 		/// <summary>
 		/// Areas where UI elements are shown to the user. 
 		/// 1. Mod list Sidebar 
 		/// 2. Category tab top bar
 		/// 3. Entries Content area
 		/// </summary>
-		internal class ListArea : MonoBehaviour
+		public class ListArea : MonoBehaviour
 		{
-			private UIFModel.BaseModel _model;
-			public UIFModel.BaseModel Model => _model;
-			protected void ContainerReset()
+			protected UIFModel.ModelBase _model;
+			public UIFModel.ModelBase Model => _model;
+			public void ContainerReset()
 			{
 				Infanticide();
 			}
 
-			protected void Infanticide()
+			public void Infanticide()
 			{
 				for (int i = this.transform.childCount - 1; i >= 0; i--)
 				{
@@ -54,26 +102,25 @@ namespace UIFramework
 				}
 			}
 
-			public virtual void SetModel(UIFModel.BaseModel model)
+			public virtual void SetModel(UIFModel.ModelBase model)
 			{
 				_model = model;
-				BuildFromModelList(model.subModels);
-			}
-			//protected virtual GameObject UIPrefab { get; }
-			protected virtual GameObject GetUIPrefabForModel(UIFModel.BaseModel model)
-			{
-				return Prefabs.ModTab;
+				BuildFromModelList(model.SubModels);
 			}
 
 			///	<summary>
 			/// Builds UI from a list of models
 			/// </summary>
-			internal void BuildFromModelList(List<UIFModel.BaseModel> modelList)
+			public void BuildFromModelList(List<UIFModel.ModelBase> modelList)
 			{
 				ContainerReset();
-				foreach (UIFModel.BaseModel model in modelList)
+				foreach (UIFModel.ModelBase model in modelList)
 				{
-					GameObject uiElement = GameObject.Instantiate(GetUIPrefabForModel(model), this.gameObject.transform);
+					GameObject uiElement = model.GetNewEntryWidgetInstance();//GameObject.Instantiate(GetUIPrefabForModel(model), this.gameObject.transform);
+					uiElement.SetActive(true);
+					uiElement.transform.SetParent(this.gameObject.transform, false);
+
+					
 
 					IModelController ViewController;
 
@@ -91,7 +138,7 @@ namespace UIFramework
 							Warning($"No view found for model type {model.GetType()}");
 							continue;
 					}
-					if(ViewController != null)
+					if (ViewController != null)
 					{
 						ViewController.Model = model;
 					}
@@ -106,13 +153,8 @@ namespace UIFramework
 		///
 		/// </summary>
 		[RegisterTypeInIl2Cpp]
-		internal class Sidebar : ListArea
+		public class Sidebar : ListArea
 		{
-			//protected override GameObject UIPrefab { get { return Prefabs.ModTab; } }
-			protected override GameObject GetUIPrefabForModel(UIFModel.BaseModel model) 
-			{
-				return Prefabs.ModTab;
-			}
 
 		}
 
@@ -120,55 +162,25 @@ namespace UIFramework
 		///
 		/// </summary>
 		[RegisterTypeInIl2Cpp]
-		internal class TopBar : ListArea
+		public class TopBar : ListArea
 		{
-			//protected override GameObject UIPrefab { get { return Prefabs.CatTab; } }
-			protected override GameObject GetUIPrefabForModel(UIFModel.BaseModel model) 
-			{
-				return Prefabs.CatTab;
-			}
+
 
 		}
 		/// <summary>
 		/// 
 		/// </summary>
 		[RegisterTypeInIl2Cpp]
-		
-		internal class PrefList : ListArea
-		{
-			//protected override GameObject UIPrefab { get { return Prefabs.TextPrefab; } }
-			protected override GameObject GetUIPrefabForModel(UIFModel.BaseModel model = null) 
-			{
-				UIFModel.ModelEntry entry = (UIFModel.ModelEntry) model;
-			// 	internal static GameObject TextPrefab;
-			// internal static GameObject BoolPrefab;
-			// internal static GameObject IntPrefab;
-			// internal static GameObject FloatPrefab;
-		 		switch(entry.InputType)
-				{
-					case InputType.TextField:
-						return Prefabs.TextPrefab;
-					case InputType.Toggle:
-						return Prefabs.BoolPrefab;
-					case InputType.NumericInt:
-						return Prefabs.IntPrefab;
-					case InputType.NumericFloat:
-						return Prefabs.FloatPrefab;
-					default:
-						return Prefabs.TextPrefab;
 
-				}
-			}
+		public class PrefList : ListArea
+		{
 
 		}
-
-
-
-
-		internal class TabButtonController : MonoBehaviour, IModelController
+		//protected override GameObject UIPrefab { get { return Prefabs.TextPrefab; } }
+		public class TabButtonController : MonoBehaviour, IModelController
 		{
-			internal UIFModel.BaseModel _model;
-			public virtual UIFModel.BaseModel Model
+			protected UIFModel.ModelBase _model;
+			public virtual UIFModel.ModelBase Model
 			{
 				get { return _model; }
 				set
@@ -179,17 +191,17 @@ namespace UIFramework
 				}
 			}
 
-			internal string Label { set { this.gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
-			internal ColorARGB TabColor { get; set; }
-			internal ListArea TargetContainer;
-			internal void OnSelect()
+			public string Label { set { this.gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
+			public ColorARGB TabColor { get; set; }
+			public ListArea TargetContainer;
+			public void OnSelect()
 			{
 				PopTarget();
 			}
 			/// <summary>
 			/// Populates the target container with
 			/// </summary>
-			internal virtual void PopTarget()
+			public virtual void PopTarget()
 			{
 				switch (this)
 				{
@@ -213,43 +225,50 @@ namespace UIFramework
 
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[RegisterTypeInIl2Cpp]
-		internal class Mod : TabButtonController
+		public class Mod : TabButtonController
 		{
 
-			internal string ModName { get; set; }
+			public string ModName { get; set; }
 
 
-			internal override void PopTarget()
+			public override void PopTarget()
 			{
 				TargetContainer = Prefabs.CatDisplayList.GetComponent<TopBar>();
-				TargetContainer.BuildFromModelList(Model.subModels);
+				TargetContainer.BuildFromModelList(Model.SubModels);
 			}
 
 
 
 		}
-
+		/// <summary>
+		/// 
+		/// </summary>
 		[RegisterTypeInIl2Cpp]
-		internal class Category : TabButtonController
+		public class Category : TabButtonController
 		{
-			internal override void PopTarget()
+			public override void PopTarget()
 			{
 				TargetContainer = Prefabs.PrefDisplayList.GetComponent<PrefList>();
-				TargetContainer.BuildFromModelList(Model.subModels);
+				TargetContainer.BuildFromModelList(Model.SubModels);
 			}
 
 		}
-		
+		/// <summary>
+		/// 
+		/// </summary>
 		public class PreferenceEntry : MonoBehaviour, IModelController
 		{
-			internal UIFModel.ModelEntry _model;
-			public UIFModel.BaseModel Model 
-			{ 
-				get { return _model; } 
-				set 
-				{ 
-					_model = (UIFModel.ModelEntry) value; 
+			protected UIFModel.ModelEntry _model;
+			public UIFModel.ModelBase Model
+			{
+				get { return _model; }
+				set
+				{
+					_model = (UIFModel.ModelEntry)value;
 					DescriptionText = _model.Description;
 					IdentifierText = _model.Identifier;
 				}
@@ -257,52 +276,73 @@ namespace UIFramework
 			public InputType InputType { get; set; }
 			public string DescriptionText { set { this.gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
 			public string IdentifierText { set { this.gameObject.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
-			
+
 
 		}
+		/// <summary>
+		/// 
+		/// </summary>
 		[RegisterTypeInIl2Cpp]
-		internal abstract class TextInputEntry : PreferenceEntry
+		public abstract class TextInputEntry : PreferenceEntry
 		{
-			protected TextMeshProUGUI textField => this.gameObject.transform.Find("Panel/InputField (TMP)/Text Area/Text").gameObject.GetComponent<TextMeshProUGUI>();
+			public TextMeshProUGUI textField => this.gameObject.transform.Find("Panel/InputField (TMP)/Text Area/Text").gameObject.GetComponent<TextMeshProUGUI>();
 			public string PlaceHolderText { set { this.gameObject.transform.Find("Panel/InputField (TMP)/Text Area/Placeholder").gameObject.GetComponent<TextMeshProUGUI>().text = value; } }
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		[RegisterTypeInIl2Cpp]
-		internal class PrefText : TextInputEntry
+
+		public class PrefText : TextInputEntry
 		{
 			public virtual string Value => textField.text;
 		}
-
+		/// <summary>
+		/// 
+		/// </summary>
 		[RegisterTypeInIl2Cpp]
-		internal class PrefInt : TextInputEntry
+		public class PrefInt : TextInputEntry
 		{
 			public int Value => int.Parse(textField.text);
 		}
-
+		/// <summary>
+		/// 
+		/// </summary>
 		[RegisterTypeInIl2Cpp]
-		internal class PrefFloat : TextInputEntry
+		public class PrefFloat : TextInputEntry
 		{
 			public float Value => float.Parse(textField.text);
 		}
-
+		/// <summary>
+		/// 
+		/// </summary>
 		[RegisterTypeInIl2Cpp]
-		internal class PrefBool : PreferenceEntry
+		public class PrefBool : PreferenceEntry
 		{
 			public bool value => this.gameObject.transform.Find("Panel/Toggle").gameObject.GetComponent<Toggle>().isOn;
 		}
-
+		/// <summary>
+		/// 
+		/// </summary>
 		[RegisterTypeInIl2Cpp]
-		internal class PrefMulti : PreferenceEntry
+		public class PrefMulti : PreferenceEntry
 		{
 
 		}
+		/// <summary>
+		/// 
+		/// </summary>
 		[RegisterTypeInIl2Cpp]
-		internal class PrefSlider : PreferenceEntry
+		public class PrefSlider : PreferenceEntry
 		{
 
 		}
+		/// <summary>
+		/// 
+		/// </summary>
 		[RegisterTypeInIl2Cpp]
-		internal class PrefDropDown : PreferenceEntry
+		public class PrefDropDown : PreferenceEntry
 		{
 
 		}

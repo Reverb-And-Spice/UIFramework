@@ -1,6 +1,8 @@
-﻿using Il2CppTMPro;
-using UnityEngine;
+﻿using Il2CppRUMBLE.Managers;
+using Il2CppTMPro;
 using MelonLoader;
+using UnityEngine;
+using static UnityEngine.Rendering.ProbeReferenceVolume;
 
 namespace UIFramework
 {
@@ -9,17 +11,17 @@ namespace UIFramework
 		private static bool debugMode = true;
 		private static string lastDiffLogMessage = string.Empty;
 
-		private static GameObject DebugUi;
+		/*private static GameObject DebugUi;
 		private static TextMeshPro DebugUiText;
 		private static GameObject PlayerUi;
 
-		/*/// <summary>
+		/// <summary>
 		/// Creates a debug screen in front of the player 
 		/// </summary>
 		internal static void BuildDebugScreen()
 		{
-			PlayerUi = PlayerManager.Instance.LocalPlayer.Controller.gameObject.transform.GetChild(6).GetChild(0).gameObject;
-			DebugUi = Calls.Create.NewText("Placeholder text. You shouldn't be seeing this without some UE Shenanigans\n or decompiled code. Unless I (probably) told you about this.", 1f, Color.white, new Vector3(0f, 0.1f, 1f), Quaternion.Euler(0, 0, 0));
+			PlayerUi = PlayerManager.Instance.LocalPlayer.Controller.gameObject.transform.GetChild(4).GetChild(0).gameObject;
+			DebugUi = RumbleModdingAPI.RMAPI.Create.NewText("Placeholder text. You shouldn't be seeing this without some UE Shenanigans\n or decompiled code. Doesn't count if it's you, Ava. I (probably) told you about this.", 1f, Color.white, new Vector3(0f, 0.1f, 1f), Quaternion.Euler(0, 0, 0));
 			DebugUi.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
 			DebugUi.transform.localPosition = new Vector3(0f, 0.1f, 0.96f);
 			DebugUi.transform.SetParent(PlayerUi.transform, false);
@@ -34,7 +36,7 @@ namespace UIFramework
 		/// <param name="message"></param>
 		internal static void UpdateDebugScreen(string message)
 		{
-			if (Calls.IsMapInitialized()) { DebugUiText.text = message; }
+			if (RumbleModdingAPI.RMAPI.Calls.IsMapInitialized()) { DebugUiText.text = message; }
 		}*/
 
 

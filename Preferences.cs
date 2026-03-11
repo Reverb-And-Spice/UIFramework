@@ -20,6 +20,7 @@ namespace UIFramework
 		internal static MelonPreferences_Entry<float> TestFloat;
 		internal static MelonPreferences_Entry<double> TestDouble;
 		internal static MelonPreferences_Entry<InputType> TestEnum;
+		internal static MelonPreferences_Entry<List<int> > TestList;
 
 		internal static void InitializePrefs()
 		{
@@ -39,7 +40,7 @@ namespace UIFramework
 			TestFloat = Experimental.CreateEntry("TestFloat", 3.14f, "Test Float", "This is a test float.");
 			TestDouble = Experimental.CreateEntry("TestDouble", 3.14159, "Test Double", "This is a test double.");
 			TestEnum = Experimental.CreateEntry("TestEnum", InputType.TextField, "Test Enum", "This is a test enum.");
-
+			TestList = Experimental.CreateEntry("TestList", new List<int> { 1, 2, 3 }, "Test List", "This is a test list of integers.");
 			CatUIFramework.SaveToFile();
 			Experimental.SaveToFile();
 

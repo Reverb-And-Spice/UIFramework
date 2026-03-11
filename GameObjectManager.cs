@@ -22,7 +22,7 @@ namespace UIFramework
 		internal static GameObject UiAssets;
 		internal static GameObject PrefabSources = new GameObject("Prefabs");
 
-		internal static GameObject MainCanvasSource;
+		public static GameObject MainCanvasSource;
 		internal static GameObject ModDisplayList;
 		internal static GameObject CatDisplayList;
 		internal static GameObject PrefDisplayList;
@@ -30,10 +30,10 @@ namespace UIFramework
 		internal static GameObject ModTab;
 		internal static GameObject CatTab;
 
-		internal static GameObject TextPrefab;
-		internal static GameObject BoolPrefab;
-		internal static GameObject IntPrefab;
-		internal static GameObject FloatPrefab;
+		public static GameObject TextPrefab;
+		public static GameObject BoolPrefab;
+		public static GameObject IntPrefab;
+		public static GameObject FloatPrefab;
 
 		internal static Button MainActionButton;
 
@@ -70,7 +70,7 @@ namespace UIFramework
 
 			GameObject.DontDestroyOnLoad(UiAssets);
 			MainCanvasSource = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "UICanvas")?.gameObject;
-			
+			MainCanvasSource.name = "UITemplateCanvas";
 
 			ModDisplayList = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "ModRegCont")?.gameObject;
 			CatDisplayList = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "CatRegCont")?.gameObject;
@@ -94,6 +94,7 @@ namespace UIFramework
 			//ModEntry.TestComponent test = ModDisplayList.AddComponent<ModEntry.TestComponent>();
 
 			//Add the appropriate components to each prefab for later use
+			MainCanvasSource.AddComponent<UIFController.WindowController>();
 			TextPrefab.AddComponent<UIFController.PrefText>();
 			BoolPrefab.AddComponent<UIFController.PrefBool>();
 			IntPrefab.AddComponent<UIFController.PrefInt>();
@@ -124,6 +125,7 @@ namespace UIFramework
 			GameObject.Instantiate(IntPrefab, PrefDisplayList.transform);
 			GameObject.Instantiate(FloatPrefab, PrefDisplayList.transform);
 			*/
+			MainCanvasSource.SetActive(false);
 		}
 
 		static UnityAction MainButtonClick = new System.Action(() =>
