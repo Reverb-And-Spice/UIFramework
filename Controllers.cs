@@ -120,13 +120,13 @@ namespace UIFramework
 					uiElement.SetActive(true);
 					uiElement.transform.SetParent(this.gameObject.transform, false);
 
-					
 
-					IModelController ViewController;
+
+					IModelController ViewController; //ut= uiElement.GetComponent<UIFController.IModelController>();
 
 					//Retrieve the appropriate game object controller component depending on the model type
-					//TODO: This section might now be irrelevant. Need to confirm on return to IDE
-					/*switch (model)
+					
+					switch (model)
 					{
 						case UIFModel.ModelMod modModel:
 						case UIFModel.ModelCategory catModel:
@@ -138,7 +138,7 @@ namespace UIFramework
 						default:
 							Warning($"No view found for model type {model.GetType()}");
 							continue;
-					}*/
+					}
 					
 					if (ViewController != null)
 					{
@@ -208,10 +208,10 @@ namespace UIFramework
 				switch (this)
 				{
 					case Mod mod:
-						TargetContainer = this.gameObject.transform.parent.parent.parent.parent.parent.gameObject.GetComponent<WindowController>().CatRegistryPanel;//Prefabs.CatDisplayList.GetComponent<TopBar>();
+						TargetContainer = this.gameObject.transform.parent.parent.parent.gameObject.GetComponent<WindowController>().CatRegistryPanel;//Prefabs.CatDisplayList.GetComponent<TopBar>();
 						break;
 					case Category cat:
-						TargetContainer = this.gameObject.transform.parent.parent.parent.parent.parent.gameObject.GetComponent<WindowController>().PrefRegistryPanel;
+						TargetContainer = this.gameObject.transform.parent.parent.parent.gameObject.GetComponent<WindowController>().PrefRegistryPanel;
 						break;
 				}
 
@@ -219,8 +219,9 @@ namespace UIFramework
 			}
 
 
-			void Start()
+			void OnEnable()
 			{
+				Log("TabButtonController OnEnable", true, 1);
 				this.gameObject.GetComponent<Button>().onClick.AddListener((UnityAction)OnSelect);
 			}
 
@@ -231,7 +232,7 @@ namespace UIFramework
 		/// 
 		/// </summary>
 		[RegisterTypeInIl2Cpp]
-		public class Mod : TabButtonController
+		public class Mod : TabButtonController, IModelController
 		{
 
 			public string ModName { get; set; }
@@ -250,7 +251,7 @@ namespace UIFramework
 		/// 
 		/// </summary>
 		[RegisterTypeInIl2Cpp]
-		public class Category : TabButtonController
+		public class Category : TabButtonController, IModelController
 		{
 			public override void PopTarget()
 			{
@@ -299,7 +300,7 @@ namespace UIFramework
 
 			public override void ModelSet()
 			{
-				PlaceHolderText = _model.PrefEntry.Value;
+				PlaceHolderText = _model.PrefEntry.BoxedValue.ToString();
 			}
 		}
 
