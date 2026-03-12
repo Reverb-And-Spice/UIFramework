@@ -125,7 +125,8 @@ namespace UIFramework
 					IModelController ViewController;
 
 					//Retrieve the appropriate game object controller component depending on the model type
-					switch (model)
+					//TODO: This section might now be irrelevant. Need to confirm on return to IDE
+					/*switch (model)
 					{
 						case UIFModel.ModelMod modModel:
 						case UIFModel.ModelCategory catModel:
@@ -137,7 +138,8 @@ namespace UIFramework
 						default:
 							Warning($"No view found for model type {model.GetType()}");
 							continue;
-					}
+					}*/
+					
 					if (ViewController != null)
 					{
 						ViewController.Model = model;
@@ -206,10 +208,10 @@ namespace UIFramework
 				switch (this)
 				{
 					case Mod mod:
-						TargetContainer = this.gameObject.transform.parent.parent.gameObject.GetComponent<WindowController>().CatRegistryPanel;//Prefabs.CatDisplayList.GetComponent<TopBar>();
+						TargetContainer = this.gameObject.transform.parent.parent.parent.parent.parent.gameObject.GetComponent<WindowController>().CatRegistryPanel;//Prefabs.CatDisplayList.GetComponent<TopBar>();
 						break;
 					case Category cat:
-						TargetContainer = this.gameObject.transform.parent.parent.gameObject.GetComponent<WindowController>().PrefRegistryPanel;
+						TargetContainer = this.gameObject.transform.parent.parent.parent.parent.parent.gameObject.GetComponent<WindowController>().PrefRegistryPanel;
 						break;
 				}
 
@@ -271,8 +273,15 @@ namespace UIFramework
 					_model = (UIFModel.ModelEntry)value;
 					DescriptionText = _model.Description;
 					IdentifierText = _model.Identifier;
+					ModelSet();
 				}
 			}
+			
+			/// <summary>
+			/// Runs when the model property has been set. 
+			/// </summary>
+			public virtual void ModelSet(){}
+			
 			public InputType InputType { get; set; }
 			public string DescriptionText { set { this.gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
 			public string IdentifierText { set { this.gameObject.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
@@ -287,6 +296,11 @@ namespace UIFramework
 		{
 			public TextMeshProUGUI textField => this.gameObject.transform.Find("Panel/InputField (TMP)/Text Area/Text").gameObject.GetComponent<TextMeshProUGUI>();
 			public string PlaceHolderText { set { this.gameObject.transform.Find("Panel/InputField (TMP)/Text Area/Placeholder").gameObject.GetComponent<TextMeshProUGUI>().text = value; } }
+
+			public override void ModelSet()
+			{
+				PlaceHolderText = _model.PrefEntry.Value;
+			}
 		}
 
 		/// <summary>

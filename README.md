@@ -118,8 +118,8 @@ Standard registration gives you default input controls in the UI for each type.
 
 
 
-### Custom model proposal
-#### You can design your own models before registration
+### Custom model proposal (these have not been implemented yet and methodnames will change)
+#### Proposal 0: You can design your own models before registration
 (Assuming you already created the melonpreferences structure)
 UIFModel.Mod MyMod = new();
 
@@ -128,6 +128,19 @@ UIFModel.Mod MyMod = new();
 UIFModel.CatModel catAdapter1 = new UIFModel(TestCategory1);
 catAdapter1.FindEntry("Test Entry1").InputType.Slider;
 ```
+
+#### Proposal 1: Registration provides you with the model that was just created from your input. You can then search and apply customizations there.
+
+```
+UIFModel.ModelMod MyMod = UIFramework.Register(this, MelonPreferences_Category[])
+MyMod.GetCategory("Category1").GetEntry("Entry1).SetUIWidget(UIFramework.Assets.PrefTextEntry)
+```
+
+You can also use this as a point to create your own customWidget
+```
+MyMod.GetCategory("Category1").GetEntry("Entry1).SetUIWidget(MyCustomGameObject)
+```
+Custom Game Objects need a component that implements the UIFController.PreferenceEntry class
 
 
 ## (OLD) Proposal for custom interface usage
