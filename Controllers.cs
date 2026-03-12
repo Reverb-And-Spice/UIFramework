@@ -206,10 +206,10 @@ namespace UIFramework
 				switch (this)
 				{
 					case Mod mod:
-						TargetContainer = Prefabs.CatDisplayList.GetComponent<TopBar>();
+						TargetContainer = this.gameObject.transform.parent.parent.gameObject.GetComponent<WindowController>().CatRegistryPanel;//Prefabs.CatDisplayList.GetComponent<TopBar>();
 						break;
 					case Category cat:
-						TargetContainer = Prefabs.PrefDisplayList.GetComponent<PrefList>();
+						TargetContainer = this.gameObject.transform.parent.parent.gameObject.GetComponent<WindowController>().PrefRegistryPanel;
 						break;
 				}
 

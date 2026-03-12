@@ -7,9 +7,11 @@ This will not be diegetic.
 ## Minimum Viable Product
 Able to create a ui from melonpreferences, take in inputs, load, and save them
 
+
 ## End goal
 A modular UI where people can create their own instances and be interactable in VR with optional panels that can be pinned in scenes.
 
+# Usage Overview
 ## As melon preferences interface
 
 ### Example Usage
@@ -45,6 +47,10 @@ TestEntry22 = TestCategory1.CreateEntry("Entry 2-2", true, null, "Test bool");
 ```
 UIFramework.Register(this, TestCategory1, TestCategory2);
 ```
+
+####
+Configuring Custom Widgets
+
 
 
 -----

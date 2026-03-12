@@ -32,18 +32,23 @@ namespace UIFramework
 		/// </summary>
 		/// <param name="modInstance"></param>
 		/// <param name="categories"></param>
-		public static void Register(MelonMod modInstance, params MelonPreferences_Category[] categories)
+		/// <returns>A reference to the created Mod Model for further customization</returns>
+		public static UIFModel.ModelMod Register(MelonMod modInstance, params MelonPreferences_Category[] categories)
 		{
-			ModelInstance.AddModModel(new UIFModel.ModelMod(modInstance, categories.ToList()));
+			UIFModel.ModelMod NewModModel = new(modInstance, categories);
+			ModelInstance.AddModModel(NewModModel);
+			return NewModModel;
 		}
-		/// <summary>
+		/*/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="modInstance"></param>
 		/// <param name="categories"></param>
-		public static void Register(MelonMod modInstance, List<MelonPreferences_Category> categories)
+		public static UIFModel.ModelMod Register(MelonMod modInstance, List<MelonPreferences_Category> categories)
 		{
+			
 			ModelInstance.AddModModel(new UIFModel.ModelMod(modInstance, categories));
+			
 		}
 		/// <summary>
 		/// 
@@ -54,7 +59,7 @@ namespace UIFramework
 		{
 			//ModelInstance.AddModModel(customModel);
 
-		}
+		}*/
 
 		internal static void BuildModList()
 		{
