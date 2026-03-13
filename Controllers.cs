@@ -58,9 +58,9 @@ namespace UIFramework
 			public void SetModel(UIFModel.RootModel model)
 			{
 				MainCanvas = this.gameObject;
-				ModRegistryPanel = MainCanvas.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "ModRegCont")?.gameObject.GetComponent<Sidebar>();
-				CatRegistryPanel = MainCanvas.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "CatRegCont")?.gameObject.GetComponent<TopBar>();
-				PrefRegistryPanel = MainCanvas.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefRegCont")?.gameObject.GetComponent<PrefList>();
+				ModRegistryPanel = MainCanvas.transform.Find("Root/ModRegistry/ViewPort/ModRegCont").gameObject.GetComponent<Sidebar>();
+				CatRegistryPanel = MainCanvas.transform.Find("Root/CatRegistry/ViewPort/CatRegCont").gameObject.GetComponent<TopBar>();
+				PrefRegistryPanel = MainCanvas.transform.Find("Root/PrefRegistry/ViewPort/PrefRegCont").gameObject.GetComponent<PrefList>();
 
 				_model = model;
 				BuildModList();
