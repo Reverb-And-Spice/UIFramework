@@ -1,4 +1,12 @@
-﻿# NOT MOD UI
+﻿# Current Implementation Notes
+## In ISettingEntry
+1. Add SaveAction Method
+2. Add LoadAction Method
+## When clicking on a different mod button:
+Clear current contents of PrefRegistrationPanel
+
+
+# NOT MOD UI
 
 We want people to be able to implement this as easy and painless as possible. 
 

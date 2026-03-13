@@ -265,10 +265,18 @@ namespace UIFramework
 			}*/
 
 		}
+		public interface ISettingEntry
+		{
+			public string DescriptionText { set; }
+			public string IdentifierText { set; }
+			//override this function to create your own validation check
+			public bool ValidationCheck();
+			
+		}
 		/// <summary>
 		/// 
 		/// </summary>
-		public class PreferenceEntry : MonoBehaviour, IModelListable
+		public class PreferenceEntry : MonoBehaviour, IModelListable, ISettingEntry
 		{
 			protected UIFModel.ModelEntry _model;
 			public UIFModel.ModelBase Model
@@ -292,13 +300,15 @@ namespace UIFramework
 			public string DescriptionText { set { this.gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
 			public string IdentifierText { set { this.gameObject.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
 
+			public virtual bool ValidationCheck()
+			{
+				return true;
+			}
+
 
 		}
 
-		public interface ISettingEntry
-		{
-
-		}
+		
 		/// <summary>
 		/// 
 		/// </summary>

@@ -22,6 +22,9 @@ namespace UIFramework
 		internal static MelonPreferences_Entry<InputType> TestEnum;
 		internal static MelonPreferences_Entry<List<int> > TestList;
 
+		internal static MelonPreferences_Category TestBooleans;
+		internal static List<MelonPreferences_Entry<bool>> TestBoolList = new List<MelonPreferences_Entry<bool>>();
+
 		internal static void InitializePrefs()
 		{
 			if (!Directory.Exists(USER_DATA))
@@ -44,6 +47,11 @@ namespace UIFramework
 			CatUIFramework.SaveToFile();
 			Experimental.SaveToFile();
 
+			TestBooleans = MelonPreferences.CreateCategory("TestBooleans", "Test Booleans");
+			for (int i = 0; i < 10; i++)
+			{
+				TestBoolList.Add(TestBooleans.CreateEntry("TestBool" + i, false, "Test Bool " + i));
+			}
 		}
 
 	}

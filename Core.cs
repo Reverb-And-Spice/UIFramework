@@ -45,7 +45,7 @@ namespace UIFramework
 		public override void OnLateInitializeMelon()
 		{
 			Preferences.InitializePrefs();
-			UIFramework.Register(this, Preferences.CatUIFramework, Preferences.Experimental);
+			UIFramework.Register(this, Preferences.CatUIFramework, Preferences.Experimental, Preferences.TestBooleans);
 		}
 		/// <summary></summary>
 		public override void OnUpdate()

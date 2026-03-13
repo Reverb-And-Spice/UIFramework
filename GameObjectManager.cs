@@ -84,7 +84,7 @@ namespace UIFramework
 			IntPrefab = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryInt")?.gameObject;
 			FloatPrefab = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryFloat")?.gameObject;
 
-			MainActionButton = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "MainActionButton")?.gameObject.GetComponent<Button>();
+			MainActionButton = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "SaveActionButton")?.gameObject.GetComponent<Button>();
 
 
 			
@@ -196,7 +196,11 @@ namespace UIFramework
 			foreach (var t in tmps)
 			{
 				if (t == null) continue;
-
+				if (t.gameObject.name == "ButtonText")
+				{
+					t.enableWordWrapping = false; // Ensure wrapping is off for these
+					continue;
+				}
 				t.enableWordWrapping = true;
 				// Overflow mode ensures text wraps and fills the space, 
 				// rather than cutting off or masking.
