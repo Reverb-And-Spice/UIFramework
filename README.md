@@ -1,7 +1,9 @@
 ﻿# Current Implementation Notes
 ## In ISettingEntry
 1. Add SaveAction Method
-2. Add LoadAction Method
+1. Add LoadAction Method
+1. Make sure individual save actions are run before category save
+1. implement category save action lol
 ## When clicking on a different mod button:
 Clear current contents of PrefRegistrationPanel
 
