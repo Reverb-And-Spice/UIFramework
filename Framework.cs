@@ -61,21 +61,7 @@ namespace UIFramework
 
 		}*/
 
-		internal static void BuildModList()
-		{
 
-			/*foreach (UIFModel.ModelMod mod in ModelInstance.ModModelsList)
-			{
-				GameObject tab = GameObject.Instantiate(Prefabs.ModTab,Prefabs.ModDisplayList.transform);
-				UIFController.Mod ViewController = tab.GetComponent<UIFController.Mod>();
-
-				ViewController.Model = mod;
-				ViewController.TargetContainer = CatRegistryPanel;
-
-
-			}*/
-			//Prefabs.ModDisplayList.GetComponent<UIFController.Sidebar>().BuildFromModelList(ModelInstance.SubModels.Cast<UIFModel.ModelBase>().ToList());
-		}
 
 		internal static void InitializeUIObjects()
 		{

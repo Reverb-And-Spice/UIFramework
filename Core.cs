@@ -80,8 +80,6 @@ namespace UIFramework
 		{
 			Prefabs.LoadAssetBundle();
 
-			UIFramework.BuildModList();
-
 			UIFramework.InitializeUIObjects();
 			UIFramework.BuildUI();
 			isFirstLoad = false;

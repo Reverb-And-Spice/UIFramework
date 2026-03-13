@@ -24,7 +24,7 @@ namespace UIFramework
 	/// <remarks>I may have gone a little crazy with inheritance</remarks>
 	public class UIFController
 	{
-		public interface IModelController
+		public interface IModelListable
 		{
 			/// <summary>
 			/// Reference to the model the controller works from.  
@@ -58,12 +58,13 @@ namespace UIFramework
 			public void SetModel(UIFModel.RootModel model)
 			{
 				MainCanvas = this.gameObject;
-				ModRegistryPanel = MainCanvas.transform.Find("Root/ModRegistry/ViewPort/ModRegCont").gameObject.GetComponent<Sidebar>();
-				CatRegistryPanel = MainCanvas.transform.Find("Root/CatRegistry/ViewPort/CatRegCont").gameObject.GetComponent<TopBar>();
-				PrefRegistryPanel = MainCanvas.transform.Find("Root/PrefRegistry/ViewPort/PrefRegCont").gameObject.GetComponent<PrefList>();
+				ModRegistryPanel = MainCanvas.transform.Find("Root/ModRegistry/Viewport/ModRegCont").gameObject.GetComponent<Sidebar>();
+				CatRegistryPanel = MainCanvas.transform.Find("Root/CatRegistry/Viewport/CatRegCont").gameObject.GetComponent<TopBar>();
+				PrefRegistryPanel = MainCanvas.transform.Find("Root/PrefRegistry/Viewport/PrefRegCont").gameObject.GetComponent<PrefList>();
 
 				_model = model;
 				BuildModList();
+				Deb("Main Window Full Path: " + Helpers.HierarchyUtility.GetGameObjectPath(this.gameObject));
 			}
 			public void BuildModList()
 			{
@@ -122,7 +123,7 @@ namespace UIFramework
 
 
 
-					IModelController ViewController; //ut= uiElement.GetComponent<UIFController.IModelController>();
+					IModelListable ViewController; //ut= uiElement.GetComponent<UIFController.IModelListable>();
 
 					//Retrieve the appropriate game object controller component depending on the model type
 					
@@ -179,7 +180,7 @@ namespace UIFramework
 
 		}
 		//protected override GameObject UIPrefab { get { return Prefabs.TextPrefab; } }
-		public class TabButtonController : MonoBehaviour, IModelController
+		public class TabButtonController : MonoBehaviour, IModelListable
 		{
 			protected UIFModel.ModelBase _model;
 			public virtual UIFModel.ModelBase Model
@@ -200,22 +201,25 @@ namespace UIFramework
 			{
 				PopTarget();
 			}
+			GameObject _A_DebugTargetContainer;
 			/// <summary>
 			/// Populates the target container with
 			/// </summary>
 			public virtual void PopTarget()
 			{
+				
 				switch (this)
 				{
 					case Mod mod:
-						TargetContainer = this.gameObject.transform.parent.parent.parent.gameObject.GetComponent<WindowController>().CatRegistryPanel;//Prefabs.CatDisplayList.GetComponent<TopBar>();
+						TargetContainer = gameObject.transform.parent.parent.parent.parent.parent.gameObject.GetComponent<WindowController>().CatRegistryPanel;//Prefabs.CatDisplayList.GetComponent<TopBar>();
 						break;
 					case Category cat:
-						TargetContainer = this.gameObject.transform.parent.parent.parent.gameObject.GetComponent<WindowController>().PrefRegistryPanel;
+						TargetContainer = gameObject.transform.parent.parent.parent.parent.parent.gameObject.GetComponent<WindowController>().PrefRegistryPanel;
 						break;
 				}
-
+				_A_DebugTargetContainer = TargetContainer.gameObject;
 				TargetContainer.SetModel(_model);
+				Deb("TargetContainer Full Path: " + Helpers.HierarchyUtility.GetGameObjectPath(TargetContainer.gameObject));
 			}
 
 
@@ -228,21 +232,22 @@ namespace UIFramework
 
 		}
 
+		
 		/// <summary>
 		/// 
 		/// </summary>
 		[RegisterTypeInIl2Cpp]
-		public class Mod : TabButtonController, IModelController
+		public class Mod : TabButtonController, IModelListable
 		{
 
 			public string ModName { get; set; }
 
 
-			public override void PopTarget()
+			/*public override void PopTarget()
 			{
 				TargetContainer = Prefabs.CatDisplayList.GetComponent<TopBar>();
 				TargetContainer.BuildFromModelList(Model.SubModels);
-			}
+			}*/
 
 
 
@@ -251,19 +256,19 @@ namespace UIFramework
 		/// 
 		/// </summary>
 		[RegisterTypeInIl2Cpp]
-		public class Category : TabButtonController, IModelController
+		public class Category : TabButtonController, IModelListable
 		{
-			public override void PopTarget()
+			/*public override void PopTarget()
 			{
 				TargetContainer = Prefabs.PrefDisplayList.GetComponent<PrefList>();
 				TargetContainer.BuildFromModelList(Model.SubModels);
-			}
+			}*/
 
 		}
 		/// <summary>
 		/// 
 		/// </summary>
-		public class PreferenceEntry : MonoBehaviour, IModelController
+		public class PreferenceEntry : MonoBehaviour, IModelListable
 		{
 			protected UIFModel.ModelEntry _model;
 			public UIFModel.ModelBase Model
@@ -289,11 +294,16 @@ namespace UIFramework
 
 
 		}
+
+		public interface ISettingEntry
+		{
+
+		}
 		/// <summary>
 		/// 
 		/// </summary>
 		[RegisterTypeInIl2Cpp]
-		public abstract class TextInputEntry : PreferenceEntry
+		public abstract class TextInputEntry : PreferenceEntry, ISettingEntry
 		{
 			public TextMeshProUGUI textField => this.gameObject.transform.Find("Panel/InputField (TMP)/Text Area/Text").gameObject.GetComponent<TextMeshProUGUI>();
 			public string PlaceHolderText { set { this.gameObject.transform.Find("Panel/InputField (TMP)/Text Area/Placeholder").gameObject.GetComponent<TextMeshProUGUI>().text = value; } }
