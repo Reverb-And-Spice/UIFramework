@@ -1,9 +1,11 @@
 ﻿# Current Implementation Notes
 ## In ISettingEntry
-1. Add SaveAction Method
+1. Add SaveAction Method -
+1. 
 1. Add LoadAction Method
 1. Make sure individual save actions are run before category save
 1. implement category save action lol
+1. Add a state for whether or not it's been edited
 ## When clicking on a different mod button:
 Clear current contents of PrefRegistrationPanel
 
@@ -67,7 +69,7 @@ Configuring Custom Widgets
 ### Quick layout mockup
 <sup>No it will not look like this. I just needed to show the layout</sup>
 
-![UI Mockup](Misc/Mockup.png)
+![UI Mockup](Misc/WIP.png)
 -----
 
 ## Design Pattern

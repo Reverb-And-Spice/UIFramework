@@ -24,6 +24,7 @@ namespace UIFramework
 	/// <remarks>I may have gone a little crazy with inheritance</remarks>
 	public class UIFController
 	{
+		//[RegisterTypeInIl2Cpp]
 		public interface IModelListable
 		{
 			/// <summary>
@@ -201,7 +202,6 @@ namespace UIFramework
 			{
 				PopTarget();
 			}
-			GameObject _A_DebugTargetContainer;
 			/// <summary>
 			/// Populates the target container with
 			/// </summary>
@@ -217,7 +217,6 @@ namespace UIFramework
 						TargetContainer = gameObject.transform.parent.parent.parent.parent.parent.gameObject.GetComponent<WindowController>().PrefRegistryPanel;
 						break;
 				}
-				_A_DebugTargetContainer = TargetContainer.gameObject;
 				TargetContainer.SetModel(_model);
 				Deb("TargetContainer Full Path: " + Helpers.HierarchyUtility.GetGameObjectPath(TargetContainer.gameObject));
 			}
@@ -265,7 +264,8 @@ namespace UIFramework
 			}*/
 
 		}
-		public interface ISettingEntry
+		//[RegisterTypeInIl2Cpp]
+		public interface ISettingEntry : IModelListable
 		{
 			public string DescriptionText { set; }
 			public string IdentifierText { set; }
@@ -276,7 +276,7 @@ namespace UIFramework
 		/// <summary>
 		/// 
 		/// </summary>
-		public class PreferenceEntry : MonoBehaviour, IModelListable, ISettingEntry
+		public class PreferenceEntry : MonoBehaviour, ISettingEntry
 		{
 			protected UIFModel.ModelEntry _model;
 			public UIFModel.ModelBase Model
