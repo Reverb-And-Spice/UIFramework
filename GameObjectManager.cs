@@ -18,9 +18,10 @@ namespace UIFramework
 	internal static partial class Prefabs
 	{
 		
+		internal static GameObject UIFGameObjects = new GameObject("UIFramework");
 
 		internal static GameObject UiAssets;
-		internal static GameObject PrefabSources = new GameObject("Prefabs");
+		//internal static GameObject PrefabSources = new GameObject("Prefabs");
 
 		public static GameObject MainCanvasSource;
 		internal static GameObject ModDisplayList;
@@ -40,8 +41,10 @@ namespace UIFramework
 		internal static void LoadAssetBundle()
 		{
 			Debug.Log("LoadingUIFramework AssetBundle", true);
-			UiAssets = GameObject.Instantiate(LoadAssetFromStream<GameObject>(Core.Instance, "UIFramework.Assets.uiframework", "UIFramework"));
-
+			GameObject.DontDestroyOnLoad(UIFGameObjects);
+			UiAssets = GameObject.Instantiate(LoadAssetFromStream<GameObject>(Core.Instance, "UIFramework.Assets.uiframework", "UIFramework"), UIFGameObjects.transform);
+			UiAssets.name = "UIFrameworkAssets";
+			//UiAssets.SetActive(false);
 			//Taco generated (text won't work witout this for some reason)
 			foreach (var tmpugui in UiAssets.GetComponentsInChildren<TextMeshProUGUI>(true))
 			{
@@ -68,9 +71,9 @@ namespace UIFramework
 			Canvas.ForceUpdateCanvases();*/
 			ApplyAndRebuild(UiAssets);
 
-			GameObject.DontDestroyOnLoad(UiAssets);
+			
+			
 			MainCanvasSource = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "UICanvas")?.gameObject;
-			MainCanvasSource.name = "UITemplateCanvas";
 
 			ModDisplayList = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "ModRegCont")?.gameObject;
 			CatDisplayList = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "CatRegCont")?.gameObject;

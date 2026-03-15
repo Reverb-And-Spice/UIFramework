@@ -18,11 +18,6 @@ namespace UIFramework
 	public class UIFramework
 	{
 
-		/*internal static GameObject ModRegistryPanel;
-		internal static GameObject CatRegistryPanel;
-		internal static GameObject PrefRegistryPanel;*/
-
-
 		internal static UIFModel.RootModel ModelInstance = new();
 		internal static GameObject MainWindow;
 
@@ -39,34 +34,12 @@ namespace UIFramework
 			ModelInstance.AddModModel(NewModModel);
 			return NewModModel;
 		}
-		/*/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="modInstance"></param>
-		/// <param name="categories"></param>
-		public static UIFModel.ModelMod Register(MelonMod modInstance, List<MelonPreferences_Category> categories)
-		{
-			
-			ModelInstance.AddModModel(new UIFModel.ModelMod(modInstance, categories));
-			
-		}
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="modInstance"></param>
-		/// <param name="customModModel"></param>
-		public static void Register(MelonMod modInstance, UIFModel.ModelMod customModModel)
-		{
-			//ModelInstance.AddModModel(customModel);
-
-		}*/
-
 
 
 		internal static void InitializeUIObjects()
 		{
-			MainWindow = GameObject.Instantiate(Prefabs.MainCanvasSource);
-
+			MainWindow = GameObject.Instantiate(Prefabs.MainCanvasSource, Prefabs.UIFGameObjects.transform);
+			MainWindow.name = "MainWindow";
 			MainWindow.SetActive(true);
 			WindowInstance = MainWindow.GetComponent<UIFController.WindowController>();
 
@@ -89,23 +62,13 @@ namespace UIFramework
 	/// </summary>
 	public class UIFModel
 	{
-
-		//public List<ModelMod> ModModelsList = new();
-
-		/*public void AddModModel(ModelMod model)
-		{
-			//ModModelsDict[modInstance] = model;
-			//ModModelsList.Add(model);
-
-		}
-*/
 		public abstract class ModelBase
 		{
 			public List<ModelBase> SubModels = new();
 			public abstract string Name { get; }
 			public abstract GameObject GetNewEntryWidgetInstance();
 
-			
+
 		}
 
 		public class RootModel : ModelBase
@@ -176,6 +139,10 @@ namespace UIFramework
 				return GameObject.Instantiate(Prefabs.CatTab);
 			}
 
+			public void Save()
+			{
+				PrefCat.SaveToFile();
+			}
 		}
 		/// <summary>
 		/// 

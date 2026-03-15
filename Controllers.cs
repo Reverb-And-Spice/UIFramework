@@ -91,7 +91,7 @@ namespace UIFramework
 		{
 			protected UIFModel.ModelBase _model;
 			public UIFModel.ModelBase Model => _model;
-			public void ContainerReset()
+			public virtual void ContainerReset()
 			{
 				Infanticide();
 			}
@@ -153,6 +153,7 @@ namespace UIFramework
 
 		}
 
+		#region List Areas
 		/// <summary>
 		///
 		/// </summary>
@@ -178,8 +179,21 @@ namespace UIFramework
 
 		public class PrefList : ListArea
 		{
+			public UIFModel.ModelCategory SelectedCategory => Model as UIFModel.ModelCategory;
+
+			/// <summary>
+			/// Reset the contents area and clear the selected category;
+			/// </summary>
+			public override void ContainerReset()
+			{
+				_model = null;
+				base.ContainerReset();
+			}
 
 		}
+		#endregion
+
+		#region TabButtons
 		//protected override GameObject UIPrefab { get { return Prefabs.TextPrefab; } }
 		public class TabButtonController : MonoBehaviour, IModelListable
 		{
@@ -207,14 +221,15 @@ namespace UIFramework
 			/// </summary>
 			public virtual void PopTarget()
 			{
-				
+				WindowController ParentWindow = gameObject.transform.parent.parent.parent.parent.parent.gameObject.GetComponent<WindowController>();
 				switch (this)
 				{
 					case Mod mod:
-						TargetContainer = gameObject.transform.parent.parent.parent.parent.parent.gameObject.GetComponent<WindowController>().CatRegistryPanel;//Prefabs.CatDisplayList.GetComponent<TopBar>();
+						TargetContainer = ParentWindow.CatRegistryPanel;//Prefabs.CatDisplayList.GetComponent<TopBar>();
+						ParentWindow.PrefRegistryPanel.ContainerReset();
 						break;
 					case Category cat:
-						TargetContainer = gameObject.transform.parent.parent.parent.parent.parent.gameObject.GetComponent<WindowController>().PrefRegistryPanel;
+						TargetContainer = ParentWindow.PrefRegistryPanel;
 						break;
 				}
 				TargetContainer.SetModel(_model);
@@ -264,6 +279,9 @@ namespace UIFramework
 			}*/
 
 		}
+		#endregion
+
+		#region Entries
 		//[RegisterTypeInIl2Cpp]
 		public interface ISettingEntry : IModelListable
 		{
@@ -381,5 +399,6 @@ namespace UIFramework
 		{
 
 		}
+		#endregion
 	}
 }
