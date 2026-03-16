@@ -92,7 +92,7 @@ namespace UIFramework
 					entry.SaveAction();
 
 				}
-				PrefRegistryPanel.SelectedCategory.SaveAction();
+				PrefRegistryPanel.SaveAction();
 				PrefRegistryPanel.Infanticide();
 				PrefRegistryPanel.BuildFromModelList();
 			}
@@ -170,6 +170,11 @@ namespace UIFramework
 				}
 			}
 
+			/// <summary>
+			/// Is called when Save Button is clicked. Override to create custom behaviour 
+			/// </summary>
+			public virtual void SaveAction() { }
+
 		}
 
 		#region List Areas
@@ -199,6 +204,13 @@ namespace UIFramework
 		public class PrefList : ListArea
 		{
 			public UIFModel.ModelCategory SelectedCategory => Model as UIFModel.ModelCategory;
+			/// <summary>
+			/// When the save button is clicked, the selected category save action will be called. The model is now in charge of what that means
+			/// </summary>
+			public override void SaveAction()
+			{
+				SelectedCategory.SaveAction();
+			}
 
 
 		}
@@ -279,7 +291,11 @@ namespace UIFramework
 		#endregion
 
 		#region Entries
-		//[RegisterTypeInIl2Cpp]
+		/// <summary>
+		/// This was going to be the basis for all entries and what advanced users would have to implement
+		/// Unfortunately can't be successfully retrieved with GetComponent in the current setup
+		/// Will move to making PreferenceEntry the required base class
+		/// </summary>
 		public interface ISettingEntry : IModelListable
 		{
 			public string DescriptionText { set; }
@@ -289,12 +305,12 @@ namespace UIFramework
 			
 		}
 		/// <summary>
-		/// 
+		/// Inherit this class to create your own custom entry controllers for your own input controls.
 		/// </summary>
 		public class PreferenceEntry : MonoBehaviour, ISettingEntry
 		{
 			protected UIFModel.ModelEntry _model;
-			public UIFModel.ModelBase Model
+			public virtual UIFModel.ModelBase Model
 			{
 				get { return _model; }
 				set
@@ -311,15 +327,17 @@ namespace UIFramework
 			/// </summary>
 			public virtual void ModelSet(){}
 			
-			public InputType InputType { get; set; }
-			public string DescriptionText { set { this.gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
-			public string IdentifierText { set { this.gameObject.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
+			public virtual string DescriptionText { set { this.gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
+			public virtual string IdentifierText { set { this.gameObject.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
 
 			public virtual bool ValidationCheck()
 			{
 				return true;
 			}
-
+			/// <summary>
+			/// This is called when the Save button is pressed. Override to create custom behaviour.
+			/// </summary>
+			/// <remarks>Generally MelonPreferences are saved from the category, not the indivial entries.</remarks>
 			public virtual void SaveAction()
 			{
 
