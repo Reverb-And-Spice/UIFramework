@@ -38,8 +38,13 @@ TestEntry22 = TestCategory1.CreateEntry("Entry 2-2", true, null, "Test bool");
 </details>
 
 #### Registering MelonPreferences_Category to UI Framework
+Registration should be done in OnLateInitializeMelon. I'll figure out late registration later.
 ```
-UIFramework.Register(this, TestCategory1, TestCategory2);
+public override void OnLateInitializeMelon()
+{
+	Preferences.InitializePrefs();
+	UIFramework.Register(this, TestCategory1, TestCategory2);
+}
 ```
 
 ####
@@ -49,10 +54,33 @@ Configuring Custom Widgets
 
 -----
 ### Quick layout mockup
-<sup>No it will not look like this. I just needed to show the layout</sup>
+<sup>Looks will be improved. The current color scheme is to show me the boundaries between panels and make sure they've been placed correctly</sup>
 
 ![UI Mockup](Misc/WIP.png)
 -----
+-----
+-----
+
+
+
+
+#### The rest of this is for more advanced usage like custom UI creation, supporting additional data types or contribution
+-----
+
+# Usage details 
+When mods register themselves and their Melonpreferences_Category instances to the UI Framework, a model instance is created for the mod, for each of the categories that have been registered with it, and each of the entries under those and then they are added under the root model that contains all mods that have been registered.
+
+When you give a UI Controller for a container an appropriate model it will iterate through the submodels under that and create appropriate UI elements to be parented to the container.
+
+In this case, the root model that contains all mods is given to the sidebar controller which creates buttons that represent each mod.
+
+Clicking a mod button on the sidebar will give the controller for the top bar the category submodels that are registered to that mod.
+
+Clicking a category button on the top bar will populate the main panel/preference list. 
+
+One thing to note is that the game object for the individual preferences is contained in the Entry submodel. This allows you to make your custom widgets which will be retrieved and instantiated by the preferences list control.
+If none is provided, it will default to the [standard input](#defaults) based on the type of the entry.
+
 
 # Design Pattern
 
