@@ -16,6 +16,7 @@ using UnityEngine.UI;
 //using static UIFramework.UIFController;
 using static Unity.Collections.AllocatorManager;
 using static UIFramework.Debug;
+using System.Globalization;
 namespace UIFramework
 {
 	/// <summary>
@@ -45,9 +46,9 @@ namespace UIFramework
 			public Sidebar ModRegistryPanel;
 			public TopBar CatRegistryPanel;
 			public PrefList PrefRegistryPanel;
+			public Button MainActionButton;
 
-
-
+			
 
 			void Awake()
 			{
@@ -62,7 +63,9 @@ namespace UIFramework
 				ModRegistryPanel = MainCanvas.transform.Find("Root/ModRegistry/Viewport/ModRegCont").gameObject.GetComponent<Sidebar>();
 				CatRegistryPanel = MainCanvas.transform.Find("Root/CatRegistry/Viewport/CatRegCont").gameObject.GetComponent<TopBar>();
 				PrefRegistryPanel = MainCanvas.transform.Find("Root/PrefRegistry/Viewport/PrefRegCont").gameObject.GetComponent<PrefList>();
+				MainActionButton = MainCanvas.transform.Find("Root/SaveActionButton").gameObject.GetComponent<Button>();
 
+				MainActionButton.onClick.AddListener((UnityAction)SaveButtonClick);
 				_model = model;
 				BuildModList();
 				Deb("Main Window Full Path: " + Helpers.HierarchyUtility.GetGameObjectPath(this.gameObject));
@@ -77,6 +80,19 @@ namespace UIFramework
 				ModRegistryPanel.SetModel(_model);
 
 
+			}
+			/// <summary>
+			/// 
+			/// </summary>
+			public void SaveButtonClick()
+			{
+				for (int i = PrefRegistryPanel.gameObject.transform.childCount - 1; i >= 0; i--)
+				{
+					PreferenceEntry entry = PrefRegistryPanel.gameObject.transform.GetChild(i).gameObject.GetComponent<PreferenceEntry>();
+					entry.SaveAction();
+
+				}
+				PrefRegistryPanel.SelectedCategory.SaveAction();
 			}
 
 		}
@@ -93,6 +109,7 @@ namespace UIFramework
 			public UIFModel.ModelBase Model => _model;
 			public virtual void ContainerReset()
 			{
+				_model = null;
 				Infanticide();
 			}
 
@@ -115,7 +132,7 @@ namespace UIFramework
 			/// </summary>
 			public void BuildFromModelList(List<UIFModel.ModelBase> modelList)
 			{
-				ContainerReset();
+				Infanticide();
 				foreach (UIFModel.ModelBase model in modelList)
 				{
 					GameObject uiElement = model.GetNewEntryWidgetInstance();//GameObject.Instantiate(GetUIPrefabForModel(model), this.gameObject.transform);
@@ -181,14 +198,6 @@ namespace UIFramework
 		{
 			public UIFModel.ModelCategory SelectedCategory => Model as UIFModel.ModelCategory;
 
-			/// <summary>
-			/// Reset the contents area and clear the selected category;
-			/// </summary>
-			public override void ContainerReset()
-			{
-				_model = null;
-				base.ContainerReset();
-			}
 
 		}
 		#endregion
@@ -323,7 +332,12 @@ namespace UIFramework
 				return true;
 			}
 
+			public virtual void SaveAction()
+			{
 
+			}
+
+			
 		}
 
 		
@@ -333,7 +347,7 @@ namespace UIFramework
 		[RegisterTypeInIl2Cpp]
 		public abstract class TextInputEntry : PreferenceEntry, ISettingEntry
 		{
-			public TextMeshProUGUI textField => this.gameObject.transform.Find("Panel/InputField (TMP)/Text Area/Text").gameObject.GetComponent<TextMeshProUGUI>();
+			public TMP_InputField textField => this.gameObject.transform.Find("Panel/InputField (TMP)").gameObject.GetComponent<TMP_InputField>();
 			public string PlaceHolderText { set { this.gameObject.transform.Find("Panel/InputField (TMP)/Text Area/Placeholder").gameObject.GetComponent<TextMeshProUGUI>().text = value; } }
 
 			public override void ModelSet()
@@ -350,6 +364,20 @@ namespace UIFramework
 		public class PrefText : TextInputEntry
 		{
 			public virtual string Value => textField.text;
+			public override void SaveAction()
+			{
+				try
+				{
+					if (Value.Trim() != "")
+					{
+						_model.PrefEntry.BoxedValue = Value;
+					}
+				}
+				catch (Exception ex)
+				{
+					Log(ex.Message, false, 2);
+				}
+			}
 		}
 		/// <summary>
 		/// 
@@ -358,7 +386,23 @@ namespace UIFramework
 		public class PrefInt : TextInputEntry
 		{
 			public int Value => int.Parse(textField.text);
+
+			public override void SaveAction()
+			{
+				try
+				{
+					if (textField.text.Trim() != "")
+					{
+						_model.PrefEntry.BoxedValue = int.Parse(textField.text.Trim());
+					}
+				}
+				catch (Exception ex)
+				{
+					Log($"{ex.Message} {textField.text}", false, 2);
+				}
+			}
 		}
+	
 		/// <summary>
 		/// 
 		/// </summary>
@@ -366,6 +410,21 @@ namespace UIFramework
 		public class PrefFloat : TextInputEntry
 		{
 			public float Value => float.Parse(textField.text);
+
+			public override void SaveAction()
+			{
+				try
+				{
+					if (textField.text.Trim() != "")
+					{
+						_model.PrefEntry.BoxedValue = float.Parse(textField.text.Trim());
+					}
+				}
+				catch (Exception ex)
+				{
+					Log($"{ex.Message} {textField.text}", false, 2);
+				}
+			}
 		}
 		/// <summary>
 		/// 
@@ -373,7 +432,27 @@ namespace UIFramework
 		[RegisterTypeInIl2Cpp]
 		public class PrefBool : PreferenceEntry
 		{
-			public bool value => this.gameObject.transform.Find("Panel/Toggle").gameObject.GetComponent<Toggle>().isOn;
+			public bool Value => this.gameObject.transform.Find("Panel/Toggle").gameObject.GetComponent<Toggle>().isOn;
+			public override void ModelSet()
+			{
+				base.ModelSet();
+				this.gameObject.transform.Find("Panel/Toggle").gameObject.GetComponent<Toggle>().isOn = (bool)_model.PrefEntry.BoxedValue;
+
+			}
+
+			public override void SaveAction()
+			{
+				try
+				{
+					_model.PrefEntry.BoxedValue = Value;
+				}
+				catch (Exception ex)
+				{
+					Log(ex.Message, false, 2);
+				}
+
+			}
+
 		}
 		/// <summary>
 		/// 

@@ -66,7 +66,11 @@ namespace UIFramework
 		{
 			public List<ModelBase> SubModels = new();
 			public abstract string Name { get; }
-			public abstract GameObject GetNewEntryWidgetInstance();
+			public abstract GameObject GetNewEntryWidgetInstance(); 
+			public virtual void SaveAction()
+			{
+
+			}
 
 
 		}
@@ -87,6 +91,8 @@ namespace UIFramework
 			{
 				throw new NotImplementedException();
 			}
+
+			
 
 		}
 		public class ModelMod : ModelBase
@@ -139,7 +145,7 @@ namespace UIFramework
 				return GameObject.Instantiate(Prefabs.CatTab);
 			}
 
-			public void Save()
+			public override void SaveAction()
 			{
 				PrefCat.SaveToFile();
 			}
@@ -205,6 +211,13 @@ namespace UIFramework
 					}
 				}
 			}
+
+			public override void SaveAction()
+			{
+
+			}
+
+			
 		}
 	}
 

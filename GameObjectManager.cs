@@ -2,7 +2,6 @@
 using Il2CppSystem.IO;
 using Il2CppTMPro;
 using MelonLoader;
-//using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -92,7 +91,7 @@ namespace UIFramework
 
 			
 
-			MainActionButton.onClick.AddListener(MainButtonClick);
+			//MainActionButton.onClick.AddListener(MainButtonClick);
 
 			//ModEntry.TestComponent test = ModDisplayList.AddComponent<ModEntry.TestComponent>();
 
