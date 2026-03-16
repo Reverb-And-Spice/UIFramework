@@ -54,9 +54,9 @@ Configuring Custom Widgets
 ![UI Mockup](Misc/WIP.png)
 -----
 
-## Design Pattern
+# Design Pattern
 
-## MVC/MVP(ish)-Inspired Coding Pattern
+# MVC/MVP(ish)-Inspired Coding Pattern
 
 The intention is to have separation of UI and data logic. Make the UI itself disposable while the model would be the one source of truth it can be rebuilt from every time.
 
@@ -71,31 +71,38 @@ Models should avoid references to the view or the controllers as much as possibl
 
 
 
-### Adapters:
-#### Mod
+## Submodels:
+### Mod
 A mod instance in the model. Each mod instance can have one entry in the model. 
 
-#### Category
+Their equivalent buttons will show up on the sidebar
+
+### Category
 A wrapper/adapter class around a MelonPreferences_Category type. While the framework is based on MelonPreferences, it should be possible for modders to make their own settings system as long as they expose a compatible interface for the adapter. 
 
-##### Entry
+Their equivalent buttons will show up on the top bar
+
+#### Entry
 A wrapper/adapter class around a MelonPreferences_Category type. 
 
-### Controllers: 
+Their equivalent UI elements will show up in the main panel when their category is selected.
+They have a description, a label/ID, and an actual input area
+
+## Controllers: 
 Custom components added to the ugui game objects that controls them based on the model
 Each controller has a reference to the model they're supposed to represent to the user. 
 
-### View: 
+## UI: 
 The actual interface the user interacts with. 
 
-## UI Creation
-### Standard
+# UI Creation
+## Standard
 Standard registration automatically creates a UI for the mod. 
 `UI.Register(this, TestCategory1, TestCategory2);`
 Standard registration gives you default input controls in the UI for each type.
 <sup>Default input controls could change between versions</sup>
 
-#### Defaults: 
+### Defaults: 
 |Type|Input control|
 |---|---|
 |string|Standard Text Input|
@@ -103,7 +110,7 @@ Standard registration gives you default input controls in the UI for each type.
 |float|Text input with numeric filter and decimal support|
 |bool|toggle|
 
-#### Future features
+### Future features
 |Type|Input control|
 |---|---|
 |enum|Dropdown|
@@ -112,8 +119,8 @@ Standard registration gives you default input controls in the UI for each type.
 
 
 
-### Custom model proposal (these have not been implemented yet and methodnames will change)
-#### Proposal 0: You can design your own models before registration
+## Custom model proposal (these have not been implemented yet and methodnames will change)
+### Proposal 0: You can design your own models before registration
 (Assuming you already created the melonpreferences structure)
 UIFModel.Mod MyMod = new();
 
