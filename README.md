@@ -1,25 +1,5 @@
-﻿# Current Implementation Notes
-## In ISettingEntry
-1. Add SaveAction Method -
-1. 
-1. Add LoadAction Method
-1. Make sure individual save actions are run before category save
-1. implement category save action lol
-1. Add a state for whether or not it's been edited
-## When clicking on a different mod button:
-Clear current contents of PrefRegistrationPanel
-
-
-# NOT MOD UI
-
-We want people to be able to implement this as easy and painless as possible. 
-
-This will not be diegetic.
-
-## Minimum Viable Product
-Able to create a ui from melonpreferences, take in inputs, load, and save them
-
-
+﻿
+# UI Framework
 ## End goal
 A modular UI where people can create their own instances and be interactable in VR with optional panels that can be pinned in scenes.
 
@@ -28,11 +8,13 @@ A modular UI where people can create their own instances and be interactable in 
 
 ### Example Usage
 
-**<details><summary> Standard Melon preferences declaration</summary>**
+**<details><summary> Standard Melon preferences declaration example </summary>**
 https://melonwiki.xyz/#/modders/preferences?id=melon-preferences
 ```
 private const string USER_DATA = "UserData/TestMod/";
 private const string CONFIG_FILE = "config.cfg";
+if (!Directory.Exists(USER_DATA))
+    Directory.CreateDirectory(USER_DATA);
 
 private MelonPreferences_Category TestCategory1;
 private MelonPreferences_Entry<string> TestEntry11;

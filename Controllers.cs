@@ -93,6 +93,8 @@ namespace UIFramework
 
 				}
 				PrefRegistryPanel.SelectedCategory.SaveAction();
+				PrefRegistryPanel.Infanticide();
+				PrefRegistryPanel.BuildFromModelList();
 			}
 
 		}
@@ -124,16 +126,16 @@ namespace UIFramework
 			public virtual void SetModel(UIFModel.ModelBase model)
 			{
 				_model = model;
-				BuildFromModelList(model.SubModels);
+				BuildFromModelList();
 			}
 
 			///	<summary>
 			/// Builds UI from a list of models
 			/// </summary>
-			public void BuildFromModelList(List<UIFModel.ModelBase> modelList)
+			public void BuildFromModelList()
 			{
 				Infanticide();
-				foreach (UIFModel.ModelBase model in modelList)
+				foreach (UIFModel.ModelBase model in Model.SubModels)
 				{
 					GameObject uiElement = model.GetNewEntryWidgetInstance();//GameObject.Instantiate(GetUIPrefabForModel(model), this.gameObject.transform);
 					uiElement.SetActive(true);
@@ -266,14 +268,6 @@ namespace UIFramework
 			public string ModName { get; set; }
 
 
-			/*public override void PopTarget()
-			{
-				TargetContainer = Prefabs.CatDisplayList.GetComponent<TopBar>();
-				TargetContainer.BuildFromModelList(Model.SubModels);
-			}*/
-
-
-
 		}
 		/// <summary>
 		/// 
@@ -281,12 +275,6 @@ namespace UIFramework
 		[RegisterTypeInIl2Cpp]
 		public class Category : TabButtonController, IModelListable
 		{
-			/*public override void PopTarget()
-			{
-				TargetContainer = Prefabs.PrefDisplayList.GetComponent<PrefList>();
-				TargetContainer.BuildFromModelList(Model.SubModels);
-			}*/
-
 		}
 		#endregion
 
@@ -430,6 +418,30 @@ namespace UIFramework
 		/// 
 		/// </summary>
 		[RegisterTypeInIl2Cpp]
+		public class PrefDouble : TextInputEntry
+		{
+			public double Value => double.Parse(textField.text);
+
+			public override void SaveAction()
+			{
+				try
+				{
+					if (textField.text.Trim() != "")
+					{
+						_model.PrefEntry.BoxedValue = double.Parse(textField.text.Trim());
+					}
+				}
+				catch (Exception ex)
+				{
+					Log($"{ex.Message} {textField.text}", false, 2);
+				}
+			}
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[RegisterTypeInIl2Cpp]
 		public class PrefBool : PreferenceEntry
 		{
 			public bool Value => this.gameObject.transform.Find("Panel/Toggle").gameObject.GetComponent<Toggle>().isOn;
@@ -454,6 +466,9 @@ namespace UIFramework
 			}
 
 		}
+		#endregion
+		#region no support
+
 		/// <summary>
 		/// 
 		/// </summary>

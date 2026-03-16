@@ -162,8 +162,6 @@ namespace UIFramework
 			public string Identifier => PrefEntry.Identifier;
 			public string DisplayName => PrefEntry.DisplayName;
 
-			public InputType InputType { get; set; } = InputType.TextField;
-
 			public ModelEntry(MelonPreferences_Entry prefEntry)
 			{
 				PrefEntry = prefEntry;
@@ -171,6 +169,14 @@ namespace UIFramework
 			}
 
 			private GameObject _uiPrefabSource;
+			/// <summary>
+			/// Use this function to provide your own prefab for this entry. 
+			/// The prefab must have a component that implements IUIFrameworkEntry and properly handles the value changes and saving. 
+			/// If no prefab is provided, a default one will be used based on the type of the preference 
+			/// (bools will be toggles, strings will be text input fields and so would numerics).
+			/// 
+			/// </summary>
+			/// <param name="prefab"></param>
 			public void SetUIPrefabSource(GameObject prefab)
 			{
 				_uiPrefabSource = prefab;
@@ -183,32 +189,21 @@ namespace UIFramework
 			/// <returns></returns>
 			public override GameObject GetNewEntryWidgetInstance()
 			{
-				if (InputType == InputType.Default)
+				if (_uiPrefabSource == null)
 				{
-					return GameObject.Instantiate(_uiPrefabSource);
+					return PrefEntry.BoxedValue switch
+					{
+						bool => GameObject.Instantiate(Prefabs.BoolPrefab),
+						string => GameObject.Instantiate(Prefabs.TextPrefab),
+						int => GameObject.Instantiate(Prefabs.IntPrefab),
+						float => GameObject.Instantiate(Prefabs.FloatPrefab),
+						double => GameObject.Instantiate(Prefabs.DoublePrefab),
+						_ => GameObject.Instantiate(Prefabs.TextPrefab),
+					};
 				}
 				else
 				{
-					switch (PrefEntry.BoxedValue)
-					{
-						case bool:
-							return GameObject.Instantiate(Prefabs.BoolPrefab);
-							break;
-						case string:
-							return GameObject.Instantiate(Prefabs.TextPrefab);
-							break;
-						case int:
-							return GameObject.Instantiate(Prefabs.IntPrefab);
-							break;
-						case float:
-						case double:
-							return GameObject.Instantiate(Prefabs.FloatPrefab);
-							break;
-						default:
-							return GameObject.Instantiate(Prefabs.TextPrefab);
-							break;
-
-					}
+					return GameObject.Instantiate(_uiPrefabSource);
 				}
 			}
 

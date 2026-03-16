@@ -34,7 +34,7 @@ namespace UIFramework
 		public static GameObject BoolPrefab;
 		public static GameObject IntPrefab;
 		public static GameObject FloatPrefab;
-
+		public static GameObject DoublePrefab;
 		internal static Button MainActionButton;
 
 		internal static void LoadAssetBundle()
@@ -85,6 +85,7 @@ namespace UIFramework
 			BoolPrefab = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryBoolean")?.gameObject;
 			IntPrefab = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryInt")?.gameObject;
 			FloatPrefab = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryFloat")?.gameObject;
+			DoublePrefab = GameObject.Instantiate(FloatPrefab, UiAssets.transform);
 
 			MainActionButton = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "SaveActionButton")?.gameObject.GetComponent<Button>();
 
@@ -101,6 +102,7 @@ namespace UIFramework
 			BoolPrefab.AddComponent<UIFController.PrefBool>();
 			IntPrefab.AddComponent<UIFController.PrefInt>();
 			FloatPrefab.AddComponent<UIFController.PrefFloat>();
+			DoublePrefab.AddComponent<UIFController.PrefDouble>();
 
 			UIFController.Mod baseModTabController = ModTab.AddComponent<UIFController.Mod>();
 			Button ModButton = ModTab.GetComponent<Button>();
