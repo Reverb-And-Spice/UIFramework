@@ -93,6 +93,8 @@ namespace UIFramework
 			FloatPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryFloat")?.gameObject;
 			DoublePrefab = GameObject.Instantiate(FloatPrefab, AssetBundleLoaded.transform);
 
+			ButtonPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryButton")?.gameObject;
+
 			MainActionButton = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "SaveActionButton")?.gameObject.GetComponent<Button>();
 
 
@@ -109,7 +111,7 @@ namespace UIFramework
 			IntPrefab.AddComponent<UIFController.PrefInt>();
 			FloatPrefab.AddComponent<UIFController.PrefFloat>();
 			DoublePrefab.AddComponent<UIFController.PrefDouble>();
-
+			ButtonPrefab.AddComponent<UIFController.ButtonEntry>();
 			UIFController.Mod baseModTabController = ModTab.AddComponent<UIFController.Mod>();
 			Button ModButton = ModTab.GetComponent<Button>();
 			//ModButton.onClick.AddListener(baseModTabController.OnSelect);
@@ -130,7 +132,7 @@ namespace UIFramework
 
 		static UnityAction MainButtonClick = new System.Action(() =>
 		{
-			Debug.Log("Main Action Button Clicked!", true, 0);
+			Debug.Log("Main Action ButtonGo Clicked!", true, 0);
 		});
 
 		static GameObject GetInputPrefab(InputType type)

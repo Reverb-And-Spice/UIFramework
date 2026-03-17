@@ -60,7 +60,7 @@
         </member>
         <member name="M:UIFramework.UIFController.ListArea.SaveAction">
             <summary>
-            Is called when Save Button is clicked. Override to create custom behaviour 
+            Is called when Save ButtonGo is clicked. Override to create custom behaviour 
             </summary>
         </member>
         <member name="T:UIFramework.UIFController.Sidebar">
@@ -83,9 +83,9 @@
             When the save button is clicked, the selected category save action will be called. The model is now in charge of what that means
             </summary>
         </member>
-        <member name="M:UIFramework.UIFController.TabButtonController.PopTarget">
+        <member name="M:UIFramework.UIFController.TabButtonController.SelectTargetPanel">
             <summary>
-            Populates the target container with
+            Selects the panel that should be assigned a model next. The target then parents the models' game objects to itself from the list
             </summary>
         </member>
         <member name="T:UIFramework.UIFController.Mod">
@@ -96,13 +96,6 @@
         <member name="T:UIFramework.UIFController.Category">
             <summary>
             
-            </summary>
-        </member>
-        <member name="T:UIFramework.UIFController.ISettingEntry">
-            <summary>
-            This was going to be the basis for all entries and what advanced users would have to implement
-            Unfortunately can't be successfully retrieved with GetComponent in the current setup
-            Will move to making PreferenceEntry the required base class
             </summary>
         </member>
         <member name="T:UIFramework.UIFController.PreferenceEntry">
@@ -261,38 +254,6 @@
             <param name="categories"></param>
             <returns>A reference to the created Mod Model for further customization</returns>
         </member>
-        <member name="T:UIFramework.UIFModel">
-            <summary>
-            Models define how the UI is built. The heirarchy is simple and follows melonpreferences basic structure
-            ModelMod ->  ModelCategory -> ModelEntry
-            Modders can use the default model just by calling UIF.Register(modInstance, categories) in their OnLateInitializeMelon. 
-            The default model will use simple input methods: bools will be toggles, strings will be text input fields and so would numerics.
-            More options will eventually be available: sliders, dropdowns, multi checkboxes, radio buttons, etc.
-            
-            Those will be developed after the default model is functional
-            </summary>
-        </member>
-        <member name="T:UIFramework.UIFModel.ModelEntry">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:UIFramework.UIFModel.ModelEntry.SetUIPrefabSource(UnityEngine.GameObject)">
-            <summary>
-            Use this function to provide your own prefab for this entry. 
-            The prefab must have a component that implements IUIFrameworkEntry and properly handles the value changes and saving. 
-            If no prefab is provided, a default one will be used based on the type of the preference 
-            (bools will be toggles, strings will be text input fields and so would numerics).
-            
-            </summary>
-            <param name="prefab"></param>
-        </member>
-        <member name="M:UIFramework.UIFModel.ModelEntry.GetNewEntryWidgetInstance">
-            <summary>
-            
-            </summary>
-            <returns></returns>
-        </member>
         <member name="F:UIFramework.Prefabs.UIFGameObjects">
             <summary>
             Root Game Object for all of UIFramework in DDOL
@@ -322,6 +283,44 @@
              <param name="text">The string to normalize. Cannot be null.</param>
              <returns>A normalized string with all spaces removed, trimmed, and converted to lowercase.</returns>
             <remarks>Returns empty string if input only contains whitespace</remarks>
+        </member>
+        <member name="T:UIFramework.UIFModel">
+            <summary>
+            Models define how the UI is built. The heirarchy is simple and follows melonpreferences basic structure
+            ModelMod ->  ModelCategory -> ModelEntry
+            Modders can use the default model just by calling UIF.Register(modInstance, categories) in their OnLateInitializeMelon. 
+            The default model will use simple input methods: bools will be toggles, strings will be text input fields and so would numerics.
+            More options will eventually be available: sliders, dropdowns, multi checkboxes, radio buttons, etc.
+            
+            Those will be developed after the default model is functional
+            </summary>
+        </member>
+        <member name="T:UIFramework.UIFModel.ModelEntry">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:UIFramework.UIFModel.ModelEntry.SetUIPrefabSource(UnityEngine.GameObject)">
+            <summary>
+            Use this function to provide your own prefab for this entry. 
+            The prefab must have a component that implements IUIFrameworkEntry and properly handles the value changes and saving. 
+            If no prefab is provided, a default one will be used based on the type of the preference 
+            (bools will be toggles, strings will be text input fields and so would numerics).
+            
+            </summary>
+            <param name="prefab"></param>
+        </member>
+        <member name="M:UIFramework.UIFModel.ModelEntry.GetNewUIInstance">
+            <summary>
+            Returns an instance of the game object associated with the MelonPreferences_Entry type.
+            If a custom one is provided, it will return an instance of that instead
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:UIFramework.UIFModel.ButtonEntry.BoxedValue">
+            <summary>
+            This is only to satisfy the contract for IEntry. 
+            </summary>
         </member>
         <member name="T:UIFramework.Preferences">
             <summary>

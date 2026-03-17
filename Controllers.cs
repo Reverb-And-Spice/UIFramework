@@ -31,7 +31,7 @@ namespace UIFramework
 			/// <summary>
 			/// Reference to the model the controller works from.  
 			/// </summary>
-			public UIFModel.ModelBase Model { get; set; }
+			public UIFModel.IModelable Model { get; set; }
 		}
 		/// <summary>
 		/// 
@@ -116,7 +116,7 @@ namespace UIFramework
 		public class ListArea : MonoBehaviour
 		{
 			protected UIFModel.ModelBase _model;
-			public UIFModel.ModelBase Model => _model;
+			public UIFModel.IModelable Model => _model;
 			public virtual void ContainerReset()
 			{
 				_model = null;
@@ -156,7 +156,7 @@ namespace UIFramework
 				Infanticide();
 				foreach (UIFModel.ModelBase model in Model.SubModels)
 				{
-					GameObject uiElement = model.GetNewEntryWidgetInstance();//GameObject.Instantiate(GetUIPrefabForModel(model), this.gameObject.transform);
+					GameObject uiElement = model.GetNewUIInstance();//GameObject.Instantiate(GetUIPrefabForModel(model), this.gameObject.transform);
 					uiElement.SetActive(true);
 					uiElement.transform.SetParent(this.gameObject.transform, false);
 
@@ -173,6 +173,7 @@ namespace UIFramework
 							ViewController = uiElement.GetComponent<UIFController.TabButtonController>();
 							break;
 						case UIFModel.ModelEntry entryModel:
+						case UIFModel.ButtonEntry buttonEntry:
 							ViewController = uiElement.GetComponent<UIFController.PreferenceEntry>();
 							break;
 						default:
@@ -190,7 +191,7 @@ namespace UIFramework
 			}
 
 			/// <summary>
-			/// Is called when Save Button is clicked. Override to create custom behaviour 
+			/// Is called when Save ButtonGo is clicked. Override to create custom behaviour 
 			/// </summary>
 			public virtual void SaveAction() { }
 
@@ -240,12 +241,12 @@ namespace UIFramework
 		public class TabButtonController : MonoBehaviour, IModelListable
 		{
 			protected UIFModel.ModelBase _model;
-			public virtual UIFModel.ModelBase Model
+			public virtual UIFModel.IModelable Model
 			{
 				get { return _model; }
 				set
 				{
-					_model = value;
+					_model = (UIFModel.ModelBase) value;
 					Label = _model.Name;
 
 				}
@@ -256,12 +257,12 @@ namespace UIFramework
 			public ListArea TargetContainer;
 			public void OnSelect()
 			{
-				PopTarget();
+				SelectTargetPanel();
 			}
 			/// <summary>
-			/// Populates the target container with
+			/// Selects the panel that should be assigned a model next. The target then parents the models' game objects to itself from the list
 			/// </summary>
-			public virtual void PopTarget()
+			public virtual void SelectTargetPanel()
 			{
 				WindowController ParentWindow = gameObject.transform.parent.parent.parent.parent.parent.gameObject.GetComponent<WindowController>();
 				switch (this)
@@ -278,9 +279,13 @@ namespace UIFramework
 			}
 
 
-			void OnEnable()
+			void Start()
 			{
 				this.gameObject.GetComponent<Button>().onClick.AddListener((UnityAction)OnSelect);
+			}
+			void OnDestroy()
+			{
+				this.gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
 			}
 
 
@@ -308,7 +313,7 @@ namespace UIFramework
 		#endregion
 
 		#region Entries
-		/// <summary>
+		/*/// <summary>
 		/// This was going to be the basis for all entries and what advanced users would have to implement
 		/// Unfortunately can't be successfully retrieved with GetComponent in the current setup
 		/// Will move to making PreferenceEntry the required base class
@@ -320,21 +325,22 @@ namespace UIFramework
 			//override this function to create your own validation check
 			public bool ValidationCheck();
 			
-		}
+		}*/
 		/// <summary>
 		/// Inherit this class to create your own custom entry controllers for your own input controls.
 		/// </summary>
-		public class PreferenceEntry : MonoBehaviour, ISettingEntry
+		public class PreferenceEntry : MonoBehaviour, IModelListable
 		{
-			protected UIFModel.ModelEntry _model;
-			public virtual UIFModel.ModelBase Model
+			protected UIFModel.IEntry _model;
+			public virtual UIFModel.IModelable Model
 			{
-				get { return _model; }
+				get { return (UIFModel.IModelable) _model; }
 				set
 				{
-					_model = (UIFModel.ModelEntry)value;
+
+					_model = (UIFModel.IEntry)value;
 					DescriptionText = _model.Description;
-					IdentifierText = _model.Identifier;
+					IdentifierText = _model.Name;
 					ModelSet();
 				}
 			}
@@ -372,7 +378,7 @@ namespace UIFramework
 		/// <summary>
 		/// Base controller for text fields 
 		/// </summary>
-		public abstract class TextInputEntry : PreferenceEntry, ISettingEntry
+		public abstract class TextInputEntry : PreferenceEntry
 		{
 			/// <summary>
 			/// Returns the textfield
@@ -385,7 +391,7 @@ namespace UIFramework
 			/// <inheritdoc/>
 			public override void ModelSet()
 			{
-				PlaceHolderText = _model.PrefEntry.BoxedValue.ToString();
+				PlaceHolderText = _model.BoxedValue.ToString();
 			}
 		}
 
@@ -407,7 +413,7 @@ namespace UIFramework
 				{
 					if (Value.Trim() != "")
 					{
-						_model.PrefEntry.BoxedValue = Value;
+						_model.BoxedValue = Value;
 					}
 				}
 				catch (Exception ex)
@@ -430,7 +436,7 @@ namespace UIFramework
 				{
 					if (textField.text.Trim() != "")
 					{
-						_model.PrefEntry.BoxedValue = int.Parse(textField.text.Trim());
+						_model.BoxedValue = int.Parse(textField.text.Trim());
 					}
 				}
 				catch (Exception ex)
@@ -454,7 +460,7 @@ namespace UIFramework
 				{
 					if (textField.text.Trim() != "")
 					{
-						_model.PrefEntry.BoxedValue = float.Parse(textField.text.Trim());
+						_model.BoxedValue = float.Parse(textField.text.Trim());
 					}
 				}
 				catch (Exception ex)
@@ -477,7 +483,7 @@ namespace UIFramework
 				{
 					if (textField.text.Trim() != "")
 					{
-						_model.PrefEntry.BoxedValue = double.Parse(textField.text.Trim());
+						_model.BoxedValue = double.Parse(textField.text.Trim());
 					}
 				}
 				catch (Exception ex)
@@ -498,7 +504,7 @@ namespace UIFramework
 			public override void ModelSet()
 			{
 				base.ModelSet();
-				this.gameObject.transform.Find("Panel/Toggle").gameObject.GetComponent<Toggle>().isOn = (bool)_model.PrefEntry.BoxedValue;
+				this.gameObject.transform.Find("Panel/Toggle").gameObject.GetComponent<Toggle>().isOn = (bool)_model.BoxedValue;
 
 			}
 			/// <inheritdoc/>
@@ -506,7 +512,7 @@ namespace UIFramework
 			{
 				try
 				{
-					_model.PrefEntry.BoxedValue = Value;
+					_model.BoxedValue = Value;
 				}
 				catch (Exception ex)
 				{
@@ -517,6 +523,24 @@ namespace UIFramework
 
 		}
 		#endregion
+		[RegisterTypeInIl2Cpp]
+		public class ButtonEntry : PreferenceEntry
+		{
+			public GameObject ButtonGo;
+			public override void ModelSet()
+			{
+				base.ModelSet();
+				ButtonGo = this.gameObject.transform.Find("Panel/Panel/Button").gameObject;
+				ButtonGo.GetComponent<Button>().onClick.AddListener((UnityAction)((UIFModel.ButtonEntry)_model).OnClickRelay);
+
+
+			}
+
+			void OnDestroy()
+			{
+				ButtonGo.GetComponent<Button>().onClick.RemoveAllListeners();
+			}
+		}
 		#region no support
 
 		/// <summary>

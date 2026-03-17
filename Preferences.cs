@@ -48,7 +48,7 @@ namespace UIFramework
 			Experimental.SaveToFile();
 
 			TestBooleans = MelonPreferences.CreateCategory("TestBooleans", "Test Booleans");
-			for (int i = 0; i < 10; i++)
+			for (int i = 0; i < 2; i++)
 			{
 				TestBoolList.Add(TestBooleans.CreateEntry("TestBool" + i, false, "Test Bool " + i));
 			}

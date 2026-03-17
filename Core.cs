@@ -45,7 +45,11 @@ namespace UIFramework
 		public override void OnLateInitializeMelon()
 		{
 			Preferences.InitializePrefs();
-			UIFramework.Register(this, Preferences.CatUIFramework, Preferences.Experimental, Preferences.TestBooleans);
+			UIFModel.ModelMod ModModel = UIFramework.Register(this, Preferences.CatUIFramework, Preferences.Experimental, Preferences.TestBooleans);
+			UIFModel.IModelable tester = ModModel.GetSubmodel(Preferences.TestBooleans.Identifier);
+			UIFModel.ButtonEntry testButton = new UIFModel.ButtonEntry("CustomButton");
+			((UIFModel.ModelCategory)tester).AddEntry(testButton);
+
 		}
 		/// <summary></summary>
 		public override void OnUpdate()
@@ -57,6 +61,8 @@ namespace UIFramework
 				UIFramework.MainWindow.SetActive(!UIFramework.MainWindow.activeSelf);
 			}
 		}
+
+		
 
 		public override void OnSceneWasLoaded(int buildIndex, string sceneName)
 		{
@@ -82,8 +88,6 @@ namespace UIFramework
 			UIFramework.BuildUI();
 			isFirstLoad = false;
 		}
-
-
 
 
 	}

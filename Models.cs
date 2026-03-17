@@ -20,14 +20,26 @@ namespace UIFramework
 	/// </summary>
 	public class UIFModel
 	{
-		public abstract class ModelBase
+		public interface IModelable
 		{
-			public List<ModelBase> SubModels = new();
+			public List<IModelable> SubModels { get; set; }
+			public string Name { get; }
+			public GameObject GetNewUIInstance();
+			public void SaveAction();
+
+		}
+		public abstract class ModelBase : IModelable
+		{
+			public List<IModelable> SubModels { get; set; } = new();
 			public abstract string Name { get; }
-			public abstract GameObject GetNewEntryWidgetInstance();
+			public abstract GameObject GetNewUIInstance();
 			public virtual void SaveAction()
 			{
 
+			}
+			public virtual IModelable GetSubmodel(string name)
+			{
+				return SubModels.FirstOrDefault(m => m.Name == name);
 			}
 
 
@@ -45,7 +57,7 @@ namespace UIFramework
 			{
 				SubModels.Add(mod);
 			}
-			public override GameObject GetNewEntryWidgetInstance()
+			public override GameObject GetNewUIInstance()
 			{
 				throw new NotImplementedException();
 			}
@@ -74,7 +86,7 @@ namespace UIFramework
 				}
 			}
 
-			public override GameObject GetNewEntryWidgetInstance()
+			public override GameObject GetNewUIInstance()
 			{
 				return GameObject.Instantiate(Prefabs.ModTab);
 			}
@@ -87,7 +99,6 @@ namespace UIFramework
 			public override string Name => PrefCat.Identifier;
 
 
-			public List<ModelEntry> Entries = new();
 			public ModelCategory(MelonPreferences_Category cat)
 			{
 				PrefCat = cat;
@@ -98,7 +109,7 @@ namespace UIFramework
 
 			}
 
-			public override GameObject GetNewEntryWidgetInstance()
+			public override GameObject GetNewUIInstance()
 			{
 				return GameObject.Instantiate(Prefabs.CatTab);
 			}
@@ -107,19 +118,35 @@ namespace UIFramework
 			{
 				PrefCat.SaveToFile();
 			}
+
+			public void AddEntry (IEntry model)
+			{
+				SubModels.Add((IModelable)model);
+			}
+		}
+		public interface IEntry
+		{
+			public string Name { get; }
+			public string Description { get; }
+			public string DisplayName { get; }
+			public object BoxedValue { get; set; }
 		}
 		/// <summary>
 		/// 
 		/// </summary>
-		public class ModelEntry : ModelBase
+		public class ModelEntry : ModelBase, IEntry
 		{
 			public MelonPreferences_Entry PrefEntry;
 			public override string Name => PrefEntry.Identifier;
 
-			public string Description => PrefEntry.Description;
-			public string Identifier => PrefEntry.Identifier;
-			public string DisplayName => PrefEntry.DisplayName;
+			public virtual string Description => PrefEntry.Description;
+			public virtual string DisplayName => PrefEntry.DisplayName;
 
+			public object BoxedValue 
+			{
+				get => PrefEntry.BoxedValue;
+				set => PrefEntry.BoxedValue = value;
+			}
 			public ModelEntry(MelonPreferences_Entry prefEntry)
 			{
 				PrefEntry = prefEntry;
@@ -142,10 +169,11 @@ namespace UIFramework
 
 
 			/// <summary>
-			/// 
+			/// Returns an instance of the game object associated with the MelonPreferences_Entry type.
+			/// If a custom one is provided, it will return an instance of that instead
 			/// </summary>
 			/// <returns></returns>
-			public override GameObject GetNewEntryWidgetInstance()
+			public override GameObject GetNewUIInstance()
 			{
 				if (_uiPrefabSource == null)
 				{
@@ -184,5 +212,39 @@ namespace UIFramework
 
 
 		}
+
+		#region customs
+		public class ButtonEntry : ModelBase, IEntry
+		{
+			private string _name;
+			public override string Name => _name;
+
+			private string _description;
+			public string Description => _description;
+
+			private string _displayName;
+			public string DisplayName => _displayName;
+			/// <summary>
+			/// This is only to satisfy the contract for IEntry. 
+			/// </summary>
+			public object BoxedValue { get; set; }
+
+			public Action<IEntry> OnClick;
+			public ButtonEntry(string name, string description = "", string displayName = "")
+			{
+				_name = name;
+				_description = description;
+				_displayName = displayName;
+			}
+
+			public override GameObject GetNewUIInstance() => UIFramework.GetPrefab(InputType.Button);
+			public virtual void OnClickRelay()
+			{
+				OnClick?.Invoke(this);
+			}
+
+
+		}
+		#endregion
 	}
 }
