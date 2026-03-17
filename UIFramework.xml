@@ -293,6 +293,21 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="F:UIFramework.Prefabs.UIFGameObjects">
+            <summary>
+            Root Game Object for all of UIFramework in DDOL
+            </summary>
+        </member>
+        <member name="F:UIFramework.Prefabs.AssetBundleLoaded">
+            <summary>
+            UI Assets from the asset bundle
+            </summary>
+        </member>
+        <member name="F:UIFramework.Prefabs.TempStorage">
+            <summary>
+            Temporary game object storage as they're being instantiated
+            </summary>
+        </member>
         <member name="M:UIFramework.Prefabs.ApplyAndRebuild(UnityEngine.GameObject)">
             <summary>
             Wrapping gets disabled when loading and this reenables it

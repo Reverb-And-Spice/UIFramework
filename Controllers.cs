@@ -275,13 +275,11 @@ namespace UIFramework
 						break;
 				}
 				TargetContainer.SetModel(_model);
-				Deb("TargetContainer Full Path: " + Helpers.HierarchyUtility.GetGameObjectPath(TargetContainer.gameObject));
 			}
 
 
 			void OnEnable()
 			{
-				Log("TabButtonController OnEnable", true, 1);
 				this.gameObject.GetComponent<Button>().onClick.AddListener((UnityAction)OnSelect);
 			}
 

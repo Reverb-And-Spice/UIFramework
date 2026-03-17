@@ -11,17 +11,27 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using static Il2CppSystem.DateTimeParse;
+using Il2CppExitGames.Client.Photon;
 
 namespace UIFramework
 {
 	internal static partial class Prefabs
 	{
-		
+		/// <summary>
+		/// Root Game Object for all of UIFramework in DDOL
+		/// </summary>
 		internal static GameObject UIFGameObjects = new GameObject("UIFramework");
 
-		internal static GameObject UiAssets;
+		/// <summary>
+		/// UI Assets from the asset bundle
+		/// </summary>
+		internal static GameObject AssetBundleLoaded;
 		//internal static GameObject PrefabSources = new GameObject("Prefabs");
 
+		/// <summary>
+		/// Temporary game object storage as they're being instantiated
+		/// </summary>
+		internal static GameObject TempStorage = new GameObject("TempStorage");
 		public static GameObject MainCanvasSource;
 		internal static GameObject ModDisplayList;
 		internal static GameObject CatDisplayList;
@@ -30,22 +40,27 @@ namespace UIFramework
 		internal static GameObject ModTab;
 		internal static GameObject CatTab;
 
-		public static GameObject TextPrefab;
-		public static GameObject BoolPrefab;
-		public static GameObject IntPrefab;
-		public static GameObject FloatPrefab;
-		public static GameObject DoublePrefab;
+		internal static GameObject TextPrefab;
+		internal static GameObject BoolPrefab;
+		internal static GameObject IntPrefab;
+		internal static GameObject FloatPrefab;
+		internal static GameObject DoublePrefab;
+
+		internal static GameObject ButtonPrefab;
 		internal static Button MainActionButton;
 
 		internal static void LoadAssetBundle()
 		{
 			Debug.Log("LoadingUIFramework AssetBundle", true);
 			GameObject.DontDestroyOnLoad(UIFGameObjects);
-			UiAssets = GameObject.Instantiate(LoadAssetFromStream<GameObject>(Core.Instance, "UIFramework.Assets.uiframework", "UIFramework"), UIFGameObjects.transform);
-			UiAssets.name = "UIFrameworkAssets";
-			//UiAssets.SetActive(false);
+			TempStorage.transform.SetParent(UIFGameObjects.transform,false);
+			TempStorage.SetActive(false);
+
+			AssetBundleLoaded = GameObject.Instantiate(LoadAssetFromStream<GameObject>(Core.Instance, "UIFramework.Assets.uiframework", "UIFramework"), UIFGameObjects.transform);
+			AssetBundleLoaded.name = "UIFrameworkAssets";
+			//AssetBundleLoaded.SetActive(false);
 			//Taco generated (text won't work witout this for some reason)
-			foreach (var tmpugui in UiAssets.GetComponentsInChildren<TextMeshProUGUI>(true))
+			foreach (var tmpugui in AssetBundleLoaded.GetComponentsInChildren<TextMeshProUGUI>(true))
 			{
 				tmpugui.font = Resources.Load<TMP_FontAsset>("Fonts & Materials/Arial SDF");
 
@@ -58,36 +73,27 @@ namespace UIFramework
 					tmpugui.SetVerticesDirty();
 					tmpugui.SetMaterialDirty();
 				}
-				//tmpugui.SetLayoutDirty();
 			}
-
-			//Refresh(UiAssets, alsoFixCommonIssues: true);
-
-			// 4) If your LayoutGroups weren’t updating, force a proper rebuild
-			/*Canvas.ForceUpdateCanvases();
-			var rts = UiAssets.GetComponentsInChildren<RectTransform>(true);
-			foreach (var rt in rts) UnityEngine.UI.LayoutRebuilder.ForceRebuildLayoutImmediate(rt);
-			Canvas.ForceUpdateCanvases();*/
-			ApplyAndRebuild(UiAssets);
+			ApplyAndRebuild(AssetBundleLoaded);
 
 			
 			
-			MainCanvasSource = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "UICanvas")?.gameObject;
+			MainCanvasSource = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "UICanvas")?.gameObject;
 
-			ModDisplayList = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "ModRegCont")?.gameObject;
-			CatDisplayList = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "CatRegCont")?.gameObject;
-			PrefDisplayList = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefRegCont")?.gameObject;
+			ModDisplayList = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "ModRegCont")?.gameObject;
+			CatDisplayList = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "CatRegCont")?.gameObject;
+			PrefDisplayList = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefRegCont")?.gameObject;
 
-			ModTab = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "ModEntry")?.gameObject;
-			CatTab = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "CategoryTab")?.gameObject;
+			ModTab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "ModEntry")?.gameObject;
+			CatTab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "CategoryTab")?.gameObject;
 
-			TextPrefab = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryText")?.gameObject;
-			BoolPrefab = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryBoolean")?.gameObject;
-			IntPrefab = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryInt")?.gameObject;
-			FloatPrefab = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryFloat")?.gameObject;
-			DoublePrefab = GameObject.Instantiate(FloatPrefab, UiAssets.transform);
+			TextPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryText")?.gameObject;
+			BoolPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryBoolean")?.gameObject;
+			IntPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryInt")?.gameObject;
+			FloatPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryFloat")?.gameObject;
+			DoublePrefab = GameObject.Instantiate(FloatPrefab, AssetBundleLoaded.transform);
 
-			MainActionButton = UiAssets.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "SaveActionButton")?.gameObject.GetComponent<Button>();
+			MainActionButton = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "SaveActionButton")?.gameObject.GetComponent<Button>();
 
 
 			
@@ -119,16 +125,6 @@ namespace UIFramework
 			PrefDisplayList.AddComponent<UIFController.PrefList>();
 
 
-			//UiAssets.SetActive(false);
-			//UI Test Section
-			/*
-			GameObject testMod = GameObject.Instantiate(ModTab, ModDisplayList.transform);
-			GameObject testCat = GameObject.Instantiate(CatTab, CatDisplayList.transform);
-			GameObject testPref = GameObject.Instantiate(TextPrefab, PrefDisplayList.transform);
-			GameObject.Instantiate(BoolPrefab, PrefDisplayList.transform);
-			GameObject.Instantiate(IntPrefab, PrefDisplayList.transform);
-			GameObject.Instantiate(FloatPrefab, PrefDisplayList.transform);
-			*/
 			MainCanvasSource.SetActive(false);
 		}
 

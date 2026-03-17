@@ -51,12 +51,10 @@ namespace UIFramework
 		public override void OnUpdate()
 		{
 			DiffLog($"");
-			if(Input.GetKey(KeyCode.LeftAlt))
+
+			if(Input.GetKeyDown(KeyCode.F9))
 			{
-				if(Input.GetKeyDown(KeyCode.F9))
-				{
-					UIFramework.MainWindow.SetActive(!UIFramework.MainWindow.activeSelf);
-				}
+				UIFramework.MainWindow.SetActive(!UIFramework.MainWindow.activeSelf);
 			}
 		}
 
