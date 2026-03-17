@@ -1,5 +1,6 @@
 ﻿
 # UI Framework
+## Default toggle button is F9
 ## End goal
 A modular UI where people can create their own instances and be interactable in VR with optional panels that can be pinned in scenes.
 
@@ -84,7 +85,7 @@ If none is provided, it will default to the [standard input](#defaults) based on
 
 # Design Pattern
 
-# MVC/MVP(ish)-Inspired Coding Pattern
+# MVC/MVP(ish)-Inspired Pattern
 
 The intention is to have separation of UI and data logic. Make the UI itself disposable while the model would be the one source of truth it can be rebuilt from every time.
 

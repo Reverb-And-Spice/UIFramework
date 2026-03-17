@@ -74,8 +74,8 @@ namespace UIFramework
 
 			if (CurrentScene == "gym" && isFirstLoad) FirstGymLoad();
 
-			if (CurrentScene.Contains("map") || CurrentScene == "park")
-				UIFramework.MainWindow.SetActive(false); //Remove on final product
+			if(!isFirstLoad)
+				UIFramework.MainWindow.SetActive(false); 
 			
 			
 		}
@@ -87,6 +87,8 @@ namespace UIFramework
 			UIFramework.InitializeUIObjects();
 			UIFramework.BuildUI();
 			isFirstLoad = false;
+
+			UIFramework.MainWindow.SetActive(false);
 		}
 
 
