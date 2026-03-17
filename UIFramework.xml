@@ -1,0 +1,317 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>UIFramework</name>
+    </assembly>
+    <members>
+        <member name="T:UIFramework.UIFController">
+            <summary>
+            Custom components that will serve as views in this MVP/MVC-ish pattern
+            </summary>
+            <remarks>I may have gone a little crazy with inheritance</remarks>
+        </member>
+        <member name="P:UIFramework.UIFController.IModelListable.Model">
+            <summary>
+            Reference to the model the controller works from.  
+            </summary>
+        </member>
+        <member name="T:UIFramework.UIFController.WindowController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:UIFramework.UIFController.WindowController.SaveButtonClick">
+            <summary>
+            Gets called when the save button gets clicked. 
+            </summary>
+            <remarks>
+            Generally Melonpreferences are saved by category. 
+            But this iterates through the child controllers and call their SaveAction() method.
+            This allows for custom behavior before the actual category gets saved
+            </remarks>
+        </member>
+        <member name="T:UIFramework.UIFController.ListArea">
+            <summary>
+            Areas where UI elements are shown to the user. 
+            1. Mod list Sidebar 
+            2. Category tab top bar
+            3. Entries Content area
+            </summary>
+        </member>
+        <member name="M:UIFramework.UIFController.ListArea.Infanticide">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:UIFramework.UIFController.ListArea.SetModel(UIFramework.UIFModel.ModelBase)">
+            <summary>
+            Sets the underlying data model for the current instance.
+            </summary>
+            <remarks>
+            Calling this method updates the internal state to reflect the provided model. Subsequent
+            operations may depend on the newly set model.
+            </remarks>
+            <param name="model">The model to associate with this instance. Cannot be null.</param>
+        </member>
+        <member name="M:UIFramework.UIFController.ListArea.BuildFromModelList">
+            <summary>
+            Clears the contents and recreates them from the submodels list in Model
+            </summary>
+        </member>
+        <member name="M:UIFramework.UIFController.ListArea.SaveAction">
+            <summary>
+            Is called when Save Button is clicked. Override to create custom behaviour 
+            </summary>
+        </member>
+        <member name="T:UIFramework.UIFController.Sidebar">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:UIFramework.UIFController.TopBar">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:UIFramework.UIFController.PrefList">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:UIFramework.UIFController.PrefList.SaveAction">
+            <summary>
+            When the save button is clicked, the selected category save action will be called. The model is now in charge of what that means
+            </summary>
+        </member>
+        <member name="M:UIFramework.UIFController.TabButtonController.PopTarget">
+            <summary>
+            Populates the target container with
+            </summary>
+        </member>
+        <member name="T:UIFramework.UIFController.Mod">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:UIFramework.UIFController.Category">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:UIFramework.UIFController.ISettingEntry">
+            <summary>
+            This was going to be the basis for all entries and what advanced users would have to implement
+            Unfortunately can't be successfully retrieved with GetComponent in the current setup
+            Will move to making PreferenceEntry the required base class
+            </summary>
+        </member>
+        <member name="T:UIFramework.UIFController.PreferenceEntry">
+            <summary>
+            Inherit this class to create your own custom entry controllers for your own input controls.
+            </summary>
+        </member>
+        <member name="M:UIFramework.UIFController.PreferenceEntry.ModelSet">
+            <summary>
+            Runs when the model property has been set. 
+            </summary>
+        </member>
+        <member name="P:UIFramework.UIFController.PreferenceEntry.DescriptionText">
+            <summary>
+            Sets the description text
+            </summary>
+        </member>
+        <member name="P:UIFramework.UIFController.PreferenceEntry.IdentifierText">
+            <summary>
+            Sets the identifier text
+            </summary>
+        </member>
+        <member name="M:UIFramework.UIFController.PreferenceEntry.SaveAction">
+            <summary>
+            This is called when the Save button is pressed. Override to create custom behaviour.
+            </summary>
+            <remarks>Generally MelonPreferences are saved from the category, not the indivial entries.</remarks>
+        </member>
+        <member name="T:UIFramework.UIFController.TextInputEntry">
+            <summary>
+            Base controller for text fields 
+            </summary>
+        </member>
+        <member name="P:UIFramework.UIFController.TextInputEntry.textField">
+            <summary>
+            Returns the textfield
+            </summary>
+        </member>
+        <member name="P:UIFramework.UIFController.TextInputEntry.PlaceHolderText">
+            <summary>
+            Sets the placeholder text in the textField
+            </summary>
+        </member>
+        <member name="M:UIFramework.UIFController.TextInputEntry.ModelSet">
+            <inheritdoc/>
+        </member>
+        <member name="T:UIFramework.UIFController.PrefText">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:UIFramework.UIFController.PrefText.Value">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:UIFramework.UIFController.PrefText.SaveAction">
+            <inheritdoc/>
+        </member>
+        <member name="T:UIFramework.UIFController.PrefInt">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:UIFramework.UIFController.PrefInt.SaveAction">
+            <inheritdoc/>
+        </member>
+        <member name="T:UIFramework.UIFController.PrefFloat">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:UIFramework.UIFController.PrefDouble">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:UIFramework.UIFController.PrefDouble.SaveAction">
+            <inheritdoc/>
+        </member>
+        <member name="T:UIFramework.UIFController.PrefBool">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:UIFramework.UIFController.PrefBool.ModelSet">
+            <inheritdoc/>
+        </member>
+        <member name="M:UIFramework.UIFController.PrefBool.SaveAction">
+            <inheritdoc/>
+        </member>
+        <member name="T:UIFramework.UIFController.PrefMulti">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:UIFramework.UIFController.PrefSlider">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:UIFramework.UIFController.PrefDropDown">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:UIFramework.BuildInfo">
+            <summary></summary>
+        </member>
+        <member name="F:UIFramework.BuildInfo.Name">
+            <summary></summary>
+        </member>
+        <member name="F:UIFramework.BuildInfo.Author">
+            <summary></summary>
+        </member>
+        <member name="F:UIFramework.BuildInfo.Version">
+            <summary></summary>
+        </member>
+        <member name="T:UIFramework.Core">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:UIFramework.Core.OnInitializeMelon">
+            <summary></summary>
+        </member>
+        <member name="M:UIFramework.Core.OnUpdate">
+            <summary></summary>
+        </member>
+        <member name="M:UIFramework.Debug.DiffLog(System.String,System.Boolean,System.Int32)">
+            <summary>
+            Call in OnUpdate to monitor variables per frame but only logs if they change
+            </summary>
+            <param name="message"></param>
+            <param name="debugOnly"></param>
+            <param name="logLevel"></param>
+        </member>
+        <member name="M:UIFramework.Debug.Log(System.String,System.Boolean,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="message"></param>
+            <param name="debugOnly"></param>
+            <param name="logLevel"></param>
+        </member>
+        <member name="T:UIFramework.UIFramework">
+            <summary>
+            primary public facing class, modders will interact with this to register their preferences and build the UI.
+            </summary>
+        </member>
+        <member name="M:UIFramework.UIFramework.Register(MelonLoader.MelonMod,MelonLoader.MelonPreferences_Category[])">
+            <summary>
+            
+            </summary>
+            <param name="modInstance"></param>
+            <param name="categories"></param>
+            <returns>A reference to the created Mod Model for further customization</returns>
+        </member>
+        <member name="T:UIFramework.UIFModel">
+            <summary>
+            Models define how the UI is built. The heirarchy is simple and follows melonpreferences basic structure
+            ModelMod ->  ModelCategory -> ModelEntry
+            Modders can use the default model just by calling UIF.Register(modInstance, categories) in their OnLateInitializeMelon. 
+            The default model will use simple input methods: bools will be toggles, strings will be text input fields and so would numerics.
+            More options will eventually be available: sliders, dropdowns, multi checkboxes, radio buttons, etc.
+            
+            Those will be developed after the default model is functional
+            </summary>
+        </member>
+        <member name="T:UIFramework.UIFModel.ModelEntry">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:UIFramework.UIFModel.ModelEntry.SetUIPrefabSource(UnityEngine.GameObject)">
+            <summary>
+            Use this function to provide your own prefab for this entry. 
+            The prefab must have a component that implements IUIFrameworkEntry and properly handles the value changes and saving. 
+            If no prefab is provided, a default one will be used based on the type of the preference 
+            (bools will be toggles, strings will be text input fields and so would numerics).
+            
+            </summary>
+            <param name="prefab"></param>
+        </member>
+        <member name="M:UIFramework.UIFModel.ModelEntry.GetNewEntryWidgetInstance">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:UIFramework.Prefabs.ApplyAndRebuild(UnityEngine.GameObject)">
+            <summary>
+            Wrapping gets disabled when loading and this reenables it
+            </summary>
+            <param name="root"></param>
+        </member>
+        <member name="M:UIFramework.Helpers.ToNormal(System.String)">
+             <summary>
+             Returns a normalized version of the specified string by converting it to lowercase, trimming whitespace, and
+             removing all spaces.
+             </summary>
+             <param name="text">The string to normalize. Cannot be null.</param>
+             <returns>A normalized string with all spaces removed, trimmed, and converted to lowercase.</returns>
+            <remarks>Returns empty string if input only contains whitespace</remarks>
+        </member>
+        <member name="T:UIFramework.Preferences">
+            <summary>
+            UIFramework's own preferences go here 
+            </summary>
+        </member>
+    </members>
+</doc>

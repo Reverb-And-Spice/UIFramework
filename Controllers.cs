@@ -39,7 +39,7 @@ namespace UIFramework
 		[RegisterTypeInIl2Cpp]
 		public class WindowController : MonoBehaviour
 		{
-			public UIFModel.RootModel _model;
+			protected UIFModel.RootModel _model;
 			public UIFModel.ModelBase Model { get { return _model; } }
 
 			public GameObject MainCanvas;
@@ -57,7 +57,7 @@ namespace UIFramework
 				//_model = new UIFModel.RootModel();
 			}
 
-			public void SetModel(UIFModel.RootModel model)
+			public virtual void SetModel(UIFModel.RootModel model)
 			{
 				MainCanvas = this.gameObject;
 				ModRegistryPanel = MainCanvas.transform.Find("Root/ModRegistry/Viewport/ModRegCont").gameObject.GetComponent<Sidebar>();
@@ -70,7 +70,7 @@ namespace UIFramework
 				BuildModList();
 				Deb("Main Window Full Path: " + Helpers.HierarchyUtility.GetGameObjectPath(this.gameObject));
 			}
-			public void BuildModList()
+			public virtual void BuildModList()
 			{
 				ModRegistryPanel.ContainerReset();
 				
@@ -82,10 +82,16 @@ namespace UIFramework
 
 			}
 			/// <summary>
-			/// 
+			/// Gets called when the save button gets clicked. 
 			/// </summary>
-			public void SaveButtonClick()
+			/// <remarks>
+			/// Generally Melonpreferences are saved by category. 
+			/// But this iterates through the child controllers and call their SaveAction() method.
+			/// This allows for custom behavior before the actual category gets saved
+			/// </remarks>
+			public virtual void SaveButtonClick()
 			{
+				
 				for (int i = PrefRegistryPanel.gameObject.transform.childCount - 1; i >= 0; i--)
 				{
 					PreferenceEntry entry = PrefRegistryPanel.gameObject.transform.GetChild(i).gameObject.GetComponent<PreferenceEntry>();
@@ -99,6 +105,8 @@ namespace UIFramework
 
 		}
 
+
+		#region List Areas
 		/// <summary>
 		/// Areas where UI elements are shown to the user. 
 		/// 1. Mod list Sidebar 
@@ -115,6 +123,10 @@ namespace UIFramework
 				Infanticide();
 			}
 
+
+			/// <summary>
+			/// 
+			/// </summary>
 			public void Infanticide()
 			{
 				for (int i = this.transform.childCount - 1; i >= 0; i--)
@@ -122,7 +134,14 @@ namespace UIFramework
 					GameObject.Destroy(this.transform.GetChild(i).gameObject);
 				}
 			}
-
+			/// <summary>
+			/// Sets the underlying data model for the current instance.
+			/// </summary>
+			/// <remarks>
+			/// Calling this method updates the internal state to reflect the provided model. Subsequent
+			/// operations may depend on the newly set model.
+			/// </remarks>
+			/// <param name="model">The model to associate with this instance. Cannot be null.</param>
 			public virtual void SetModel(UIFModel.ModelBase model)
 			{
 				_model = model;
@@ -130,7 +149,7 @@ namespace UIFramework
 			}
 
 			///	<summary>
-			/// Builds UI from a list of models
+			/// Clears the contents and recreates them from the submodels list in Model
 			/// </summary>
 			public void BuildFromModelList()
 			{
@@ -177,7 +196,7 @@ namespace UIFramework
 
 		}
 
-		#region List Areas
+
 		/// <summary>
 		///
 		/// </summary>
@@ -326,8 +345,13 @@ namespace UIFramework
 			/// Runs when the model property has been set. 
 			/// </summary>
 			public virtual void ModelSet(){}
-			
+			/// <summary>
+			/// Sets the description text
+			/// </summary>
 			public virtual string DescriptionText { set { this.gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
+			/// <summary>
+			/// Sets the identifier text
+			/// </summary>
 			public virtual string IdentifierText { set { this.gameObject.transform.GetChild(1).GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
 
 			public virtual bool ValidationCheck()
@@ -348,14 +372,19 @@ namespace UIFramework
 
 		
 		/// <summary>
-		/// 
+		/// Base controller for text fields 
 		/// </summary>
-		[RegisterTypeInIl2Cpp]
 		public abstract class TextInputEntry : PreferenceEntry, ISettingEntry
 		{
+			/// <summary>
+			/// Returns the textfield
+			/// </summary>
 			public TMP_InputField textField => this.gameObject.transform.Find("Panel/InputField (TMP)").gameObject.GetComponent<TMP_InputField>();
+			/// <summary>
+			/// Sets the placeholder text in the textField
+			/// </summary>
 			public string PlaceHolderText { set { this.gameObject.transform.Find("Panel/InputField (TMP)/Text Area/Placeholder").gameObject.GetComponent<TextMeshProUGUI>().text = value; } }
-
+			/// <inheritdoc/>
 			public override void ModelSet()
 			{
 				PlaceHolderText = _model.PrefEntry.BoxedValue.ToString();
@@ -369,7 +398,11 @@ namespace UIFramework
 
 		public class PrefText : TextInputEntry
 		{
+			/// <summary>
+			/// 
+			/// </summary>
 			public virtual string Value => textField.text;
+			/// <inheritdoc/>
 			public override void SaveAction()
 			{
 				try
@@ -392,7 +425,7 @@ namespace UIFramework
 		public class PrefInt : TextInputEntry
 		{
 			public int Value => int.Parse(textField.text);
-
+			/// <inheritdoc/>
 			public override void SaveAction()
 			{
 				try
@@ -439,7 +472,7 @@ namespace UIFramework
 		public class PrefDouble : TextInputEntry
 		{
 			public double Value => double.Parse(textField.text);
-
+			/// <inheritdoc/>
 			public override void SaveAction()
 			{
 				try
@@ -463,13 +496,14 @@ namespace UIFramework
 		public class PrefBool : PreferenceEntry
 		{
 			public bool Value => this.gameObject.transform.Find("Panel/Toggle").gameObject.GetComponent<Toggle>().isOn;
+			/// <inheritdoc/>
 			public override void ModelSet()
 			{
 				base.ModelSet();
 				this.gameObject.transform.Find("Panel/Toggle").gameObject.GetComponent<Toggle>().isOn = (bool)_model.PrefEntry.BoxedValue;
 
 			}
-
+			/// <inheritdoc/>
 			public override void SaveAction()
 			{
 				try

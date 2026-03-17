@@ -26,5 +26,7 @@
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 		<Exec Command="COPY &quot;$(TargetPath)&quot; &quot;G:\SteamLibrary\steamapps\common\RUMBLE\Mods&quot;" />
+		<Exec Command="COPY &quot;$(TargetDir)$(TargetName).xml&quot; &quot;G:\SteamLibrary\steamapps\common\RUMBLE\Mods&quot;" />
+		<Exec Command="COPY &quot;$(TargetDir)$(TargetName).xml&quot; &quot;$(ProjectDir)&quot;" />
 	</Target>
 </Project>

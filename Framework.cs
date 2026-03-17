@@ -1,10 +1,10 @@
+using MelonLoader;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
-using MelonLoader;
 using UnityEngine;
 using UnityEngine.Bindings;
 using UnityEngine.Events;
@@ -15,7 +15,7 @@ namespace UIFramework
 	/// <summary>
 	/// primary public facing class, modders will interact with this to register their preferences and build the UI.
 	/// </summary>
-	public class UIFramework
+	public static class UIFramework
 	{
 
 		internal static UIFModel.RootModel ModelInstance = new();
@@ -191,15 +191,27 @@ namespace UIFramework
 			{
 				if (_uiPrefabSource == null)
 				{
-					return PrefEntry.BoxedValue switch
+
+					switch (PrefEntry.BoxedValue)
 					{
-						bool => GameObject.Instantiate(Prefabs.BoolPrefab),
-						string => GameObject.Instantiate(Prefabs.TextPrefab),
-						int => GameObject.Instantiate(Prefabs.IntPrefab),
-						float => GameObject.Instantiate(Prefabs.FloatPrefab),
-						double => GameObject.Instantiate(Prefabs.DoublePrefab),
-						_ => GameObject.Instantiate(Prefabs.TextPrefab),
-					};
+						case bool:
+							return GameObject.Instantiate(Prefabs.BoolPrefab);
+							break;
+						case string:
+							return GameObject.Instantiate(Prefabs.TextPrefab);
+							break;
+						case int:
+							return GameObject.Instantiate(Prefabs.IntPrefab);
+						case float:
+							return GameObject.Instantiate(Prefabs.FloatPrefab);
+						case double:
+							return GameObject.Instantiate(Prefabs.DoublePrefab);
+						default:
+							Debug.Log("Unsupported type detected with no custom widget prefab provided. Defaulting to text input. Creating custom component recommended");
+							return GameObject.Instantiate(Prefabs.TextPrefab);
+
+
+					}
 				}
 				else
 				{
@@ -215,7 +227,6 @@ namespace UIFramework
 			
 		}
 	}
-
 
 	public enum InputType
 	{
