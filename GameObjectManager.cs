@@ -45,9 +45,13 @@ namespace UIFramework
 		internal static GameObject IntPrefab;
 		internal static GameObject FloatPrefab;
 		internal static GameObject DoublePrefab;
+		internal static GameObject DropDownPrefab;
+		
 
 		internal static GameObject ButtonPrefab;
+
 		internal static Button MainActionButton;
+		internal static Button MinimizeButton;
 
 		internal static void LoadAssetBundle()
 		{
@@ -88,17 +92,21 @@ namespace UIFramework
 			CatTab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "CategoryTab")?.gameObject;
 
 			TextPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryText")?.gameObject;
-			BoolPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryBoolean")?.gameObject;
+			BoolPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryBool")?.gameObject;
+			
 			IntPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryInt")?.gameObject;
 			FloatPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryFloat")?.gameObject;
 			DoublePrefab = GameObject.Instantiate(FloatPrefab, AssetBundleLoaded.transform);
 
+			DropDownPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryDropdown")?.gameObject;
+
 			ButtonPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryButton")?.gameObject;
 
+
 			MainActionButton = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "SaveActionButton")?.gameObject.GetComponent<Button>();
+			MinimizeButton = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "Minimize")?.gameObject.GetComponent<Button>();
 
 
-			
 
 			//MainActionButton.onClick.AddListener(MainButtonClick);
 
@@ -106,20 +114,23 @@ namespace UIFramework
 
 			//Add the appropriate components to each prefab for later use
 			MainCanvasSource.AddComponent<UIFController.WindowController>();
+
 			TextPrefab.AddComponent<UIFController.PrefText>();
 			BoolPrefab.AddComponent<UIFController.PrefBool>();
+			
 			IntPrefab.AddComponent<UIFController.PrefInt>();
 			FloatPrefab.AddComponent<UIFController.PrefFloat>();
 			DoublePrefab.AddComponent<UIFController.PrefDouble>();
+			
+			DropDownPrefab.AddComponent<UIFController.PrefDropDown>();
+
 			ButtonPrefab.AddComponent<UIFController.ButtonEntry>();
-			UIFController.Mod baseModTabController = ModTab.AddComponent<UIFController.Mod>();
-			Button ModButton = ModTab.GetComponent<Button>();
-			//ModButton.onClick.AddListener(baseModTabController.OnSelect);
 
-			UIFController.Category baseCatTabController = CatTab.AddComponent<UIFController.Category>();
-			Button CatButton = ModTab.GetComponent<Button>();
-			//CatButton.onClick.AddListener(baseCatTabController.OnSelect);
 
+
+			ModTab.AddComponent<UIFController.Mod>();
+
+			CatTab.AddComponent<UIFController.Category>();
 
 			//Add the component to the container sections
 			ModDisplayList.AddComponent<UIFController.Sidebar>();

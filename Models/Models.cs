@@ -5,73 +5,61 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
+using static UIFramework.UIFController;
 
 namespace UIFramework
 {
-
+	//TODO: Too much repitition Reinstate base model classq
 	/// <summary>
 	/// Models define how the UI is built. The heirarchy is simple and follows melonpreferences basic structure
-	/// ModelMod ->  ModelCategory -> ModelEntry
+	/// ModelMod ->  ModelMelonCategory -> ModelMelonEntry
 	/// Modders can use the default model just by calling UIF.Register(modInstance, categories) in their OnLateInitializeMelon. 
 	/// The default model will use simple input methods: bools will be toggles, strings will be text input fields and so would numerics.
 	/// More options will eventually be available: sliders, dropdowns, multi checkboxes, radio buttons, etc.
 	/// 
 	/// Those will be developed after the default model is functional
 	/// </summary>
-	public class UIFModel
+	public partial class UIFModel
 	{
-		public interface IModelable
+		public class RootModel : IHoldSubmodels
 		{
-			public List<IModelable> SubModels { get; set; }
-			public string Name { get; }
-			public GameObject GetNewUIInstance();
-			public void SaveAction();
 
-		}
-		public abstract class ModelBase : IModelable
-		{
-			public List<IModelable> SubModels { get; set; } = new();
-			public abstract string Name { get; }
-			public abstract GameObject GetNewUIInstance();
-			public virtual void SaveAction()
-			{
+			public virtual List<IModelable> SubModels { get; set; } = new();
 
-			}
-			public virtual IModelable GetSubmodel(string name)
-			{
-				return SubModels.FirstOrDefault(m => m.Name == name);
-			}
-
-
-		}
-
-		public class RootModel : ModelBase
-		{
 			private string _name = string.Empty;
-			public override string Name => _name;
+
+			public string Identifier => _name;
+			public string DisplayName => _name;
+
 			public void SetName(string name)
 			{
 				_name = name;
 			}
-			public void AddModModel(ModelMod mod)
+
+			public void AddSubmodel(IModelable mod)
 			{
 				SubModels.Add(mod);
 			}
-			public override GameObject GetNewUIInstance()
+
+			public IModelable GetSubmodel(string name)
 			{
-				throw new NotImplementedException();
+				return SubModels.FirstOrDefault(m => m.Identifier == name);
 			}
+			public GameObject GetNewUIInstance() { return null; }
 
-
+			public void SaveAction() { }
 
 		}
-		public class ModelMod : ModelBase
+
+		public class ModelMod : ModelModItem
 		{
+			//public List<IModelable> SubModels { get; set; } = new();
 			public MelonMod Instance { get; set; }
-			//public string ModName => Instance.Info.Name;
+			//public string ModName => Instance.Info.Identifier;
 
-			public override string Name => Instance.Info.Name;
-
+			public override string Identifier => Instance.Info.Name;
+			public override string DisplayName => Identifier;
 
 			//internal List<ModelBase> catModelList = new();
 
@@ -82,36 +70,37 @@ namespace UIFramework
 
 				foreach (MelonPreferences_Category cat in catList)
 				{
-					SubModels.Add(new ModelCategory(cat));
+					SubModels.Add(new ModelMelonCategory(cat));
 				}
 			}
-
-			public override GameObject GetNewUIInstance()
+			public ModelMod(MelonMod instance)
 			{
-				return GameObject.Instantiate(Prefabs.ModTab);
+				Instance = instance;
+			}
+
+
+			public void AddSubmodel(IModelable model)
+			{
+				SubModels.Add(model);
 			}
 
 		}
 
-		public class ModelCategory : ModelBase
+		public class ModelMelonCategory : ModelCategoryItem
 		{
+			//public List<IModelable> SubModels { get; set; }
 			public MelonPreferences_Category PrefCat;
-			public override string Name => PrefCat.Identifier;
+			public override string Identifier => PrefCat.Identifier;
+			public override string DisplayName => PrefCat.DisplayName.Trim() == "" ? PrefCat.Identifier : PrefCat.DisplayName;
 
-
-			public ModelCategory(MelonPreferences_Category cat)
+			public ModelMelonCategory(MelonPreferences_Category cat)
 			{
 				PrefCat = cat;
 				foreach (MelonPreferences_Entry entry in PrefCat.Entries)
 				{
-					SubModels.Add(new ModelEntry(entry));
+					SubModels.Add(new ModelMelonEntry(entry));
 				}
 
-			}
-
-			public override GameObject GetNewUIInstance()
-			{
-				return GameObject.Instantiate(Prefabs.CatTab);
 			}
 
 			public override void SaveAction()
@@ -119,35 +108,29 @@ namespace UIFramework
 				PrefCat.SaveToFile();
 			}
 
-			public void AddEntry (IEntry model)
+			public void AddSubModel(IEntry model)
 			{
 				SubModels.Add((IModelable)model);
 			}
+
 		}
-		public interface IEntry
-		{
-			public string Name { get; }
-			public string Description { get; }
-			public string DisplayName { get; }
-			public object BoxedValue { get; set; }
-		}
+
 		/// <summary>
 		/// 
 		/// </summary>
-		public class ModelEntry : ModelBase, IEntry
+		public class ModelMelonEntry : ModelEntryItem
 		{
-			public MelonPreferences_Entry PrefEntry;
-			public override string Name => PrefEntry.Identifier;
+			public virtual MelonPreferences_Entry PrefEntry { get; set; }
+			public override string Identifier => PrefEntry.Identifier;
+			public override string DisplayName => PrefEntry.DisplayName.Trim() == "" ? PrefEntry.Identifier : PrefEntry.DisplayName;
+			public override string Description => PrefEntry.Description;
 
-			public virtual string Description => PrefEntry.Description;
-			public virtual string DisplayName => PrefEntry.DisplayName;
-
-			public object BoxedValue 
+			public object BoxedValue
 			{
 				get => PrefEntry.BoxedValue;
 				set => PrefEntry.BoxedValue = value;
 			}
-			public ModelEntry(MelonPreferences_Entry prefEntry)
+			public ModelMelonEntry(MelonPreferences_Entry prefEntry)
 			{
 				PrefEntry = prefEntry;
 
@@ -192,6 +175,8 @@ namespace UIFramework
 							return UIFramework.GetPrefab(InputType.NumericFloat);
 						case double:
 							return UIFramework.GetPrefab(InputType.NumericDouble);
+						case Enum:
+							return UIFramework.GetPrefab(InputType.Dropdown);
 						default:
 							Debug.Log("Unsupported type detected with no custom widget prefab provided. Defaulting to text input. Creating custom component recommended", false, 1);
 							return UIFramework.GetPrefab(InputType.TextField);
@@ -205,46 +190,12 @@ namespace UIFramework
 				}
 			}
 
-			public override void SaveAction()
+			public void SaveAction()
 			{
 
 			}
-
 
 		}
-
-		#region customs
-		public class ButtonEntry : ModelBase, IEntry
-		{
-			private string _name;
-			public override string Name => _name;
-
-			private string _description;
-			public string Description => _description;
-
-			private string _displayName;
-			public string DisplayName => _displayName;
-			/// <summary>
-			/// This is only to satisfy the contract for IEntry. 
-			/// </summary>
-			public object BoxedValue { get; set; }
-
-			public Action<IEntry> OnClick;
-			public ButtonEntry(string name, string description = "", string displayName = "")
-			{
-				_name = name;
-				_description = description;
-				_displayName = displayName;
-			}
-
-			public override GameObject GetNewUIInstance() => UIFramework.GetPrefab(InputType.Button);
-			public virtual void OnClickRelay()
-			{
-				OnClick?.Invoke(this);
-			}
-
-
-		}
-		#endregion
 	}
+
 }

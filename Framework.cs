@@ -31,7 +31,13 @@ namespace UIFramework
 		public static UIFModel.ModelMod Register(MelonMod modInstance, params MelonPreferences_Category[] categories)
 		{
 			UIFModel.ModelMod NewModModel = new(modInstance, categories.ToList());
-			ModelInstance.AddModModel(NewModModel);
+			ModelInstance.AddSubmodel(NewModModel);
+			return NewModModel;
+		}
+		public static UIFModel.ModelMod Register(MelonMod modInstance)
+		{
+			UIFModel.ModelMod NewModModel = new(modInstance);
+			ModelInstance.AddSubmodel(NewModModel);
 			return NewModModel;
 		}
 
@@ -73,6 +79,9 @@ namespace UIFramework
 				case InputType.Button:
 					selectedPrefab = GameObject.Instantiate(Prefabs.ButtonPrefab);
 					break;
+				case InputType.Dropdown:
+					selectedPrefab = GameObject.Instantiate(Prefabs.DropDownPrefab);
+					break;
 				default:
 					selectedPrefab = GameObject.Instantiate(Prefabs.TextPrefab);
 					break;
@@ -91,8 +100,8 @@ namespace UIFramework
 		NumericFloat,
 		NumericDouble,
 		Button,
-		/*Slider,
 		Dropdown,
+		/*Slider,
 		MultiCheckbox,
 		RadioButton*/
 	}

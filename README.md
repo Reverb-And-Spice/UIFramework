@@ -57,7 +57,7 @@ Configuring Custom Widgets
 ### Quick layout mockup
 <sup>Looks will be improved. The current color scheme is to show me the boundaries between panels and make sure they've been placed correctly</sup>
 
-![UI Mockup](Misc/WIP.png)
+![UI Mockup](_Misc/WIP.png)
 -----
 -----
 -----

@@ -9,124 +9,51 @@
             Custom components that will serve as views in this MVP/MVC-ish pattern
             </summary>
             <remarks>I may have gone a little crazy with inheritance</remarks>
-        </member>
-        <member name="P:UIFramework.UIFController.IModelListable.Model">
             <summary>
-            Reference to the model the controller works from.  
+            Custom components that will serve as views in this MVP/MVC-ish pattern
             </summary>
+            <remarks>I may have gone a little crazy with inheritance</remarks>
         </member>
-        <member name="T:UIFramework.UIFController.WindowController">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:UIFramework.UIFController.WindowController.SaveButtonClick">
-            <summary>
-            Gets called when the save button gets clicked. 
-            </summary>
-            <remarks>
-            Generally Melonpreferences are saved by category. 
-            But this iterates through the child controllers and call their SaveAction() method.
-            This allows for custom behavior before the actual category gets saved
-            </remarks>
-        </member>
-        <member name="T:UIFramework.UIFController.ListArea">
-            <summary>
-            Areas where UI elements are shown to the user. 
-            1. Mod list Sidebar 
-            2. Category tab top bar
-            3. Entries Content area
-            </summary>
-        </member>
-        <member name="M:UIFramework.UIFController.ListArea.Infanticide">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:UIFramework.UIFController.ListArea.SetModel(UIFramework.UIFModel.ModelBase)">
-            <summary>
-            Sets the underlying data model for the current instance.
-            </summary>
-            <remarks>
-            Calling this method updates the internal state to reflect the provided model. Subsequent
-            operations may depend on the newly set model.
-            </remarks>
-            <param name="model">The model to associate with this instance. Cannot be null.</param>
-        </member>
-        <member name="M:UIFramework.UIFController.ListArea.BuildFromModelList">
-            <summary>
-            Clears the contents and recreates them from the submodels list in Model
-            </summary>
-        </member>
-        <member name="M:UIFramework.UIFController.ListArea.SaveAction">
-            <summary>
-            Is called when Save ButtonGo is clicked. Override to create custom behaviour 
-            </summary>
-        </member>
-        <member name="T:UIFramework.UIFController.Sidebar">
-             <summary>
-            
-             </summary>
-        </member>
-        <member name="T:UIFramework.UIFController.TopBar">
-             <summary>
-            
-             </summary>
-        </member>
-        <member name="T:UIFramework.UIFController.PrefList">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:UIFramework.UIFController.PrefList.SaveAction">
-            <summary>
-            When the save button is clicked, the selected category save action will be called. The model is now in charge of what that means
-            </summary>
-        </member>
-        <member name="M:UIFramework.UIFController.TabButtonController.SelectTargetPanel">
-            <summary>
-            Selects the panel that should be assigned a model next. The target then parents the models' game objects to itself from the list
-            </summary>
-        </member>
-        <member name="T:UIFramework.UIFController.Mod">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="T:UIFramework.UIFController.Category">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="T:UIFramework.UIFController.PreferenceEntry">
-            <summary>
-            Inherit this class to create your own custom entry controllers for your own input controls.
-            </summary>
-        </member>
-        <member name="M:UIFramework.UIFController.PreferenceEntry.ModelSet">
-            <summary>
-            Runs when the model property has been set. 
-            </summary>
-        </member>
-        <member name="P:UIFramework.UIFController.PreferenceEntry.DescriptionText">
+        <member name="P:UIFramework.UIFController.Entry.DescriptionText">
             <summary>
             Sets the description text
             </summary>
         </member>
-        <member name="P:UIFramework.UIFController.PreferenceEntry.IdentifierText">
+        <member name="P:UIFramework.UIFController.Entry.DisplayName">
             <summary>
             Sets the identifier text
             </summary>
         </member>
-        <member name="M:UIFramework.UIFController.PreferenceEntry.SaveAction">
+        <member name="M:UIFramework.UIFController.Entry.ModelSet">
+            <summary>
+            Runs when the model property has been set. 
+            </summary>
+        </member>
+        <member name="M:UIFramework.UIFController.Entry.SaveAction">
             <summary>
             This is called when the Save button is pressed. Override to create custom behaviour.
             </summary>
             <remarks>Generally MelonPreferences are saved from the category, not the indivial entries.</remarks>
         </member>
+        <member name="T:UIFramework.UIFController.MelonEntry">
+            <summary>
+            Inherit this class to create your own custom entry controllers for your own input controls.
+            </summary>
+        </member>
+        <member name="M:UIFramework.UIFController.MelonEntry.ModelSet">
+            <inheritdoc/>
+        </member>
+        <member name="M:UIFramework.UIFController.MelonEntry.ValidationCheck">
+            <inheritdoc/>
+        </member>
         <member name="T:UIFramework.UIFController.TextInputEntry">
             <summary>
             Base controller for text fields 
+            </summary>
+        </member>
+        <member name="P:UIFramework.UIFController.TextInputEntry._prefModel">
+            <summary>
+            TODO: This is jank. Deal with this by creating a base class for preference entries that aren't based on melonloader.
             </summary>
         </member>
         <member name="P:UIFramework.UIFController.TextInputEntry.textField">
@@ -187,20 +114,106 @@
         <member name="M:UIFramework.UIFController.PrefBool.SaveAction">
             <inheritdoc/>
         </member>
-        <member name="T:UIFramework.UIFController.PrefMulti">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="T:UIFramework.UIFController.PrefSlider">
-            <summary>
-            
-            </summary>
-        </member>
         <member name="T:UIFramework.UIFController.PrefDropDown">
             <summary>
             
             </summary>
+        </member>
+        <member name="T:UIFramework.UIFController.ListArea">
+            <summary>
+            Areas where UI elements are shown to the user. 
+            1. Mod list Sidebar 
+            2. Category tab top bar
+            3. Entries Content area
+            </summary>
+        </member>
+        <member name="M:UIFramework.UIFController.ListArea.Infanticide">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:UIFramework.UIFController.ListArea.SetModel(UIFramework.UIFModel.IHoldSubmodels)">
+            <summary>
+            Sets the underlying data model for the current instance.
+            </summary>
+            <remarks>
+            Calling this method updates the internal state to reflect the provided model. Subsequent
+            operations may depend on the newly set model.
+            </remarks>
+            <param name="model">The model to associate with this instance. Cannot be null.</param>
+        </member>
+        <member name="M:UIFramework.UIFController.ListArea.BuildFromModelList">
+            <summary>
+            Clears the contents and recreates them from the submodels list in Model
+            </summary>
+        </member>
+        <member name="M:UIFramework.UIFController.ListArea.SaveAction">
+            <summary>
+            Is called when Save ButtonGo is clicked. Override to create custom behaviour 
+            </summary>
+        </member>
+        <member name="T:UIFramework.UIFController.Sidebar">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:UIFramework.UIFController.TopBar">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:UIFramework.UIFController.PrefList">
+            <summary>
+            Main body of the UI. Lists individual preferences
+            </summary>
+        </member>
+        <member name="M:UIFramework.UIFController.PrefList.SaveAction">
+            <summary>
+            When the save button is clicked, the selected category save action will be called. The model is now in charge of what that means
+            </summary>
+        </member>
+        <member name="M:UIFramework.UIFController.TabButtonController.SelectTargetPanel">
+            <summary>
+            Selects the panel that should be assigned a model next. The target then parents the models' game objects to itself from the list
+            </summary>
+        </member>
+        <member name="T:UIFramework.UIFController.Mod">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:UIFramework.UIFController.Category">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:UIFramework.UIFController.IChildable">
+            <summary>
+            Controllers for models that can be submodels of other models. 
+            Preference Entries
+            Mod Buttons
+            Category Buttons
+            </summary>
+        </member>
+        <member name="P:UIFramework.UIFController.IChildable.Model">
+            <summary>
+            Reference to the model the controller works from.  
+            </summary>
+        </member>
+        <member name="T:UIFramework.UIFController.WindowController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:UIFramework.UIFController.WindowController.SaveButtonClick">
+            <summary>
+            Gets called when the save button gets clicked. 
+            </summary>
+            <remarks>
+            Generally Melonpreferences are saved by category. 
+            But this iterates through the child controllers and call their SaveAction() method.
+            This allows for custom behavior before the actual category gets saved
+            </remarks>
         </member>
         <member name="T:UIFramework.BuildInfo">
             <summary></summary>
@@ -218,12 +231,6 @@
             <summary>
             
             </summary>
-        </member>
-        <member name="M:UIFramework.Core.OnInitializeMelon">
-            <summary></summary>
-        </member>
-        <member name="M:UIFramework.Core.OnUpdate">
-            <summary></summary>
         </member>
         <member name="M:UIFramework.Debug.DiffLog(System.String,System.Boolean,System.Int32)">
             <summary>
@@ -287,7 +294,7 @@
         <member name="T:UIFramework.UIFModel">
             <summary>
             Models define how the UI is built. The heirarchy is simple and follows melonpreferences basic structure
-            ModelMod ->  ModelCategory -> ModelEntry
+            ModelMod ->  ModelMelonCategory -> ModelMelonEntry
             Modders can use the default model just by calling UIF.Register(modInstance, categories) in their OnLateInitializeMelon. 
             The default model will use simple input methods: bools will be toggles, strings will be text input fields and so would numerics.
             More options will eventually be available: sliders, dropdowns, multi checkboxes, radio buttons, etc.
@@ -295,12 +302,104 @@
             Those will be developed after the default model is functional
             </summary>
         </member>
-        <member name="T:UIFramework.UIFModel.ModelEntry">
+        <member name="P:UIFramework.UIFModel.ModelBase.Identifier">
+            <inheritdoc/>
+        </member>
+        <member name="M:UIFramework.UIFModel.ModelBase.GetNewUIInstance">
+            <inheritdoc/>
+        </member>
+        <member name="P:UIFramework.UIFModel.ModelBase.DisplayName">
+            <inheritdoc/>
+        </member>
+        <member name="T:UIFramework.UIFModel.SelectableModelBase">
+            <summary>
+            Models that become buttons on the sidebar and topbar
+            </summary>
+        </member>
+        <member name="P:UIFramework.UIFModel.ModelEntryItem.OnUICreated">
+            <inheritdoc/>
+        </member>
+        <member name="T:UIFramework.UIFModel.EmptyCategory">
             <summary>
             
             </summary>
         </member>
-        <member name="M:UIFramework.UIFModel.ModelEntry.SetUIPrefabSource(UnityEngine.GameObject)">
+        <member name="P:UIFramework.UIFModel.ButtonEntry.BoxedValue">
+            <summary>
+            This is only to satisfy the contract for IEntry. 
+            </summary>
+        </member>
+        <member name="T:UIFramework.UIFModel.IModelable">
+            <summary>
+            Implemented by all models
+            </summary>
+        </member>
+        <member name="P:UIFramework.UIFModel.IModelable.Identifier">
+            <summary>
+            Name for the model
+            </summary>
+        </member>
+        <member name="P:UIFramework.UIFModel.IModelable.DisplayName">
+            <summary>
+            User-facing display name. Should return Identifier if not assigned to a value
+            </summary>
+        </member>
+        <member name="M:UIFramework.UIFModel.IModelable.GetNewUIInstance">
+            <summary>
+            Instantiates a new Game object associated with them model
+            </summary>
+            <returns> UI Game Object</returns>
+        </member>
+        <member name="M:UIFramework.UIFModel.IModelable.SaveAction">
+            <summary>
+            Should be called when save button is pressed. Runs after all ancestor's save actions have been run
+            </summary>
+        </member>
+        <member name="T:UIFramework.UIFModel.IHoldSubmodels">
+            <summary>
+            Models that contain submodels. Generally these are mods and categories representing tabs
+            </summary>
+        </member>
+        <member name="P:UIFramework.UIFModel.IHoldSubmodels.SubModels">
+            <summary>
+            A list of submodels
+            </summary>
+        </member>
+        <member name="M:UIFramework.UIFModel.IHoldSubmodels.GetSubmodel(System.String)">
+            <summary>
+            Finds submodel by identifier
+            </summary>
+            <param name="identifier"></param>
+            <returns></returns>
+        </member>
+        <member name="M:UIFramework.UIFModel.IHoldSubmodels.AddSubmodel(UIFramework.UIFModel.IModelable)">
+            <summary>
+            Adds a new submodel to the SubModels list
+            </summary>
+            <param name="model"></param>
+        </member>
+        <member name="T:UIFramework.UIFModel.IEntry">
+            <summary>
+            Goes on the main panel. Contains controls for manipulating preferences or just general UI controls
+            </summary>
+        </member>
+        <member name="M:UIFramework.UIFModel.IEntry.SaveAction">
+            <summary>
+            If the 
+            </summary>
+        </member>
+        <member name="P:UIFramework.UIFModel.IEntry.OnUICreated">
+            <summary>
+            Called when the Entry has been created.
+            Useful when you wanna change specific elements after creation
+            </summary>
+        </member>
+        <member name="T:UIFramework.UIFModel.ModelMelonEntry">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:UIFramework.UIFModel.ModelMelonEntry.SetUIPrefabSource(UnityEngine.GameObject)">
             <summary>
             Use this function to provide your own prefab for this entry. 
             The prefab must have a component that implements IUIFrameworkEntry and properly handles the value changes and saving. 
@@ -310,17 +409,12 @@
             </summary>
             <param name="prefab"></param>
         </member>
-        <member name="M:UIFramework.UIFModel.ModelEntry.GetNewUIInstance">
+        <member name="M:UIFramework.UIFModel.ModelMelonEntry.GetNewUIInstance">
             <summary>
             Returns an instance of the game object associated with the MelonPreferences_Entry type.
             If a custom one is provided, it will return an instance of that instead
             </summary>
             <returns></returns>
-        </member>
-        <member name="P:UIFramework.UIFModel.ButtonEntry.BoxedValue">
-            <summary>
-            This is only to satisfy the contract for IEntry. 
-            </summary>
         </member>
         <member name="T:UIFramework.Preferences">
             <summary>

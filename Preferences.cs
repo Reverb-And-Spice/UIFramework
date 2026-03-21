@@ -1,4 +1,5 @@
 using MelonLoader;
+using UnityEngine.Bindings;
 
 namespace UIFramework
 {
@@ -11,7 +12,8 @@ namespace UIFramework
 		private const string USER_DATA = "UserData/UIFramework/";
 
 		internal static MelonPreferences_Category CatUIFramework;
-		internal static MelonPreferences_Entry<bool> EnableDebugLogs;
+		internal static MelonPreferences_Entry<bool> EnableDebugMode;
+		internal static MelonPreferences_Entry<bool> AutoHideOnSceneLoad;
 		
 		internal static MelonPreferences_Category Experimental;
 		internal static MelonPreferences_Entry<bool> TestBool;
@@ -21,6 +23,10 @@ namespace UIFramework
 		internal static MelonPreferences_Entry<double> TestDouble;
 		internal static MelonPreferences_Entry<InputType> TestEnum;
 		internal static MelonPreferences_Entry<List<int> > TestList;
+
+		internal static MelonPreferences_Category TestEmptyDisplayName;
+		internal static MelonPreferences_Entry<string> TestEmptyDisplayPref;
+
 
 		internal static MelonPreferences_Category TestBooleans;
 		internal static List<MelonPreferences_Entry<bool>> TestBoolList = new List<MelonPreferences_Entry<bool>>();
@@ -33,7 +39,8 @@ namespace UIFramework
 
 			CatUIFramework = MelonPreferences.CreateCategory("UIFramework", "UIFramework Settings");
 			CatUIFramework.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
-			EnableDebugLogs = CatUIFramework.CreateEntry("EnableDebugLogs", true, "Enable Debug Logs", "Enables or disables debug logs for UIFramework. Useful for mod developers.");
+			EnableDebugMode = CatUIFramework.CreateEntry("EnableDebugMode", true, "Enable Debug Logs", "Enables or disables debug logs for UIFramework. Useful for mod developers.");
+			AutoHideOnSceneLoad = CatUIFramework.CreateEntry("AutoHideOnSceneLoad", true, "Auto Hide On Scene Load", "Hides the UI Automatically in between scenes.");
 
 			Experimental = MelonPreferences.CreateCategory("UIFrameworkExperimental", "Experimental Settings");
 			Experimental.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
@@ -44,6 +51,14 @@ namespace UIFramework
 			TestDouble = Experimental.CreateEntry("TestDouble", 3.14159, "Test Double", "This is a test double.");
 			TestEnum = Experimental.CreateEntry("TestEnum", InputType.TextField, "Test Enum", "This is a test enum.");
 			TestList = Experimental.CreateEntry("TestList", new List<int> { 1, 2, 3 }, "Test List", "This is a test list of integers.");
+
+			
+
+			TestEmptyDisplayName = MelonPreferences.CreateCategory("EmptyDisplayName");
+			TestEmptyDisplayName.SetFilePath(Path.Combine(USER_DATA,CONFIG_FILE));
+
+			TestEmptyDisplayPref = TestEmptyDisplayName.CreateEntry("NoDisplayName", "Hello, World!", null, "This is a test string."); 
+
 			CatUIFramework.SaveToFile();
 			Experimental.SaveToFile();
 
@@ -52,6 +67,13 @@ namespace UIFramework
 			{
 				TestBoolList.Add(TestBooleans.CreateEntry("TestBool" + i, false, "Test Bool " + i));
 			}
+
+/*			Debug.debugMode = EnableDebugMode.Value;
+
+			EnableDebugMode.OnEntryValueChanged.Subscribe((oldValue, newValue) => { 
+				Debug.debugMode = newValue;
+				Debug.Msg($"Debug mode has been set to: {newValue}");
+			});*/
 		}
 
 	}

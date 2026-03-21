@@ -34,24 +34,24 @@ namespace UIFramework
 
 		internal string CurrentScene = "";
 		internal bool isFirstLoad = true;
-		/// <summary></summary>
+#pragma warning disable CS1591
 		public override void OnInitializeMelon()
 		{
 
 			LoggerInstance.Msg("Initialized.");
 			Instance = this;
+			MelonPreferences.OnPreferencesSaved.Subscribe(MelPrefsSaved);
 			
 		}
 		public override void OnLateInitializeMelon()
 		{
 			Preferences.InitializePrefs();
-			UIFModel.ModelMod ModModel = UIFramework.Register(this, Preferences.CatUIFramework, Preferences.Experimental, Preferences.TestBooleans);
-			UIFModel.IModelable tester = ModModel.GetSubmodel(Preferences.TestBooleans.Identifier);
-			UIFModel.ButtonEntry testButton = new UIFModel.ButtonEntry("CustomButton");
-			((UIFModel.ModelCategory)tester).AddEntry(testButton);
-
+			UIFModel.ModelMod ModModel = UIFramework.Register(this, Preferences.CatUIFramework, Preferences.Experimental, Preferences.TestBooleans, Preferences.TestEmptyDisplayName);
+			UIFModel.ModelMelonCategory tester = (UIFModel.ModelMelonCategory)ModModel.GetSubmodel(Preferences.TestBooleans.Identifier);
+			UIFModel.ButtonEntry testButton = new UIFModel.ButtonEntry(CustomClick, "CustomButton", "just a test", "Custom Button");
+			tester.AddSubModel(testButton);
 		}
-		/// <summary></summary>
+
 		public override void OnUpdate()
 		{
 			DiffLog($"");
@@ -66,6 +66,7 @@ namespace UIFramework
 
 		public override void OnSceneWasLoaded(int buildIndex, string sceneName)
 		{
+#pragma warning restore CS1591
 			CurrentScene = sceneName.ToNormal();
 			if (CurrentScene == "loader")
 			{
@@ -74,11 +75,17 @@ namespace UIFramework
 
 			if (CurrentScene == "gym" && isFirstLoad) FirstGymLoad();
 
-			if(!isFirstLoad)
-				UIFramework.MainWindow.SetActive(false); 
-			
-			
+			if (!isFirstLoad)
+			{
+				if(UIFramework.MainWindow.activeSelf)
+				{
+					UIFramework.MainWindow.SetActive(!Preferences.AutoHideOnSceneLoad.Value);
+				}
+			}
 		}
+			
+			
+		
 
 		internal void FirstGymLoad()
 		{
@@ -91,6 +98,14 @@ namespace UIFramework
 			UIFramework.MainWindow.SetActive(false);
 		}
 
+		public void MelPrefsSaved(string s)
+		{
+			Debug.Deb("MelPrefsSaved called " + s);
+		}
 
+		public void CustomClick(UIFController.Entry button)
+		{
+			Debug.Log($"Clicked: {button.DisplayName} ");
+		}
 	}
 }	
