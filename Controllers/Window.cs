@@ -6,17 +6,19 @@ using MelonLoader;
 using MelonLoader.Logging;
 using MonoMod.ModInterop;
 using System;
+using System.Collections;
+using System.Globalization;
 //using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
-//using static UIFramework.UIFController;
-using static Unity.Collections.AllocatorManager;
 using static UIFramework.Debug;
-using System.Globalization;
+//using static UI.UIFController;
+using static Unity.Collections.AllocatorManager;
 namespace UIFramework
 {
 	/// <summary>
@@ -25,6 +27,7 @@ namespace UIFramework
 	/// <remarks>I may have gone a little crazy with inheritance</remarks>
 	public partial class UIFController
 	{
+
 		/// <summary>
 		/// Controllers for models that can be submodels of other models. 
 		/// Preference Entries
@@ -37,6 +40,45 @@ namespace UIFramework
 			/// Reference to the model the controller works from.  
 			/// </summary>
 			public UIFModel.IModelable Model { get; set; }
+		}
+		public abstract class SubModelController : MonoBehaviour
+		{
+			protected UIFModel.IModelable _internalModel;
+			public virtual UIFModel.IModelable Model
+			{
+				get
+				{
+					return _internalModel;
+				}
+				set
+				{
+					_internalModel = value;
+					ModelSet();
+				}
+			}
+
+			public WindowController _rootWindow;
+
+			public WindowController FindRootWindow()
+			{
+				WindowController foundRoot = null; ;
+				Transform ancestor = this.gameObject.transform.parent;
+				while (ancestor != null)
+				{
+					if (ancestor.name.Contains("MainWindow"))
+					{
+						return ancestor.GetComponent<WindowController>();
+					}
+					ancestor = ancestor.parent;
+				}
+
+				return foundRoot;
+			}
+			void OnTransformParentChanged()
+			{
+				_rootWindow = FindRootWindow();
+			}
+			public virtual void ModelSet() { }
 		}
 
 		/// <summary>
@@ -74,7 +116,7 @@ namespace UIFramework
 
 
 				MainActionButton.onClick.AddListener((UnityAction)SaveButtonClick);
-				
+
 				MinimizeButton.onClick.AddListener((UnityAction)(() => MainCanvas.SetActive(false)));
 
 				_model = model;
@@ -105,16 +147,40 @@ namespace UIFramework
 
 				for (int i = PrefRegistryPanel.gameObject.transform.childCount - 1; i >= 0; i--)
 				{
-					Entry entry = PrefRegistryPanel.gameObject.transform.GetChild(i).gameObject.GetComponent<MelonEntry>();
-					entry.SaveAction();
-					entry.EntryModel.SaveAction();
+					//Error handling per child to prevent breaking the whole loop.
+					try
+					{
+						Entry entry = PrefRegistryPanel.gameObject.transform.GetChild(i).gameObject.GetComponent<Entry>();
+						entry.SaveAction();
+						entry.EntryModel.SaveAction();
+					}
+					catch (Exception ex)
+					{
+						Debug.Warning($"Error in entry saving loop {PrefRegistryPanel.gameObject.transform.childCount - i}:");
+						Debug.Error(ex.Message);
+					}
 				}
 				PrefRegistryPanel.SaveAction();
 				PrefRegistryPanel.Infanticide();
 				PrefRegistryPanel.BuildFromModelList();
 			}
 
+			public virtual void DiscardButtonClick()
+			{
+				PrefRegistryPanel.DiscardAction();
+			}
+
+
+			void Update()
+			{
+				if (Input.GetKeyDown(KeyCode.Escape))
+				{
+					// Deselect the currently selected UI element
+					EventSystem.current.SetSelectedGameObject(null);
+				}
+			}
+
 		}
 	}
-	
+
 }

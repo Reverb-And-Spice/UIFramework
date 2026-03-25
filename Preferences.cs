@@ -4,7 +4,7 @@ using UnityEngine.Bindings;
 namespace UIFramework
 {
 	/// <summary>
-	/// UIFramework's own preferences go here 
+	/// UI's own preferences go here 
 	/// </summary>
 	internal static class Preferences
 	{
@@ -37,9 +37,9 @@ namespace UIFramework
 				Directory.CreateDirectory(USER_DATA);
 
 
-			CatUIFramework = MelonPreferences.CreateCategory("UIFramework", "UIFramework Settings");
+			CatUIFramework = MelonPreferences.CreateCategory("UI", "UI Settings");
 			CatUIFramework.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
-			EnableDebugMode = CatUIFramework.CreateEntry("EnableDebugMode", true, "Enable Debug Logs", "Enables or disables debug logs for UIFramework. Useful for mod developers.");
+			EnableDebugMode = CatUIFramework.CreateEntry("EnableDebugMode", true, "Enable Debug Logs", "Enables or disables debug logs for UI. Useful for mod developers.");
 			AutoHideOnSceneLoad = CatUIFramework.CreateEntry("AutoHideOnSceneLoad", true, "Auto Hide On Scene Load", "Hides the UI Automatically in between scenes.");
 
 			Experimental = MelonPreferences.CreateCategory("UIFrameworkExperimental", "Experimental Settings");
@@ -68,9 +68,10 @@ namespace UIFramework
 				TestBoolList.Add(TestBooleans.CreateEntry("TestBool" + i, false, "Test Bool " + i));
 			}
 
-/*			Debug.debugMode = EnableDebugMode.Value;
+			/*Debug.debugMode = EnableDebugMode.EnteredValue;
 
-			EnableDebugMode.OnEntryValueChanged.Subscribe((oldValue, newValue) => { 
+			EnableDebugMode.OnEntryValueChanged.Subscribe((oldValue, newValue) =>
+			{
 				Debug.debugMode = newValue;
 				Debug.Msg($"Debug mode has been set to: {newValue}");
 			});*/

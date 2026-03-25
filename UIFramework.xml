@@ -24,7 +24,7 @@
             Sets the identifier text
             </summary>
         </member>
-        <member name="M:UIFramework.UIFController.Entry.ModelSet">
+        <member name="P:UIFramework.UIFController.Entry.EntryModel">
             <summary>
             Runs when the model property has been set. 
             </summary>
@@ -38,6 +38,7 @@
         <member name="T:UIFramework.UIFController.MelonEntry">
             <summary>
             Inherit this class to create your own custom entry controllers for your own input controls.
+            TODO: Refactor this to suggest non-melon related settings storage
             </summary>
         </member>
         <member name="M:UIFramework.UIFController.MelonEntry.ModelSet">
@@ -74,12 +75,12 @@
             
             </summary>
         </member>
-        <member name="P:UIFramework.UIFController.PrefText.Value">
-            <summary>
+        <member name="P:UIFramework.UIFController.PrefText.EnteredValue">
+             <summary>
             
-            </summary>
+             </summary>
         </member>
-        <member name="M:UIFramework.UIFController.PrefText.SaveAction">
+        <member name="M:UIFramework.UIFController.PrefText.ApplyValueToPref">
             <inheritdoc/>
         </member>
         <member name="T:UIFramework.UIFController.PrefInt">
@@ -87,7 +88,7 @@
             
             </summary>
         </member>
-        <member name="M:UIFramework.UIFController.PrefInt.SaveAction">
+        <member name="M:UIFramework.UIFController.PrefInt.ApplyValueToPref">
             <inheritdoc/>
         </member>
         <member name="T:UIFramework.UIFController.PrefFloat">
@@ -100,7 +101,7 @@
             
             </summary>
         </member>
-        <member name="M:UIFramework.UIFController.PrefDouble.SaveAction">
+        <member name="M:UIFramework.UIFController.PrefDouble.ApplyValueToPref">
             <inheritdoc/>
         </member>
         <member name="T:UIFramework.UIFController.PrefBool">
@@ -111,10 +112,15 @@
         <member name="M:UIFramework.UIFController.PrefBool.ModelSet">
             <inheritdoc/>
         </member>
-        <member name="M:UIFramework.UIFController.PrefBool.SaveAction">
+        <member name="M:UIFramework.UIFController.PrefBool.EditCheck">
             <inheritdoc/>
         </member>
         <member name="T:UIFramework.UIFController.PrefDropDown">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:UIFramework.UIFController.EntryState">
             <summary>
             
             </summary>
@@ -175,6 +181,11 @@
         <member name="M:UIFramework.UIFController.TabButtonController.SelectTargetPanel">
             <summary>
             Selects the panel that should be assigned a model next. The target then parents the models' game objects to itself from the list
+            </summary>
+        </member>
+        <member name="M:UIFramework.UIFController.TabButtonController.Highlight">
+            <summary>
+            Change the color of the selected panel to be more prominent. Reset all other buttons in parent to be default color
             </summary>
         </member>
         <member name="T:UIFramework.UIFController.Mod">
@@ -248,12 +259,12 @@
             <param name="debugOnly"></param>
             <param name="logLevel"></param>
         </member>
-        <member name="T:UIFramework.UIFramework">
+        <member name="T:UIFramework.UI">
             <summary>
             primary public facing class, modders will interact with this to register their preferences and build the UI.
             </summary>
         </member>
-        <member name="M:UIFramework.UIFramework.Register(MelonLoader.MelonMod,MelonLoader.MelonPreferences_Category[])">
+        <member name="M:UIFramework.UI.Register(MelonLoader.MelonMod,MelonLoader.MelonPreferences_Category[])">
             <summary>
             
             </summary>
@@ -263,7 +274,7 @@
         </member>
         <member name="F:UIFramework.Prefabs.UIFGameObjects">
             <summary>
-            Root Game Object for all of UIFramework in DDOL
+            Root Game Object for all of UI in DDOL
             </summary>
         </member>
         <member name="F:UIFramework.Prefabs.AssetBundleLoaded">
@@ -275,12 +286,6 @@
             <summary>
             Temporary game object storage as they're being instantiated
             </summary>
-        </member>
-        <member name="M:UIFramework.Prefabs.ApplyAndRebuild(UnityEngine.GameObject)">
-            <summary>
-            Wrapping gets disabled when loading and this reenables it
-            </summary>
-            <param name="root"></param>
         </member>
         <member name="M:UIFramework.Helpers.ToNormal(System.String)">
              <summary>
@@ -313,7 +318,7 @@
         </member>
         <member name="T:UIFramework.UIFModel.SelectableModelBase">
             <summary>
-            Models that become buttons on the sidebar and topbar
+            Models that represent buttons on the sidebar and topbar
             </summary>
         </member>
         <member name="P:UIFramework.UIFModel.ModelEntryItem.OnUICreated">
@@ -372,7 +377,7 @@
             <param name="identifier"></param>
             <returns></returns>
         </member>
-        <member name="M:UIFramework.UIFModel.IHoldSubmodels.AddSubmodel(UIFramework.UIFModel.IModelable)">
+        <member name="M:UIFramework.UIFModel.IHoldSubmodels.AddSubmodel(UIFramework.UIFModel.IModelable[])">
             <summary>
             Adds a new submodel to the SubModels list
             </summary>
@@ -414,11 +419,11 @@
             Returns an instance of the game object associated with the MelonPreferences_Entry type.
             If a custom one is provided, it will return an instance of that instead
             </summary>
-            <returns></returns>
+            <returns>TODO: Move this to the UI builders as this is ui logic</returns>
         </member>
         <member name="T:UIFramework.Preferences">
             <summary>
-            UIFramework's own preferences go here 
+            UI's own preferences go here 
             </summary>
         </member>
     </members>

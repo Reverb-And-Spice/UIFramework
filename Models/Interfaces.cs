@@ -62,7 +62,7 @@ namespace UIFramework
 			/// Adds a new submodel to the SubModels list
 			/// </summary>
 			/// <param name="model"></param>
-			public void AddSubmodel(IModelable model);
+			public void AddSubmodel(params IModelable[] model);
 		}
 		/// <summary>
 		/// Goes on the main panel. Contains controls for manipulating preferences or just general UI controls

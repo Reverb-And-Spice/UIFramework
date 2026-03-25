@@ -37,15 +37,20 @@ namespace UIFramework
 				_name = name;
 			}
 
-			public void AddSubmodel(IModelable mod)
+			public void AddSubmodel(params IModelable[] mod)
 			{
-				SubModels.Add(mod);
+				SubModels.AddRange(mod);
 			}
 
 			public IModelable GetSubmodel(string name)
 			{
 				return SubModels.FirstOrDefault(m => m.Identifier == name);
 			}
+			public ModelModItem GetModModel(string identifier)
+			{
+				return (ModelModItem)GetSubmodel(identifier);
+			}
+			
 			public GameObject GetNewUIInstance() { return null; }
 
 			public void SaveAction() { }
@@ -78,12 +83,7 @@ namespace UIFramework
 				Instance = instance;
 			}
 
-
-			public void AddSubmodel(IModelable model)
-			{
-				SubModels.Add(model);
-			}
-
+			
 		}
 
 		public class ModelMelonCategory : ModelCategoryItem
@@ -108,10 +108,11 @@ namespace UIFramework
 				PrefCat.SaveToFile();
 			}
 
-			public void AddSubModel(IEntry model)
+			/*public void AddSubModel(IEntry model)
 			{
 				SubModels.Add((IModelable)model);
-			}
+			}*/
+			
 
 		}
 
@@ -120,6 +121,7 @@ namespace UIFramework
 		/// </summary>
 		public class ModelMelonEntry : ModelEntryItem
 		{
+			
 			public virtual MelonPreferences_Entry PrefEntry { get; set; }
 			public override string Identifier => PrefEntry.Identifier;
 			public override string DisplayName => PrefEntry.DisplayName.Trim() == "" ? PrefEntry.Identifier : PrefEntry.DisplayName;
@@ -133,8 +135,16 @@ namespace UIFramework
 			public ModelMelonEntry(MelonPreferences_Entry prefEntry)
 			{
 				PrefEntry = prefEntry;
-
+				SavedValue = prefEntry.BoxedValue;
+				PrefEntry.OnEntryValueChangedUntyped.Subscribe(OnValueChanged);
 			}
+
+			protected void OnValueChanged(object oldVal, object newVal)
+			{
+				SavedValue = newVal;
+			}
+			 
+			public virtual object SavedValue { get; set; }
 
 			private GameObject _uiPrefabSource;
 			/// <summary>
@@ -155,7 +165,7 @@ namespace UIFramework
 			/// Returns an instance of the game object associated with the MelonPreferences_Entry type.
 			/// If a custom one is provided, it will return an instance of that instead
 			/// </summary>
-			/// <returns></returns>
+			/// <returns>TODO: Move this to the UI builders as this is ui logic</returns>
 			public override GameObject GetNewUIInstance()
 			{
 				if (_uiPrefabSource == null)
@@ -164,22 +174,20 @@ namespace UIFramework
 					switch (PrefEntry.BoxedValue)
 					{
 						case bool:
-							return UIFramework.GetPrefab(InputType.Toggle);
-							break;
+							return UI.GetPrefab(InputType.Toggle);
 						case string:
-							return UIFramework.GetPrefab(InputType.TextField);
-							break;
+							return UI.GetPrefab(InputType.TextField);
 						case int:
-							return UIFramework.GetPrefab(InputType.NumericInt);
+							return UI.GetPrefab(InputType.NumericInt);
 						case float:
-							return UIFramework.GetPrefab(InputType.NumericFloat);
+							return UI.GetPrefab(InputType.NumericFloat);
 						case double:
-							return UIFramework.GetPrefab(InputType.NumericDouble);
+							return UI.GetPrefab(InputType.NumericDouble);
 						case Enum:
-							return UIFramework.GetPrefab(InputType.Dropdown);
+							return UI.GetPrefab(InputType.Dropdown);
 						default:
 							Debug.Log("Unsupported type detected with no custom widget prefab provided. Defaulting to text input. Creating custom component recommended", false, 1);
-							return UIFramework.GetPrefab(InputType.TextField);
+							return UI.GetPrefab(InputType.TextField);
 
 
 					}
@@ -190,10 +198,10 @@ namespace UIFramework
 				}
 			}
 
-			public void SaveAction()
+			/*public void SaveAction()
 			{
 
-			}
+			}*/
 
 		}
 	}

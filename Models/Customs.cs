@@ -49,12 +49,13 @@ namespace UIFramework
 
 			private string _displayName;
 			public override string DisplayName => _displayName;
+
 			/// <summary>
 			/// This is only to satisfy the contract for IEntry. 
 			/// </summary>
 			public object BoxedValue { get; set; }
 
-			public void SaveAction() { }
+			public override void SaveAction() { }
 
 			public Action<UIFController.ButtonEntry> OnClick;
 
@@ -67,7 +68,7 @@ namespace UIFramework
 				OnClick += onClick;
 			}
 
-			public override GameObject GetNewUIInstance() => UIFramework.GetPrefab(InputType.Button);
+			public override GameObject GetNewUIInstance() => UI.GetPrefab(InputType.Button);
 
 
 		}

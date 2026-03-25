@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-//using static UIFramework.UIFController;
+//using static UI.UIFController;
 using static Unity.Collections.AllocatorManager;
 using static UIFramework.Debug;
 using System.Globalization;
@@ -31,13 +31,13 @@ namespace UIFramework
 		/// 2. Category tab top bar
 		/// 3. Entries Content area
 		/// </summary>
-		public class ListArea : MonoBehaviour
+		public abstract class ListArea : SubModelController
 		{
-			protected UIFModel.IHoldSubmodels _model;
-			public UIFModel.IHoldSubmodels Model => _model;
+			protected UIFModel.IHoldSubmodels _model => (UIFModel.IHoldSubmodels)_internalModel;
+			
 			public virtual void ContainerReset()
 			{
-				_model = null;
+				Model = null;
 				Infanticide();
 			}
 
@@ -62,7 +62,7 @@ namespace UIFramework
 			/// <param name="model">The model to associate with this instance. Cannot be null.</param>
 			public virtual void SetModel(UIFModel.IHoldSubmodels model)
 			{
-				_model = model;
+				Model = model;
 				BuildFromModelList();
 			}
 
@@ -72,11 +72,11 @@ namespace UIFramework
 			public void BuildFromModelList()
 			{
 				Infanticide();
-				foreach (UIFModel.IModelable model in Model.SubModels)
+				foreach (UIFModel.IModelable model in _model.SubModels)
 				{
 					GameObject uiElement = model.GetNewUIInstance();//GameObject.Instantiate(GetUIPrefabForModel(model), this.gameObject.transform);
 					uiElement.SetActive(true);
-					uiElement.transform.SetParent(this.gameObject.transform, false);
+					uiElement.transform.SetParent(this.gameObject.transform,false);
 
 
 
@@ -106,6 +106,7 @@ namespace UIFramework
 
 				}
 			}
+			public virtual void DiscardAction() { }
 
 			/// <summary>
 			/// Is called when Save ButtonGo is clicked. Override to create custom behaviour 
@@ -140,16 +141,22 @@ namespace UIFramework
 
 		public class PrefList : ListArea
 		{
-			public UIFModel.ModelMelonCategory SelectedCategory => Model as UIFModel.ModelMelonCategory;
+			public UIFModel.ModelCategoryItem SelectedCategory => Model as UIFModel.ModelCategoryItem;
 			/// <summary>
 			/// When the save button is clicked, the selected category save action will be called. The model is now in charge of what that means
 			/// </summary>
 			public override void SaveAction()
 			{
 				SelectedCategory.SaveAction();
+
+
 			}
-
-
+			public override void DiscardAction()
+			{
+				SelectedCategory.DiscardAction();
+				BuildFromModelList();
+			}
+			
 		}
 	}
 }

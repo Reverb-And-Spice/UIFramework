@@ -15,7 +15,7 @@ namespace UIFramework
 	/// <summary>
 	/// primary public facing class, modders will interact with this to register their preferences and build the UI.
 	/// </summary>
-	public static class UIFramework
+	public static class UI
 	{
 
 		internal static UIFModel.RootModel ModelInstance = new();
@@ -105,4 +105,6 @@ namespace UIFramework
 		MultiCheckbox,
 		RadioButton*/
 	}
+
+	
 }

@@ -32,7 +32,7 @@ namespace UIFramework
 			
 		}*/
 
-		public abstract class Entry : MonoBehaviour, IChildable
+		public abstract class Entry : SubModelController, IChildable
 		{
 			/// <summary>
 			/// Sets the description text
@@ -48,28 +48,14 @@ namespace UIFramework
 				set { this.gameObject.gameObject.transform.Find("Data/Label").gameObject.GetComponent<TextMeshProUGUI>().text = value; }
 			}
 
+			public virtual EntryState EntryStatus {get; set;}
+
 			/// <summary>
 			/// Runs when the model property has been set. 
 			/// </summary>
-			public virtual void ModelSet() 
-			{
-				EntryModel.OnUICreated?.Invoke(this);
-			}
 
-			public UIFModel.IEntry EntryModel;
-			public virtual UIFModel.IModelable Model
-			{
-				get { return (UIFModel.IModelable)EntryModel; }
-				set
-				{
 
-					EntryModel = (UIFModel.IEntry)value;
-					DescriptionText = EntryModel.Description;
-					DisplayName = EntryModel.DisplayName;
-
-					ModelSet();
-				}
-			}
+			public UIFModel.IEntry EntryModel => (UIFModel.IEntry)_internalModel;
 			/// <summary>
 			/// This is called when the Save button is pressed. Override to create custom behaviour.
 			/// </summary>
@@ -78,17 +64,26 @@ namespace UIFramework
 			{
 				EntryModel.SaveAction();
 			}
+
+			public override void ModelSet()
+			{
+				DescriptionText = EntryModel.Description;
+				DisplayName = EntryModel.DisplayName;
+				EntryModel.OnUICreated?.Invoke(this);
+			}
 		}
+
 		/// <summary>
 		/// Inherit this class to create your own custom entry controllers for your own input controls.
+		/// TODO: Refactor this to suggest non-melon related settings storage
 		/// </summary>
 		public abstract class MelonEntry : Entry
 		{
 			
-			
+			//public abstract string EnteredValue {get; set;}
 
 			/// <inheritdoc/>
-			public override void ModelSet() { }
+			public override void ModelSet() { base.ModelSet();}
 
 			/// <inheritdoc/>
 			public virtual bool ValidationCheck()
@@ -96,7 +91,15 @@ namespace UIFramework
 				return true;
 			}
 
+			public virtual void EditCheck() { }
 
+			public override void SaveAction()
+			{
+				ApplyValueToPref();
+				base.SaveAction();
+			}
+
+			public virtual void ApplyValueToPref() { }
 		}
 
 
@@ -120,8 +123,34 @@ namespace UIFramework
 			/// <inheritdoc/>
 			public override void ModelSet()
 			{
-				PlaceHolderText = _prefModel.BoxedValue.ToString();
+				textField.text = _prefModel.BoxedValue.ToString();
 				base.ModelSet();
+			} 
+
+			public override void EditCheck()
+			{
+				if(textField.text != _prefModel.PrefEntry.BoxedValue.ToString())
+				{
+					EntryStatus = EntryState.Edited;
+				}
+			}
+
+
+
+			public virtual void EditStart(string s)
+			{
+				textField.textComponent.fontStyle = FontStyles.Normal;
+			} 
+			public virtual void EditEnd(string s)
+			{
+				textField.textComponent.fontStyle = FontStyles.Italic;
+				ApplyValueToPref();
+			}
+
+			protected virtual void Start()
+			{
+				textField.onSelect.AddListener((System.Action<string>)EditStart);
+				textField.onDeselect.AddListener((System.Action<string>)EditEnd);
 			}
 		}
 
@@ -133,17 +162,18 @@ namespace UIFramework
 		public class PrefText : TextInputEntry
 		{
 			/// <summary>
-			/// 
+			///
 			/// </summary>
-			public virtual string Value => textField.text;
+			public virtual string EnteredValue => textField.text;
 			/// <inheritdoc/>
-			public override void SaveAction()
+
+			public override void ApplyValueToPref()
 			{
 				try
 				{
-					if (Value.Trim() != "")
+					if (EnteredValue.Trim() != "")
 					{
-						_prefModel.BoxedValue = Value;
+						_prefModel.BoxedValue = EnteredValue;
 					}
 				}
 				catch (Exception ex)
@@ -158,9 +188,9 @@ namespace UIFramework
 		[RegisterTypeInIl2Cpp]
 		public class PrefInt : TextInputEntry
 		{
-			public int Value => int.Parse(textField.text);
+			public int EnteredValue => int.Parse(textField.text);
 			/// <inheritdoc/>
-			public override void SaveAction()
+			public override void ApplyValueToPref()
 			{
 				try
 				{
@@ -173,6 +203,7 @@ namespace UIFramework
 				{
 					Log($"{ex.Message} {textField.text}", false, 2);
 				}
+				
 			}
 		}
 
@@ -182,9 +213,9 @@ namespace UIFramework
 		[RegisterTypeInIl2Cpp]
 		public class PrefFloat : TextInputEntry
 		{
-			public float Value => float.Parse(textField.text);
+			public float EnteredValue => float.Parse(textField.text);
 
-			public override void SaveAction()
+			public override void ApplyValueToPref()
 			{
 				try
 				{
@@ -197,6 +228,7 @@ namespace UIFramework
 				{
 					Log($"{ex.Message} {textField.text}", false, 2);
 				}
+				
 			}
 		}
 		/// <summary>
@@ -205,9 +237,10 @@ namespace UIFramework
 		[RegisterTypeInIl2Cpp]
 		public class PrefDouble : TextInputEntry
 		{
-			public double Value => double.Parse(textField.text);
+			public double EnteredValue => double.Parse(textField.text);
 			/// <inheritdoc/>
-			public override void SaveAction()
+
+			public override void ApplyValueToPref()
 			{
 				try
 				{
@@ -220,6 +253,7 @@ namespace UIFramework
 				{
 					Log($"{ex.Message} {textField.text}", false, 2);
 				}
+				
 			}
 		}
 
@@ -229,29 +263,89 @@ namespace UIFramework
 		[RegisterTypeInIl2Cpp]
 		public class PrefBool : MelonEntry
 		{
+			protected Toggle toggle => this.gameObject.transform.Find("Data/Toggle").gameObject.GetComponent<Toggle>();
 			protected UIFModel.ModelMelonEntry _prefModel => (UIFModel.ModelMelonEntry)EntryModel;
-			public bool Value => this.gameObject.transform.Find("Data/Toggle").gameObject.GetComponent<Toggle>().isOn;
+			public bool EnteredValue => this.gameObject.transform.Find("Data/Toggle").gameObject.GetComponent<Toggle>().isOn;
 			/// <inheritdoc/>
 			public override void ModelSet()
 			{
-				this.gameObject.transform.Find("Data/Toggle").gameObject.GetComponent<Toggle>().isOn = (bool)_prefModel.BoxedValue;
+				toggle.isOn = (bool)_prefModel.BoxedValue;
+				toggle.onValueChanged.AddListener((UnityAction<bool>)OnValueChanged);
+				
 				base.ModelSet();
 
 			}
 			/// <inheritdoc/>
-			public override void SaveAction()
+			public override void EditCheck()
+			{
+				
+			}
+			public void OnValueChanged(bool newValue )
+			{
+				ApplyValueToPref();
+			}
+
+			public override void ApplyValueToPref()
 			{
 				try
 				{
-					_prefModel.BoxedValue = Value;
+					_prefModel.BoxedValue = EnteredValue;
 				}
 				catch (Exception ex)
 				{
 					Log(ex.Message, false, 2);
 				}
+			}
+		}
 
+		
+		/// <summary>
+		/// 
+		/// </summary>
+		[RegisterTypeInIl2Cpp]
+		public class PrefDropDown : MelonEntry
+		{
+			protected UIFModel.ModelMelonEntry _prefModel => (UIFModel.ModelMelonEntry)EntryModel;
+			public TMP_Dropdown dropdown;
+
+			public Type prefEnum;
+			public override void ModelSet()
+			{
+				dropdown = this.gameObject.transform.Find("Data/Dropdown").GetComponent<TMP_Dropdown>();
+				prefEnum = _prefModel.PrefEntry.BoxedValue.GetType();
+
+				string[] enumValues = Enum.GetNames(prefEnum);
+				
+				//Uhhh... Guess I have to do this? someone figure it out for me later
+				Il2CppSystem.Collections.Generic.List<string> valueList = new();
+				foreach (string value in enumValues)
+				{
+					valueList.Add(value);
+				}
+
+
+				dropdown.ClearOptions();
+				dropdown.AddOptions(valueList);
+
+				dropdown.value = (int)_prefModel.BoxedValue;
+
+				dropdown.onValueChanged.AddListener((UnityAction<int>)OnValueChanged);
+
+				base.ModelSet();
+			}
+			public override void EditCheck()
+			{
+				
 			}
 
+			public void OnValueChanged(int index )
+			{
+				ApplyValueToPref();
+			}
+			public override void ApplyValueToPref()
+			{
+				_prefModel.PrefEntry.BoxedValue = Enum.Parse(prefEnum, dropdown.value.ToString());
+			}
 		}
 
 		[RegisterTypeInIl2Cpp]
@@ -259,18 +353,7 @@ namespace UIFramework
 		{
 
 			public GameObject ButtonGo;
-			public virtual UIFModel.IModelable Model
-			{
-				get { return (UIFModel.IModelable)EntryModel; }
-				set
-				{
 
-					EntryModel = (UIFModel.IEntry)value;
-					DescriptionText = EntryModel.Description;
-					DisplayName = EntryModel.Identifier;
-					ModelSet();
-				}
-			}
 			public override void ModelSet()
 			{
 				ButtonGo = this.gameObject.transform.Find("Data/Button").gameObject;
@@ -297,46 +380,6 @@ namespace UIFramework
 				}
 			}
 		}
-		/// <summary>
-		/// 
-		/// </summary>
-		[RegisterTypeInIl2Cpp]
-		public class PrefDropDown : MelonEntry
-		{
-			protected UIFModel.ModelMelonEntry _prefModel => (UIFModel.ModelMelonEntry)EntryModel;
-			public TMP_Dropdown dropdown;
-
-			public Type prefEnum;
-			public override void ModelSet()
-			{
-				base.ModelSet();
-				dropdown = this.gameObject.transform.Find("Data/Dropdown").GetComponent<TMP_Dropdown>();
-				prefEnum = _prefModel.PrefEntry.BoxedValue.GetType();
-
-				string[] enumValues = Enum.GetNames(prefEnum);
-				
-				//Uhhh... Guess I have to do this? someone figure it out for me later
-				Il2CppSystem.Collections.Generic.List<string> valueList = new();
-				foreach (string value in enumValues)
-				{
-					valueList.Add(value);
-				}
-
-
-				dropdown.ClearOptions();
-				dropdown.AddOptions(valueList);
-
-				dropdown.value = (int)_prefModel.BoxedValue;
-
-				base.ModelSet();
-			}
-
-			public override void SaveAction()
-			{
-				_prefModel.PrefEntry.BoxedValue = Enum.Parse(prefEnum, dropdown.value.ToString());
-			}
-
-		}
 		#region no support
 
 		/// <summary>
@@ -356,6 +399,15 @@ namespace UIFramework
 
 		}
 		*/
-	}
 		#endregion
+		public enum EntryState
+		{
+			Untouched,
+			Edited,
+			Saved,
+			Errored,
+
+		}
+	}
+
 }

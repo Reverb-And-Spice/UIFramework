@@ -33,7 +33,7 @@ namespace UIFramework
 			}
 		}
 		/// <summary>
-		/// Models that become buttons on the sidebar and topbar
+		/// Models that represent buttons on the sidebar and topbar
 		/// </summary>
 		public abstract class SelectableModelBase : ModelBase, IHoldSubmodels
 		{
@@ -42,19 +42,24 @@ namespace UIFramework
 			{
 				return SubModels.FirstOrDefault(m => m.Identifier == name);
 			}
-			public virtual void AddSubmodel(IModelable submodel)
+			/*public virtual void AddSubmodel(IModelable submodel)
 			{
 				SubModels.Add(submodel);
-			}
+			}*/
 			public virtual void AddSubmodel(params IModelable[] submodel)
 			{
 				SubModels.AddRange(submodel);
 			}
 
-			public virtual void AddSubmodel(List<IModelable> submodels)
+			/*public virtual void AddSubmodel(List<IModelable> submodels)
 			{
 				SubModels.AddRange(submodels);
+			}*/
+			public virtual void DiscardAction()
+			{
+
 			}
+			public override void SaveAction() { }
 
 		}
 
@@ -65,6 +70,16 @@ namespace UIFramework
 			{
 				return GameObject.Instantiate(Prefabs.ModTab);
 			}
+			public virtual ModelCategoryItem GetModelCategory(string identifier)
+			{
+				return (ModelCategoryItem) GetSubmodel(identifier);
+			}
+
+			public virtual void AddModelCategory(params ModelCategoryItem[] categoryModel)
+			{
+				AddSubmodel(categoryModel.Cast<IModelable>().ToArray());
+			}
+
 
 		}
 		public abstract class ModelCategoryItem : SelectableModelBase
@@ -73,6 +88,11 @@ namespace UIFramework
 			{
 				return GameObject.Instantiate(Prefabs.CatTab);
 			}
+			public virtual void AddEntry(params IEntry[] entryModel)
+			{
+				AddSubmodel(entryModel.Cast<IModelable>().ToArray());
+			}
+			//public override void DiscardAction() { }
 		}
 
 		public abstract class ModelEntryItem : ModelBase, IEntry
@@ -81,7 +101,7 @@ namespace UIFramework
 			/// <inheritdoc/>
 			public virtual Action<UIFController.Entry> OnUICreated { get; set; }
 
-
+			public virtual EntryState SaveState {get; set;}
 		}
 
 		#endregion
