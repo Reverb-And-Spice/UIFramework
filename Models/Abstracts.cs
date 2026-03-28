@@ -26,7 +26,8 @@ namespace UIFramework
 			/// <inheritdoc/>
 			public abstract string DisplayName { get; }
 
-
+			
+			/// <inheritdoc/>
 			public virtual void SaveAction()
 			{
 
@@ -37,7 +38,15 @@ namespace UIFramework
 		/// </summary>
 		public abstract class SelectableModelBase : ModelBase, IHoldSubmodels
 		{
+			
+			/// <summary>
+			/// List of submodels for the model
+			/// </summary>
 			public virtual List<IModelable> SubModels { get; set; } = new();
+			
+			/// <summary>
+			/// General submodel finder.
+			/// </summary>
 			public IModelable GetSubmodel(string name)
 			{
 				return SubModels.FirstOrDefault(m => m.Identifier == name);
@@ -46,6 +55,10 @@ namespace UIFramework
 			{
 				SubModels.Add(submodel);
 			}*/
+				
+			/// <summary>
+			/// Add a new submodel to the list
+			/// </summary>
 			public virtual void AddSubmodel(params IModelable[] submodel)
 			{
 				SubModels.AddRange(submodel);
@@ -55,26 +68,36 @@ namespace UIFramework
 			{
 				SubModels.AddRange(submodels);
 			}*/
+			
+			/// <summary>
+			/// Called when the discard button is pressed
+			/// </summary>
 			public virtual void DiscardAction()
 			{
 
 			}
+			/// <inheritdoc/>
 			public override void SaveAction() { }
 
 		}
 
 		public abstract class ModelModItem : SelectableModelBase
 		{
-
+			/// <inheritdoc/>
 			public override GameObject GetNewUIInstance()
 			{
 				return GameObject.Instantiate(Prefabs.ModTab);
 			}
+			/// <summary>
+			/// 
+			/// </summary>
 			public virtual ModelCategoryItem GetModelCategory(string identifier)
 			{
 				return (ModelCategoryItem) GetSubmodel(identifier);
 			}
-
+			/// <summary>
+			/// 
+			/// </summary>
 			public virtual void AddModelCategory(params ModelCategoryItem[] categoryModel)
 			{
 				AddSubmodel(categoryModel.Cast<IModelable>().ToArray());
@@ -84,6 +107,7 @@ namespace UIFramework
 		}
 		public abstract class ModelCategoryItem : SelectableModelBase
 		{
+			/// <inheritdoc/>
 			public override GameObject GetNewUIInstance()
 			{
 				return GameObject.Instantiate(Prefabs.CatTab);
@@ -97,10 +121,20 @@ namespace UIFramework
 
 		public abstract class ModelEntryItem : ModelBase, IEntry
 		{
+			
+			/// <summary>
+			/// Description of the modelentry
+			/// </summary>
 			public abstract string Description { get; }
-			/// <inheritdoc/>
+			
+			/// <summary>
+			/// Called when the corresponding UI element is created
+			/// </summary>
 			public virtual Action<UIFController.Entry> OnUICreated { get; set; }
-
+			
+			/// <summary>
+			/// 
+			/// </summary>
 			public virtual EntryState SaveState {get; set;}
 		}
 

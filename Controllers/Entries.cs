@@ -62,7 +62,7 @@ namespace UIFramework
 			/// <remarks>Generally MelonPreferences are saved from the category, not the indivial entries.</remarks>
 			public virtual void SaveAction()
 			{
-				EntryModel.SaveAction();
+				//EntryModel.SaveAction();
 			}
 
 			public override void ModelSet()
@@ -280,11 +280,12 @@ namespace UIFramework
 			{
 				
 			}
+
 			public void OnValueChanged(bool newValue )
 			{
 				ApplyValueToPref();
 			}
-
+			/// <inheritdoc/>
 			public override void ApplyValueToPref()
 			{
 				try
@@ -309,6 +310,7 @@ namespace UIFramework
 			public TMP_Dropdown dropdown;
 
 			public Type prefEnum;
+			/// <inheritdoc/>
 			public override void ModelSet()
 			{
 				dropdown = this.gameObject.transform.Find("Data/Dropdown").GetComponent<TMP_Dropdown>();
@@ -333,6 +335,7 @@ namespace UIFramework
 
 				base.ModelSet();
 			}
+			/// <inheritdoc/>
 			public override void EditCheck()
 			{
 				
@@ -342,6 +345,7 @@ namespace UIFramework
 			{
 				ApplyValueToPref();
 			}
+			/// <inheritdoc/>
 			public override void ApplyValueToPref()
 			{
 				_prefModel.PrefEntry.BoxedValue = Enum.Parse(prefEnum, dropdown.value.ToString());
@@ -353,7 +357,7 @@ namespace UIFramework
 		{
 
 			public GameObject ButtonGo;
-
+			/// <inheritdoc/>
 			public override void ModelSet()
 			{
 				ButtonGo = this.gameObject.transform.Find("Data/Button").gameObject;

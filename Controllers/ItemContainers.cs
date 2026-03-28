@@ -151,6 +151,7 @@ namespace UIFramework
 
 
 			}
+			/// <inheritdoc/>
 			public override void DiscardAction()
 			{
 				SelectedCategory.DiscardAction();

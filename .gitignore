@@ -364,3 +364,11 @@ FodyWeavers.xsd
 /Doxygen
 /Assets/AssetBundles
 /_Misc/UIFramework
+/Assets/AssetBundles/AssetBundles
+/Assets/AssetBundles/AssetBundles.manifest
+/Assets/AssetBundles/AssetBundles.manifest.meta
+/Assets/AssetBundles/AssetBundles.meta
+/Assets/AssetBundles/uiframework
+/Assets/AssetBundles/uiframework.manifest
+/Assets/AssetBundles/uiframework.manifest.meta
+/Assets/AssetBundles/uiframework.meta

@@ -89,10 +89,19 @@ namespace UIFramework
 		public class ModelMelonCategory : ModelCategoryItem
 		{
 			//public List<IModelable> SubModels { get; set; }
+			
+			/// <summary>
+			/// The MelonPreferences_Category object this adapts into the framework
+			/// </summary>
 			public MelonPreferences_Category PrefCat;
+			/// <inheritdoc/>
 			public override string Identifier => PrefCat.Identifier;
+			/// <inheritdoc/>
 			public override string DisplayName => PrefCat.DisplayName.Trim() == "" ? PrefCat.Identifier : PrefCat.DisplayName;
-
+			
+			/// <summary>
+			/// Creates a new instance of this class based on a MelonPreferences_Category
+			/// </summary>
 			public ModelMelonCategory(MelonPreferences_Category cat)
 			{
 				PrefCat = cat;
@@ -102,7 +111,7 @@ namespace UIFramework
 				}
 
 			}
-
+			/// <inheritdoc/>
 			public override void SaveAction()
 			{
 				PrefCat.SaveToFile();
@@ -122,29 +131,48 @@ namespace UIFramework
 		public class ModelMelonEntry : ModelEntryItem
 		{
 			
+			/// <summary>
+			/// MelonPreferences_Entry this model is meant to adapt
+			/// </summary>
 			public virtual MelonPreferences_Entry PrefEntry { get; set; }
+			/// <inheritdoc/>
 			public override string Identifier => PrefEntry.Identifier;
+			/// <inheritdoc/>
 			public override string DisplayName => PrefEntry.DisplayName.Trim() == "" ? PrefEntry.Identifier : PrefEntry.DisplayName;
+			/// <inheritdoc/>
 			public override string Description => PrefEntry.Description;
-
+			
+			/// <summary>
+			/// Direct access to the PrefEntry boxedvalue property
+			/// </summary>
 			public object BoxedValue
 			{
 				get => PrefEntry.BoxedValue;
 				set => PrefEntry.BoxedValue = value;
 			}
+			/// <summary>
+			/// Creates a new instance of this object based around a MelonPreferences_Entry object
+			/// </summary>
 			public ModelMelonEntry(MelonPreferences_Entry prefEntry)
 			{
 				PrefEntry = prefEntry;
 				SavedValue = prefEntry.BoxedValue;
 				PrefEntry.OnEntryValueChangedUntyped.Subscribe(OnValueChanged);
 			}
-
+			//Called when the value changes 
 			protected void OnValueChanged(object oldVal, object newVal)
 			{
-				SavedValue = newVal;
+				//SavedValue = newVal;
 			}
-			 
+			/// <summary>
+			/// The value actually saved to the file. 
+			/// </summary>
 			public virtual object SavedValue { get; set; }
+			/// <inheritdoc/>
+			public override void SaveAction()
+			{
+				SavedValue = BoxedValue;
+			}
 
 			private GameObject _uiPrefabSource;
 			/// <summary>
@@ -159,6 +187,8 @@ namespace UIFramework
 			{
 				_uiPrefabSource = prefab;
 			}
+
+			
 
 
 			/// <summary>

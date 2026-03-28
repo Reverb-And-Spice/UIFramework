@@ -39,7 +39,7 @@ namespace UIFramework
 
 			CatUIFramework = MelonPreferences.CreateCategory("UI", "UI Settings");
 			CatUIFramework.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
-			EnableDebugMode = CatUIFramework.CreateEntry("EnableDebugMode", true, "Enable Debug Logs", "Enables or disables debug logs for UI. Useful for mod developers.");
+			EnableDebugMode = CatUIFramework.CreateEntry("EnableDebugMode", false, "Enable Debug Logs", "Enables or disables debug logs for UIFramework.");
 			AutoHideOnSceneLoad = CatUIFramework.CreateEntry("AutoHideOnSceneLoad", true, "Auto Hide On Scene Load", "Hides the UI Automatically in between scenes.");
 
 			Experimental = MelonPreferences.CreateCategory("UIFrameworkExperimental", "Experimental Settings");

@@ -23,10 +23,15 @@ namespace UIFramework
 
 		internal static UIFController.WindowController WindowInstance;
 		/// <summary>
-		/// 
+		/// Registers a mod and its categories to the UI instance. 
 		/// </summary>
-		/// <param name="modInstance"></param>
-		/// <param name="categories"></param>
+		/// <param name="modInstance">Instance of your MelonMod class</param>
+		/// <param name="categories">The range of MelonPreferences_Category objects used by your mod.</param>
+		/// <remarks>
+		/// Unless the dependency was explicitly declared, Don't use before OnLateInitializeMelon.
+		/// Currently, registration after the first gym load means your mod won't show up on the mod list
+		/// 
+		/// </remarks>
 		/// <returns>A reference to the created Mod Model for further customization</returns>
 		public static UIFModel.ModelMod Register(MelonMod modInstance, params MelonPreferences_Category[] categories)
 		{
@@ -34,6 +39,10 @@ namespace UIFramework
 			ModelInstance.AddSubmodel(NewModModel);
 			return NewModModel;
 		}
+		/// <summary>
+		/// Registers a mod with no categories to the framework. Categories need to be manually added
+		/// </summary>
+		/// <param name="modInstance">Instance of your MelonMod class</param>
 		public static UIFModel.ModelMod Register(MelonMod modInstance)
 		{
 			UIFModel.ModelMod NewModModel = new(modInstance);
@@ -41,7 +50,9 @@ namespace UIFramework
 			return NewModModel;
 		}
 
-
+		/// <summary>
+		/// 
+		/// </summary>
 		internal static void InitializeUIObjects()
 		{
 			MainWindow = GameObject.Instantiate(Prefabs.MainCanvasSource, Prefabs.UIFGameObjects.transform);
@@ -50,6 +61,9 @@ namespace UIFramework
 			WindowInstance = MainWindow.GetComponent<UIFController.WindowController>();
 
 		}
+		/// <summary>
+		/// 
+		/// </summary>
 		internal static void BuildUI()
 		{
 			WindowInstance.SetModel(ModelInstance);

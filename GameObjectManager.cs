@@ -51,6 +51,7 @@ namespace UIFramework
 		internal static GameObject ButtonPrefab;
 
 		internal static Button MainActionButton;
+		internal static Button DiscardButton;
 		internal static Button MinimizeButton;
 
 		internal static void LoadAssetBundle()
@@ -88,6 +89,9 @@ namespace UIFramework
 
 			MainActionButton = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "SaveActionButton")?.gameObject.GetComponent<Button>();
 			MinimizeButton = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "Minimize")?.gameObject.GetComponent<Button>();
+
+			DiscardButton = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "DiscardActionButton")?.gameObject.GetComponent<Button>();
+			DiscardButton.gameObject.SetActive(false);
 
 
 

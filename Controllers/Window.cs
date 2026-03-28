@@ -123,6 +123,10 @@ namespace UIFramework
 				BuildModList();
 				Deb("Main Window Full Path: " + Helpers.HierarchyUtility.GetGameObjectPath(this.gameObject));
 			}
+			
+			/// <summary>
+			/// Resets the containers and build the modlist
+			/// </summary>
 			public virtual void BuildModList()
 			{
 				ModRegistryPanel.ContainerReset();

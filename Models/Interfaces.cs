@@ -69,10 +69,18 @@ namespace UIFramework
 		/// </summary>
 		public interface IEntry
 		{
+			
+			/// <summary>
+			/// Name/ID of the entry
+			/// </summary>
 			public string Identifier { get; }
+			
+			/// <summary>
+			/// Description of the entry
+			/// </summary>
 			public string Description { get; }
 			/// <summary>
-			/// If the 
+			/// Ideally called by the controller to define a save action
 			/// </summary>
 			public void SaveAction();
 			public string DisplayName { get; }

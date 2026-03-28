@@ -22,11 +22,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Remove="Assets\uiframework" />
+	  <None Remove="Assets\uiframework" />
 	</ItemGroup>
-
 	<ItemGroup>
-		<EmbeddedResource Include="Assets\uiframework" />
+		<EmbeddedResource Include="Assets\**" />
 	</ItemGroup>
 
 
