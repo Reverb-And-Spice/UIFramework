@@ -53,7 +53,6 @@ namespace UIFramework
 			TestList = Experimental.CreateEntry("TestList", new List<int> { 1, 2, 3 }, "Test List", "This is a test list of integers.");
 
 			
-
 			TestEmptyDisplayName = MelonPreferences.CreateCategory("EmptyDisplayName");
 			TestEmptyDisplayName.SetFilePath(Path.Combine(USER_DATA,CONFIG_FILE));
 
@@ -63,7 +62,8 @@ namespace UIFramework
 			Experimental.SaveToFile();
 
 			TestBooleans = MelonPreferences.CreateCategory("TestBooleans", "Test Booleans");
-			for (int i = 0; i < 2; i++)
+			TestBooleans.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
+			for (int i = 0; i < 10; i++)
 			{
 				TestBoolList.Add(TestBooleans.CreateEntry("TestBool" + i, false, "Test Bool " + i));
 			}

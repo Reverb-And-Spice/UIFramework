@@ -1,12 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿//using System;
+//using System.Collections.Generic;
+using Il2CppSystem.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-
+using System.ComponentModel.DataAnnotations;
 namespace UIFramework
 {
+	/// <summary>
+	/// contains various helper functions
+	/// ToNormal: Normalizes a string
+	/// GetDisplayNames
+	/// </summary>
 	internal static class Helpers
 	{
 		/// <summary>
@@ -17,7 +24,33 @@ namespace UIFramework
 		/// <returns>A normalized string with all spaces removed, trimmed, and converted to lowercase.</returns>
 		///<remarks>Returns empty string if input only contains whitespace</remarks>
 		public static string ToNormal(this string text) => text.ToLower().Trim().Replace(" ", "");
+		/// <summary>
+		/// Gets the displaynames from enums and if they don't have one, use their regular names
+		/// </summary>
+		/// <param name="value"></param>
+		/// <returns></returns>
+		/// <remarks>AI Assisted. Was unfamiliar with enum attributes.</remarks>
+		public static Il2CppSystem.Collections.Generic.List<string> GetDisplayName(Type enumType)
+		{
+			if(!enumType.IsEnum)
+			{
+				throw new ArgumentException("Type must be an enum");
+			}
 
+			Il2CppSystem.Collections.Generic.List<string> displayNames = new Il2CppSystem.Collections.Generic.List<string>();
+			foreach(var value in Enum.GetValues(enumType))
+			{
+				FieldInfo info = enumType.GetField(value.ToString());
+				DisplayAttribute attr = info?.GetCustomAttribute<DisplayAttribute>();
+				displayNames.Add(attr?.GetName() ?? value.ToString());
+
+			}
+			return displayNames;
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <remarks>AI Generated</remarks>
 		internal static class HierarchyUtility
 		{
 			internal static string GetGameObjectPath(GameObject obj)
@@ -45,6 +78,9 @@ namespace UIFramework
 				return builder.ToString();
 			}
 		}
+
+
+
 	}
 
 }

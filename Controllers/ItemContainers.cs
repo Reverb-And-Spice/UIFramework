@@ -71,6 +71,7 @@ namespace UIFramework
 			/// </summary>
 			public void BuildFromModelList()
 			{
+				if (Model == null) return;
 				Infanticide();
 				foreach (UIFModel.IModelable model in _model.SubModels)
 				{
@@ -147,7 +148,7 @@ namespace UIFramework
 			/// </summary>
 			public override void SaveAction()
 			{
-				SelectedCategory.SaveAction();
+				SelectedCategory?.SaveAction();
 
 
 			}

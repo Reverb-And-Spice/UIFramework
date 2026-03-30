@@ -99,7 +99,7 @@ namespace UIFramework
 				base.SaveAction();
 			}
 
-			public virtual void ApplyValueToPref() { }
+			public virtual void ApplyValueToPref(){ }
 		}
 
 
@@ -316,18 +316,10 @@ namespace UIFramework
 				dropdown = this.gameObject.transform.Find("Data/Dropdown").GetComponent<TMP_Dropdown>();
 				prefEnum = _prefModel.PrefEntry.BoxedValue.GetType();
 
-				string[] enumValues = Enum.GetNames(prefEnum);
-				
-				//Uhhh... Guess I have to do this? someone figure it out for me later
-				Il2CppSystem.Collections.Generic.List<string> valueList = new();
-				foreach (string value in enumValues)
-				{
-					valueList.Add(value);
-				}
-
+				Il2CppSystem.Collections.Generic.List<string> enumNames = Helpers.GetDisplayName(prefEnum);
 
 				dropdown.ClearOptions();
-				dropdown.AddOptions(valueList);
+				dropdown.AddOptions(enumNames);
 
 				dropdown.value = (int)_prefModel.BoxedValue;
 

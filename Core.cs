@@ -21,7 +21,7 @@ namespace UIFramework
 		/// <summary></summary>
 		public const string Author = "Reverb && Spice";
 		/// <summary></summary>
-		public const string Version = "0.4.1";
+		public const string Version = "0.5.0";
 	}
 
 	
@@ -53,10 +53,17 @@ namespace UIFramework
 
 		public override void OnUpdate()
 		{
-			DiffLog($"");
+			//DiffLog($"");
 
-			if(Input.GetKeyDown(KeyCode.F9))
+			
+
+			if (Input.GetKeyDown(KeyCode.F9))
 			{
+				if (CurrentScene == "loader")
+				{
+					Debug.Warning("UIFramework does not work in the loader. Please finish calibrating.");
+					return;
+				}
 				UI.MainWindow.SetActive(!UI.MainWindow.activeSelf);
 			}
 		}
@@ -69,7 +76,7 @@ namespace UIFramework
 			CurrentScene = sceneName.ToNormal();
 			if (CurrentScene == "loader")
 			{
-
+				
 			}
 
 			if (CurrentScene == "gym" && isFirstLoad) FirstGymLoad();
@@ -88,6 +95,14 @@ namespace UIFramework
 
 		internal void FirstGymLoad()
 		{
+			BuildUI();
+
+
+			isFirstLoad = false;
+		}
+
+		internal void BuildUI()
+		{
 			Preferences.InitializePrefs();
 			UIFModel.ModelMod ModModel;
 			if (Preferences.EnableDebugMode.Value)
@@ -101,21 +116,20 @@ namespace UIFramework
 			{
 				ModModel = UI.Register(this, Preferences.CatUIFramework);
 			}
-			
-			
+
+
 
 			Prefabs.LoadAssetBundle();
 
 			UI.InitializeUIObjects();
 			UI.BuildUI();
-			isFirstLoad = false;
 
 			UI.MainWindow.SetActive(false);
 		}
 
 		public void MelPrefsSaved(string s)
 		{
-			Debug.Deb("MelPrefsSaved called " + s);
+			//Debug.Deb("MelPrefsSaved called " + s);
 		}
 
 		public void CustomClick(UIFController.Entry button)

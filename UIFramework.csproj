@@ -20,12 +20,13 @@
 		<Reference Include="G:\SteamLibrary\steamapps\common\RUMBLE\MelonLoader\net35\**\*.dll" Private="false" />
 		<Reference Include="G:\SteamLibrary\steamapps\common\RUMBLE\MelonLoader\Il2CppAssemblies\**\*.dll" Private="false" />
 	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="Assets\uiframework" />
-	</ItemGroup>
 	<ItemGroup>
 		<EmbeddedResource Include="Assets\**" />
+	</ItemGroup>
+	<ItemGroup>
+	  <Compile Remove="Assets\Assets\**" />
+	  <EmbeddedResource Remove="Assets\Assets\**" />
+	  <None Remove="Assets\Assets\**" />
 	</ItemGroup>
 
 

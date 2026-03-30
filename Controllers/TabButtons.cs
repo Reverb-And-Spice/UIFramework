@@ -25,55 +25,25 @@ namespace UIFramework
 		//protected override GameObject UIPrefab { get { return Prefabs.TextPrefab; } }
 		public abstract class TabButtonController : SubModelController, IChildable
 		{
+			protected WindowController ParentWindow;
 			protected UIFModel.IHoldSubmodels _model => (UIFModel.IHoldSubmodels)_internalModel;
-			/*public override UIFModel.IModelable Model
-			{
-				get { return _model; }
-				set
-				{
-					_model = (UIFModel.IHoldSubmodels)value;
-
-				}
-			}*/
 
 			public override void ModelSet()
 			{
 				Label = _model.DisplayName;
-				
+				ParentWindow = _rootWindow;
 			}
 
 			public string Label { set { this.gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
 			public ColorARGB TabColor { get; set; }
-			public ListArea TargetContainer;
-			public void OnSelect()
-			{
-				SelectTargetPanel();
-				Highlight();
-			}
 			/// <summary>
-			/// Selects the panel that should be assigned a model next. The target then parents the models' game objects to itself from the list
+			/// Runs when the button is clicked. Implement this in inheriting classes. 
 			/// </summary>
-			public virtual void SelectTargetPanel()
+			/// <exception cref="NotImplementedException"></exception>
+			/// <remarks>IL2CPP does not like abstract methods 😭</remarks>
+			public virtual void OnSelect()
 			{
-				WindowController ParentWindow = _rootWindow;
-				if (_model.SubModels.Count > 0)
-				{
-					switch (_model.SubModels[0])
-					{
-						case UIFModel.ModelCategoryItem:
-							TargetContainer = ParentWindow.CatRegistryPanel;//Prefabs.CatDisplayList.GetComponent<TopBar>();
-							ParentWindow.PrefRegistryPanel.ContainerReset();
-							break;
-						case UIFModel.IEntry:
-							TargetContainer = ParentWindow.PrefRegistryPanel;
-							break;
-						default:
-							TargetContainer = ParentWindow.PrefRegistryPanel;
-							break;
-					}
-				}
-
-				TargetContainer.SetModel(_model);
+				throw new NotImplementedException();
 			}
 
 
@@ -109,8 +79,14 @@ namespace UIFramework
 		public class Mod : TabButtonController, IChildable
 		{
 
-			public string ModName { get; set; }
+			protected UIFModel.ModelMod ModModel => (UIFModel.ModelMod)_internalModel;
 
+			public override void OnSelect()
+			{
+				ParentWindow.CatRegistryPanel.SetModel(_model);
+				ParentWindow.PrefRegistryPanel.ContainerReset();
+				ParentWindow.TitleButtonText.text = $"{ModModel.DisplayName}\n{ModModel.Instance.Info.Version}";
+			}
 
 		}
 		/// <summary>
@@ -119,6 +95,11 @@ namespace UIFramework
 		[RegisterTypeInIl2Cpp]
 		public class Category : TabButtonController, IChildable
 		{
+			public override void OnSelect()
+			{
+				ParentWindow.PrefRegistryPanel.SetModel(_model);
+				
+			}
 		}
 	}
 }

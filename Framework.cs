@@ -9,7 +9,8 @@ using UnityEngine;
 using UnityEngine.Bindings;
 using UnityEngine.Events;
 using UnityEngine.UI;
-
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 namespace UIFramework
 {
 	/// <summary>
@@ -107,13 +108,21 @@ namespace UIFramework
 	}
 	public enum InputType
 	{
+		[Display(Name = "Default", Description = "Defaults to basic string input")]
 		Default,
+		[Display(Name = "Text Field", Description = "Basic text field input")]
 		TextField,
+		[Display(Name = "Toggle", Description = "A simple on/off toggle")]
 		Toggle,
+		[Display(Name = "Int input", Description = "An Input for inputing Numeric Integers")]
 		NumericInt,
+		[Display(Name = "Float input", Description = "An Input for inputing Floating Point Numbers")]
 		NumericFloat,
+		//[Display(Name = "Double input", Description = "An Input for inputing Double Precision Floating Point Numbers")]
 		NumericDouble,
+		[Display(Name = "Button", Description = "A simple button that can be clicked to trigger an action")]
 		Button,
+		[Display(Name = "Dropdown", Description = "A dropdown menu for selecting from multiple options")]
 		Dropdown,
 		/*Slider,
 		MultiCheckbox,

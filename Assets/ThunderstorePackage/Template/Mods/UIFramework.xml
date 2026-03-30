@@ -196,10 +196,12 @@
         <member name="M:UIFramework.UIFController.PrefList.DiscardAction">
             <inheritdoc/>
         </member>
-        <member name="M:UIFramework.UIFController.TabButtonController.SelectTargetPanel">
+        <member name="M:UIFramework.UIFController.TabButtonController.OnSelect">
             <summary>
-            Selects the panel that should be assigned a model next. The target then parents the models' game objects to itself from the list
+            Runs when the button is clicked. Implement this in inheriting classes. 
             </summary>
+            <exception cref="T:System.NotImplementedException"></exception>
+            <remarks>IL2CPP does not like abstract methods 😭</remarks>
         </member>
         <member name="M:UIFramework.UIFController.TabButtonController.Highlight">
             <summary>
@@ -331,6 +333,13 @@
             Temporary game object storage as they're being instantiated
             </summary>
         </member>
+        <member name="T:UIFramework.Helpers">
+            <summary>
+            contains various helper functions
+            ToNormal: Normalizes a string
+            GetDisplayNames
+            </summary>
+        </member>
         <member name="M:UIFramework.Helpers.ToNormal(System.String)">
              <summary>
              Returns a normalized version of the specified string by converting it to lowercase, trimming whitespace, and
@@ -339,6 +348,20 @@
              <param name="text">The string to normalize. Cannot be null.</param>
              <returns>A normalized string with all spaces removed, trimmed, and converted to lowercase.</returns>
             <remarks>Returns empty string if input only contains whitespace</remarks>
+        </member>
+        <member name="M:UIFramework.Helpers.GetDisplayName(System.Type)">
+            <summary>
+            Gets the displaynames from enums and if they don't have one, use their regular names
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+            <remarks>AI Assisted. Was unfamiliar with enum attributes.</remarks>
+        </member>
+        <member name="T:UIFramework.Helpers.HierarchyUtility">
+            <summary>
+            
+            </summary>
+            <remarks>AI Generated</remarks>
         </member>
         <member name="T:UIFramework.UIFModel">
             <summary>
@@ -526,6 +549,16 @@
             <summary>
             Called when the Entry has been created.
             Useful when you wanna change specific elements after creation
+            </summary>
+        </member>
+        <member name="T:UIFramework.UIFModel.IStorable">
+            <summary>
+            implemented by models that store data
+            </summary>
+        </member>
+        <member name="M:UIFramework.UIFModel.ModelMod.SaveAction">
+            <summary>
+            Calls individual category models' SaveAction method.
             </summary>
         </member>
         <member name="F:UIFramework.UIFModel.ModelMelonCategory.PrefCat">

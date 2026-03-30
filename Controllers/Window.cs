@@ -96,6 +96,10 @@ namespace UIFramework
 			public PrefList PrefRegistryPanel;
 			public Button MainActionButton;
 			public Button MinimizeButton;
+			public TextMeshProUGUI WindowTitle;
+
+			public TextMeshProUGUI TitleButtonText;
+
 
 
 			void Awake()
@@ -107,19 +111,26 @@ namespace UIFramework
 
 			public virtual void SetModel(UIFModel.RootModel model)
 			{
+				_model = model;
+
 				MainCanvas = this.gameObject;
 				ModRegistryPanel = MainCanvas.transform.Find("Root/Body/ModRegistry/Viewport/ModRegCont").gameObject.GetComponent<Sidebar>();
 				CatRegistryPanel = MainCanvas.transform.Find("Root/Body/CatRegistry/Viewport/CatRegCont").gameObject.GetComponent<TopBar>();
 				PrefRegistryPanel = MainCanvas.transform.Find("Root/Body/PrefRegistry/Viewport/PrefRegCont").gameObject.GetComponent<PrefList>();
 				MainActionButton = MainCanvas.transform.Find("Root/Body/SaveActionButton").gameObject.GetComponent<Button>();
 				MinimizeButton = MainCanvas.transform.Find("Root/Ribbon/Minimize").gameObject.GetComponent<Button>();
-
+				WindowTitle = MainCanvas.transform.Find("Root/Ribbon/WindowTitle").gameObject.GetComponent<TextMeshProUGUI>();
+				TitleButtonText = MainCanvas.transform.Find("Root/Body/TitleButton/Text").gameObject.GetComponent<TextMeshProUGUI>();
 
 				MainActionButton.onClick.AddListener((UnityAction)SaveButtonClick);
 
 				MinimizeButton.onClick.AddListener((UnityAction)(() => MainCanvas.SetActive(false)));
+				
 
-				_model = model;
+				WindowTitle.text = $"{Core.Instance.Info.Name} v{Core.Instance.Info.Version}";
+				TitleButtonText.text = $"{Core.Instance.Info.Name}\nv{Core.Instance.Info.Version}";
+
+
 				BuildModList();
 				Deb("Main Window Full Path: " + Helpers.HierarchyUtility.GetGameObjectPath(this.gameObject));
 			}
@@ -164,6 +175,8 @@ namespace UIFramework
 						Debug.Error(ex.Message);
 					}
 				}
+
+				CatRegistryPanel.Model?.SaveAction();
 				PrefRegistryPanel.SaveAction();
 				PrefRegistryPanel.Infanticide();
 				PrefRegistryPanel.BuildFromModelList();
