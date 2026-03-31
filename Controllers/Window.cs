@@ -95,6 +95,7 @@ namespace UIFramework
 			public TopBar CatRegistryPanel;
 			public PrefList PrefRegistryPanel;
 			public Button MainActionButton;
+			public Button DiscardActionButton;
 			public Button MinimizeButton;
 			public TextMeshProUGUI WindowTitle;
 
@@ -117,14 +118,20 @@ namespace UIFramework
 				ModRegistryPanel = MainCanvas.transform.Find("Root/Body/ModRegistry/Viewport/ModRegCont").gameObject.GetComponent<Sidebar>();
 				CatRegistryPanel = MainCanvas.transform.Find("Root/Body/CatRegistry/Viewport/CatRegCont").gameObject.GetComponent<TopBar>();
 				PrefRegistryPanel = MainCanvas.transform.Find("Root/Body/PrefRegistry/Viewport/PrefRegCont").gameObject.GetComponent<PrefList>();
+				
 				MainActionButton = MainCanvas.transform.Find("Root/Body/SaveActionButton").gameObject.GetComponent<Button>();
+				DiscardActionButton = MainCanvas.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "DiscardActionButton")?.gameObject.GetComponent<Button>();
 				MinimizeButton = MainCanvas.transform.Find("Root/Ribbon/Minimize").gameObject.GetComponent<Button>();
+				
 				WindowTitle = MainCanvas.transform.Find("Root/Ribbon/WindowTitle").gameObject.GetComponent<TextMeshProUGUI>();
 				TitleButtonText = MainCanvas.transform.Find("Root/Body/TitleButton/Text").gameObject.GetComponent<TextMeshProUGUI>();
 
 				MainActionButton.onClick.AddListener((UnityAction)SaveButtonClick);
 
 				MinimizeButton.onClick.AddListener((UnityAction)(() => MainCanvas.SetActive(false)));
+
+				DiscardActionButton.onClick.AddListener((UnityAction)DiscardButtonClick);
+				DiscardActionButton.gameObject.SetActive(true);
 				
 
 				WindowTitle.text = $"{Core.Instance.Info.Name} v{Core.Instance.Info.Version}";
@@ -184,7 +191,10 @@ namespace UIFramework
 
 			public virtual void DiscardButtonClick()
 			{
+				CatRegistryPanel.Model?.DiscardAction();
 				PrefRegistryPanel.DiscardAction();
+				PrefRegistryPanel.Infanticide();
+				PrefRegistryPanel.BuildFromModelList();
 			}
 
 

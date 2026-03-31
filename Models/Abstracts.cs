@@ -32,6 +32,9 @@ namespace UIFramework
 			{
 
 			}
+			public virtual void DiscardAction()
+			{
+			}
 		}
 		/// <summary>
 		/// Models that represent buttons on the sidebar and topbar
@@ -122,9 +125,7 @@ namespace UIFramework
 		public abstract class ModelEntryItem : ModelBase, IEntry
 		{
 			
-			/// <summary>
-			/// Description of the modelentry
-			/// </summary>
+			/// </inheritdoc>
 			public abstract string Description { get; }
 			
 			/// <summary>
@@ -136,6 +137,8 @@ namespace UIFramework
 			/// 
 			/// </summary>
 			public virtual EntryState SaveState {get; set;}
+
+			public virtual void DiscardAction() { }
 		}
 
 		#endregion

@@ -54,6 +54,7 @@ namespace UIFramework
 			public GameObject GetNewUIInstance() { return null; }
 
 			public void SaveAction() { }
+			public void DiscardAction() { }
 
 		}
 
@@ -98,7 +99,21 @@ namespace UIFramework
 					}
 					catch (Exception ex)
 					{
-						Debug.Log($"Error savinvg category {model.Identifier} for mod {Instance.Info.Name}: {ex.Message}", false, 2);
+						Debug.Log($"Error saving category {model.Identifier} for mod {Instance.Info.Name}: {ex.Message}", false, 2);
+					}
+				}
+			}
+			public override void DiscardAction()
+			{
+				foreach (IModelable model in SubModels)
+				{
+					try
+					{
+						model.DiscardAction();
+					}
+					catch (Exception ex)
+					{
+						Debug.Log($"Error loading category {model.Identifier} for mod {Instance.Info.Name}: {ex.Message}", false, 2);
 					}
 				}
 			}
@@ -135,6 +150,11 @@ namespace UIFramework
 			public override void SaveAction()
 			{
 				PrefCat.SaveToFile();
+			}
+
+			public override void DiscardAction()
+			{
+				PrefCat.LoadFromFile();
 			}
 
 			/*public void AddSubModel(IEntry model)
@@ -211,6 +231,11 @@ namespace UIFramework
 			public override void SaveAction()
 			{
 				SavedValue = BoxedValue;
+			}
+			/// </inheritdoc>
+			public override void DiscardAction()
+			{
+
 			}
 
 			private GameObject _uiPrefabSource;

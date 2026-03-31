@@ -23,6 +23,8 @@ namespace UIFramework
 		internal static MelonPreferences_Entry<double> TestDouble;
 		internal static MelonPreferences_Entry<InputType> TestEnum;
 		internal static MelonPreferences_Entry<List<int> > TestList;
+		internal static MelonPreferences_Entry<NonZeroBased> NonZeroEnum;
+		internal static MelonPreferences_Entry<NonContiguous> NonContiguousEnum;
 
 		internal static MelonPreferences_Category TestEmptyDisplayName;
 		internal static MelonPreferences_Entry<string> TestEmptyDisplayPref;
@@ -50,6 +52,8 @@ namespace UIFramework
 			TestFloat = Experimental.CreateEntry("TestFloat", 3.14f, "Test Float", "This is a test float.");
 			TestDouble = Experimental.CreateEntry("TestDouble", 3.14159, "Test Double", "This is a test double.");
 			TestEnum = Experimental.CreateEntry("TestEnum", InputType.TextField, "Test Enum", "This is a test enum.");
+			NonZeroEnum = Experimental.CreateEntry("Non-Zero", NonZeroBased.a,"Non-zero-based enum test", "This tests enums that don't start from zero");
+			NonContiguousEnum = Experimental.CreateEntry("Non-Cont", NonContiguous.z, "Non-Contiguous enum test", "This tests enums that have gaps in between the explicitlyi named values");
 			TestList = Experimental.CreateEntry("TestList", new List<int> { 1, 2, 3 }, "Test List", "This is a test list of integers.");
 
 			
@@ -76,6 +80,22 @@ namespace UIFramework
 				Debug.Msg($"Debug mode has been set to: {newValue}");
 			});*/
 		}
+
+	}
+
+	internal enum NonZeroBased
+	{
+		a = 3,
+		b,
+		c,
+		d,
+	}
+	internal enum NonContiguous
+	{
+		z = 3,
+		y = 5,
+		x = 10,
+		w = 13,
 
 	}
 }

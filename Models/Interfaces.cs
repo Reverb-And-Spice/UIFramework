@@ -38,6 +38,7 @@ namespace UIFramework
 			/// Should be called when save button is pressed. Runs after all ancestor's save actions have been run
 			/// </summary>
 			public void SaveAction();
+			public void DiscardAction();
 			/// <summary>
 			/// Describes the parent for where the parent container should be
 			/// </summary>
@@ -83,6 +84,7 @@ namespace UIFramework
 			/// Ideally called by the controller to define a save action
 			/// </summary>
 			public void SaveAction();
+			public void DiscardAction();
 			public string DisplayName { get; }
 			//public object BoxedValue { get; set; }
 
@@ -91,7 +93,8 @@ namespace UIFramework
 			/// Useful when you wanna change specific elements after creation
 			/// </summary>
 			public Action<UIFController.Entry> OnUICreated { get; set; }
-
+			
+			
 		}
 		/// <summary>
 		/// implemented by models that store data

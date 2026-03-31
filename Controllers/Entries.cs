@@ -14,6 +14,8 @@ using UnityEngine.UI;
 using static Unity.Collections.AllocatorManager;
 using static UIFramework.Debug;
 using Il2CppSystem.Collections.Generic;
+using System.Reflection;
+using System.ComponentModel.DataAnnotations;
 namespace UIFramework
 {
 	public partial class UIFController
@@ -307,6 +309,7 @@ namespace UIFramework
 		public class PrefDropDown : MelonEntry
 		{
 			protected UIFModel.ModelMelonEntry _prefModel => (UIFModel.ModelMelonEntry)EntryModel;
+			public System.Collections.Generic.List<int> _indexToValueMap = new();
 			public TMP_Dropdown dropdown;
 
 			public Type prefEnum;
@@ -316,12 +319,21 @@ namespace UIFramework
 				dropdown = this.gameObject.transform.Find("Data/Dropdown").GetComponent<TMP_Dropdown>();
 				prefEnum = _prefModel.PrefEntry.BoxedValue.GetType();
 
-				Il2CppSystem.Collections.Generic.List<string> enumNames = Helpers.GetDisplayName(prefEnum);
+				//Get a list of display name attributes or the enum name if not available
+				Il2CppSystem.Collections.Generic.List<string> enumNames = new(); ;// = Helpers.GetDisplayName(prefEnum);
+				foreach(var value in Enum.GetValues(prefEnum))
+				{
+					FieldInfo info = prefEnum.GetField(value.ToString());
+					DisplayAttribute attr = info?.GetCustomAttribute<DisplayAttribute>();
+					enumNames.Add(attr?.GetName() ?? value.ToString());
+					_indexToValueMap.Add(Convert.ToInt32(value));
+				}
 
+				
 				dropdown.ClearOptions();
 				dropdown.AddOptions(enumNames);
 
-				dropdown.value = (int)_prefModel.BoxedValue;
+				dropdown.value = _indexToValueMap.IndexOf((int)_prefModel.BoxedValue);
 
 				dropdown.onValueChanged.AddListener((UnityAction<int>)OnValueChanged);
 
@@ -340,7 +352,7 @@ namespace UIFramework
 			/// <inheritdoc/>
 			public override void ApplyValueToPref()
 			{
-				_prefModel.PrefEntry.BoxedValue = Enum.Parse(prefEnum, dropdown.value.ToString());
+				_prefModel.PrefEntry.BoxedValue = Enum.ToObject(prefEnum, _indexToValueMap[dropdown.value]);
 			}
 		}
 

@@ -167,6 +167,4 @@ namespace UIFramework
 		}
 		#endregion
 	}
-
-
 }

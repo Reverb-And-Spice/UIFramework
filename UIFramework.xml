@@ -430,11 +430,7 @@
         <member name="M:UIFramework.UIFModel.ModelCategoryItem.GetNewUIInstance">
             <inheritdoc/>
         </member>
-        <member name="P:UIFramework.UIFModel.ModelEntryItem.Description">
-            <summary>
-            Description of the modelentry
-            </summary>
-        </member>
+        <!-- Badly formed XML comment ignored for member "P:UIFramework.UIFModel.ModelEntryItem.Description" -->
         <member name="P:UIFramework.UIFModel.ModelEntryItem.OnUICreated">
             <summary>
             Called when the corresponding UI element is created
@@ -617,6 +613,7 @@
         <member name="M:UIFramework.UIFModel.ModelMelonEntry.SaveAction">
             <inheritdoc/>
         </member>
+        <!-- Badly formed XML comment ignored for member "M:UIFramework.UIFModel.ModelMelonEntry.DiscardAction" -->
         <member name="M:UIFramework.UIFModel.ModelMelonEntry.SetUIPrefabSource(UnityEngine.GameObject)">
             <summary>
             Use this function to provide your own prefab for this entry. 

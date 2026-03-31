@@ -75,6 +75,7 @@ namespace UIFramework
 			}
 			/// <inheritdoc/>
 			public override GameObject GetNewUIInstance() => UI.GetPrefab(InputType.Button);
+			
 
 
 		}
