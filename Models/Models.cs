@@ -61,6 +61,7 @@ namespace UIFramework
 		public class ModelMod : ModelModItem
 		{
 			//public List<IModelable> SubModels { get; set; } = new();
+			public List<ModelCategoryItem> Categories => SubModels.Cast<ModelCategoryItem>().ToList();
 			public MelonMod Instance { get; set; }
 			//public string ModName => Instance.Info.Identifier;
 
@@ -117,14 +118,12 @@ namespace UIFramework
 					}
 				}
 			}
-
-
 		}
 
 		public class ModelMelonCategory : ModelCategoryItem
 		{
 			//public List<IModelable> SubModels { get; set; }
-
+			public List<ModelMelonEntry> Entries => SubModels.Cast<ModelMelonEntry>().ToList();
 			/// <summary>
 			/// The MelonPreferences_Category object this adapts into the framework
 			/// </summary>

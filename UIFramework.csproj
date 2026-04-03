@@ -25,8 +25,14 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <Compile Remove="Assets\Assets\**" />
+	  <Compile Remove="_Doxygen\html\**" />
+	  <Compile Remove="_Doxygen\latex\**" />
 	  <EmbeddedResource Remove="Assets\Assets\**" />
+	  <EmbeddedResource Remove="_Doxygen\html\**" />
+	  <EmbeddedResource Remove="_Doxygen\latex\**" />
 	  <None Remove="Assets\Assets\**" />
+	  <None Remove="_Doxygen\html\**" />
+	  <None Remove="_Doxygen\latex\**" />
 	</ItemGroup>
 
 

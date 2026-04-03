@@ -62,6 +62,9 @@ namespace UIFramework
 			/// <param name="model">The model to associate with this instance. Cannot be null.</param>
 			public virtual void SetModel(UIFModel.IHoldSubmodels model)
 			{
+				if (model == null)
+					return;
+				ContainerReset();
 				Model = model;
 				BuildFromModelList();
 			}
@@ -132,7 +135,23 @@ namespace UIFramework
 		[RegisterTypeInIl2Cpp]
 		public class TopBar : ListArea
 		{
+			public override void SetModel(UIFModel.IHoldSubmodels model)
+			{
+				base.SetModel(model);
 
+				UIFModel.ModelCategoryItem lastSelected = null;
+				try
+				{
+					if(_rootWindow.LastCategorySelected.ContainsKey(Model as UIFModel.ModelMod))
+						lastSelected = _rootWindow.LastCategorySelected[Model as UIFModel.ModelMod];
+				}
+				catch (Exception ex) 
+				{
+					Debug.Log(ex.Message);
+				}
+
+				_rootWindow.PrefRegistryPanel.SetModel(lastSelected ?? (UIFModel.ModelCategoryItem)_model.SubModels[0]);
+			}
 
 		}
 		/// <summary>
@@ -150,6 +169,7 @@ namespace UIFramework
 			{
 				SelectedCategory?.SaveAction();
 
+				
 
 			}
 			/// <inheritdoc/>

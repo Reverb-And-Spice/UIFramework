@@ -380,3 +380,5 @@ FodyWeavers.xsd
 /Assets/AssetBundles/uiframework.manifest
 /Assets/AssetBundles/uiframework.manifest.meta
 /Assets/AssetBundles/uiframework.meta
+/_Doxygen/html
+/_Doxygen/latex

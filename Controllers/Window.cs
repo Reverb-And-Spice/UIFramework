@@ -78,6 +78,10 @@ namespace UIFramework
 			{
 				_rootWindow = FindRootWindow();
 			}
+			void Start()
+			{
+				_rootWindow = FindRootWindow();
+			}
 			public virtual void ModelSet() { }
 		}
 
@@ -101,6 +105,7 @@ namespace UIFramework
 
 			public TextMeshProUGUI TitleButtonText;
 
+			public Dictionary<UIFModel.ModelMod, UIFModel.ModelCategoryItem> LastCategorySelected = new();
 
 
 			void Awake()
@@ -153,8 +158,6 @@ namespace UIFramework
 				PrefRegistryPanel.GetComponent<PrefList>().ContainerReset();
 
 				ModRegistryPanel.SetModel(_model);
-
-
 			}
 			/// <summary>
 			/// Gets called when the save button gets clicked. 
@@ -196,8 +199,6 @@ namespace UIFramework
 				PrefRegistryPanel.Infanticide();
 				PrefRegistryPanel.BuildFromModelList();
 			}
-
-
 			void Update()
 			{
 				if (Input.GetKeyDown(KeyCode.Escape))

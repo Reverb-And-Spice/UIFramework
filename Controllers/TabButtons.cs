@@ -83,9 +83,10 @@ namespace UIFramework
 
 			public override void OnSelect()
 			{
+				//ParentWindow.PrefRegistryPanel.ContainerReset();
 				ParentWindow.CatRegistryPanel.SetModel(_model);
-				ParentWindow.PrefRegistryPanel.ContainerReset();
 				ParentWindow.TitleButtonText.text = $"{ModModel.DisplayName}\n{ModModel.Instance.Info.Version}";
+
 			}
 
 		}
@@ -97,6 +98,7 @@ namespace UIFramework
 		{
 			public override void OnSelect()
 			{
+				ParentWindow.LastCategorySelected[ParentWindow.CatRegistryPanel.Model as UIFModel.ModelMod] = this.Model as UIFModel.ModelCategoryItem;
 				ParentWindow.PrefRegistryPanel.SetModel(_model);
 				
 			}
