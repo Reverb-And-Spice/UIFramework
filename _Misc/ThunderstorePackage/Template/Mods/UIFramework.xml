@@ -168,6 +168,12 @@
             Clears the contents and recreates them from the submodels list in Model
             </summary>
         </member>
+        <member name="M:UIFramework.UIFController.ListArea.SelectTab(UIFramework.UIFModel.IHoldSubmodels)">
+            <summary>
+            
+            </summary>
+            <param name="buttonModel"></param>
+        </member>
         <member name="M:UIFramework.UIFController.ListArea.SaveAction">
             <summary>
             Is called when Save ButtonGo is clicked. Override to create custom behaviour 

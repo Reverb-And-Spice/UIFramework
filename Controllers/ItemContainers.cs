@@ -17,6 +17,7 @@ using UnityEngine.UI;
 using static Unity.Collections.AllocatorManager;
 using static UIFramework.Debug;
 using System.Globalization;
+using Il2CppSystem.Threading.Tasks;
 namespace UIFramework
 {
 	/// <summary>
@@ -93,9 +94,17 @@ namespace UIFramework
 					{
 						case UIFModel.IEntry entryModel:
 							ViewController = uiElement.GetComponent<UIFController.Entry>();
+							_rootWindow.CatRegistryPanel.SelectTab(Model as UIFModel.IHoldSubmodels);
 							break;
 						case UIFModel.IHoldSubmodels tabModel:
 							ViewController = uiElement.GetComponent<UIFController.TabButtonController>();
+							try
+							{
+								_rootWindow.ModRegistryPanel.SelectTab(Model as UIFModel.IHoldSubmodels);
+							}catch (Exception ex)
+							{
+								Debug.Log(ex.Message);
+							}
 							break;
 						default:
 							Warning($"No view found for model type {model.GetType()}");
@@ -108,6 +117,25 @@ namespace UIFramework
 					}
 
 
+				}
+			}
+			/// <summary>
+			/// 
+			/// </summary>
+			/// <param name="buttonModel"></param>
+			public void SelectTab(UIFModel.IHoldSubmodels buttonModel)
+			{
+				for(int i = 0; i < transform.childCount; i++)
+				{
+					TabButtonController tabButton = transform.GetChild(i).GetComponent<TabButtonController>();
+					if(tabButton.Model == buttonModel)
+					{
+						tabButton.GetComponent<Image>().color = _rootWindow.openTabColor;
+					}
+					else
+					{
+						tabButton.GetComponent<Image>().color = _rootWindow.defaultTabColor;
+					}
 				}
 			}
 			public virtual void DiscardAction() { }
@@ -126,7 +154,6 @@ namespace UIFramework
 		[RegisterTypeInIl2Cpp]
 		public class Sidebar : ListArea
 		{
-
 		}
 
 		/// <summary>

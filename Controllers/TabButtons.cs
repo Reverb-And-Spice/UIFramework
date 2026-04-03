@@ -25,6 +25,7 @@ namespace UIFramework
 		//protected override GameObject UIPrefab { get { return Prefabs.TextPrefab; } }
 		public abstract class TabButtonController : SubModelController, IChildable
 		{
+
 			protected WindowController ParentWindow;
 			protected UIFModel.IHoldSubmodels _model => (UIFModel.IHoldSubmodels)_internalModel;
 
@@ -43,7 +44,8 @@ namespace UIFramework
 			/// <remarks>IL2CPP does not like abstract methods 😭</remarks>
 			public virtual void OnSelect()
 			{
-				throw new NotImplementedException();
+				throw new NotImplementedException("Implement OnSelect in inheriting class");
+				//this.gameObject.GetComponent<Image>().color = ParentWindow.openTabColor;
 			}
 
 
@@ -54,7 +56,7 @@ namespace UIFramework
 			public void Highlight()
 			{
 				Transform parent = gameObject.transform.parent;
-				for(int i = parent.childCount -1; i >= 0; i--)
+				for (int i = parent.childCount - 1; i >= 0; i--)
 				{
 					//set color of child
 				}
@@ -83,9 +85,14 @@ namespace UIFramework
 
 			public override void OnSelect()
 			{
-				//ParentWindow.PrefRegistryPanel.ContainerReset();
-				ParentWindow.CatRegistryPanel.SetModel(_model);
 				ParentWindow.TitleButtonText.text = $"{ModModel.DisplayName}\n{ModModel.Instance.Info.Version}";
+
+				ParentWindow.CatRegistryPanel.SetModel(_model);
+				//
+				//ParentWindow.ModRegistryPanel.SelectTab((UIFModel.IHoldSubmodels)Model);
+				
+
+
 
 			}
 
@@ -100,7 +107,9 @@ namespace UIFramework
 			{
 				ParentWindow.LastCategorySelected[ParentWindow.CatRegistryPanel.Model as UIFModel.ModelMod] = this.Model as UIFModel.ModelCategoryItem;
 				ParentWindow.PrefRegistryPanel.SetModel(_model);
+				//ParentWindow.CatRegistryPanel.SelectTab((UIFModel.IHoldSubmodels)Model);
 				
+
 			}
 		}
 	}

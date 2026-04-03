@@ -45,10 +45,7 @@ namespace UIFramework
 		}
 		public override void OnLateInitializeMelon()
 		{
-			
 
-
-			
 		}
 
 		public override void OnUpdate()

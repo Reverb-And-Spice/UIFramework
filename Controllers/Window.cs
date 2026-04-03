@@ -91,6 +91,9 @@ namespace UIFramework
 		[RegisterTypeInIl2Cpp]
 		public class WindowController : MonoBehaviour
 		{
+			public Color defaultTabColor = new Color(0.22f, 0.22f, 0.22f, 1f);
+			public Color openTabColor = new Color(0.549f, 0.549f, 0.549f, 1f);
+
 			protected UIFModel.RootModel _model;
 			public UIFModel.IModelable Model { get { return _model; } }
 
@@ -107,7 +110,7 @@ namespace UIFramework
 
 			public Dictionary<UIFModel.ModelMod, UIFModel.ModelCategoryItem> LastCategorySelected = new();
 
-
+			
 			void Awake()
 			{
 				Log("WindowController Awake", true, 1);
