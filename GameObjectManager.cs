@@ -26,7 +26,6 @@ namespace UIFramework
 		/// UI Assets from the asset bundle
 		/// </summary>
 		internal static GameObject AssetBundleLoaded;
-		//internal static GameObject PrefabSources = new GameObject("Prefabs");
 
 		/// <summary>
 		/// Temporary game object storage as they're being instantiated
@@ -127,11 +126,6 @@ namespace UIFramework
 
 			MainCanvasSource.SetActive(false);
 		}
-
-		static UnityAction MainButtonClick = new System.Action(() =>
-		{
-			Debug.Log("Main Action ButtonGo Clicked!", true, 0);
-		});
 
 		#region Ulvak Generated
 		internal static T LoadAssetFromStream<T>(MelonMod instance, string path, string assetName) where T : UnityEngine.Object

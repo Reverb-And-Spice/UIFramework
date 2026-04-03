@@ -1,6 +1,6 @@
 {
   "name": "UIFramework",
-  "version_number": "0.5.1",
+  "version_number": "0.6.0",
   "description": "UI for MelonPreferences and more in Rumble VR",
   "website_url": "https://github.com/Reverb-And-Spice/UIFramework",
   "dependencies": [

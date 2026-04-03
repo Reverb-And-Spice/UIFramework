@@ -54,10 +54,6 @@ namespace UIFramework
 			{
 				return SubModels.FirstOrDefault(m => m.Identifier == name);
 			}
-			/*public virtual void AddSubmodel(IModelable submodel)
-			{
-				SubModels.Add(submodel);
-			}*/
 				
 			/// <summary>
 			/// Add a new submodel to the list

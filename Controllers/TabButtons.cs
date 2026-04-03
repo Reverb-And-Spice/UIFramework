@@ -35,7 +35,7 @@ namespace UIFramework
 				ParentWindow = _rootWindow;
 			}
 
-			public string Label { set { this.gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
+			public string Label { set { gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
 			public ColorARGB TabColor { get; set; }
 			/// <summary>
 			/// Runs when the button is clicked. Implement this in inheriting classes. 
@@ -50,24 +50,13 @@ namespace UIFramework
 
 
 
-			/// <summary>
-			/// Change the color of the selected panel to be more prominent. Reset all other buttons in parent to be default color
-			/// </summary>
-			public void Highlight()
-			{
-				Transform parent = gameObject.transform.parent;
-				for (int i = parent.childCount - 1; i >= 0; i--)
-				{
-					//set color of child
-				}
-			}
 			void Start()
 			{
-				this.gameObject.GetComponent<Button>().onClick.AddListener((UnityAction)OnSelect);
+				gameObject.GetComponent<Button>().onClick.AddListener((UnityAction)OnSelect);
 			}
 			void OnDestroy()
 			{
-				this.gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
+				gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
 			}
 
 
@@ -105,9 +94,8 @@ namespace UIFramework
 		{
 			public override void OnSelect()
 			{
-				ParentWindow.LastCategorySelected[ParentWindow.CatRegistryPanel.Model as UIFModel.ModelMod] = this.Model as UIFModel.ModelCategoryItem;
+				ParentWindow.LastCategorySelected[ParentWindow.CatRegistryPanel.Model as UIFModel.ModelMod] = Model as UIFModel.ModelCategoryItem;
 				ParentWindow.PrefRegistryPanel.SetModel(_model);
-				//ParentWindow.CatRegistryPanel.SelectTab((UIFModel.IHoldSubmodels)Model);
 				
 
 			}

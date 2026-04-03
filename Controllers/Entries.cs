@@ -20,19 +20,6 @@ namespace UIFramework
 {
 	public partial class UIFController
 	{
-		/*/// <summary>
-		/// This was going to be the basis for all entries and what advanced users would have to implement
-		/// Unfortunately can't be successfully retrieved with GetComponent in the current setup
-		/// Will move to making MelonEntry the required base class
-		/// </summary>
-		public interface ISettingEntry : IChildable
-		{
-			public string DescriptionText { set; }
-			public string DisplayName { set; }
-			//override this function to create your own validation check
-			public bool ValidationCheck();
-			
-		}*/
 
 		public abstract class Entry : SubModelController, IChildable
 		{
@@ -64,7 +51,6 @@ namespace UIFramework
 			/// <remarks>Generally MelonPreferences are saved from the category, not the indivial entries.</remarks>
 			public virtual void SaveAction()
 			{
-				//EntryModel.SaveAction();
 			}
 
 			public override void ModelSet()
@@ -82,7 +68,6 @@ namespace UIFramework
 		public abstract class MelonEntry : Entry
 		{
 			
-			//public abstract string EnteredValue {get; set;}
 
 			/// <inheritdoc/>
 			public override void ModelSet() { base.ModelSet();}
@@ -320,7 +305,7 @@ namespace UIFramework
 				prefEnum = _prefModel.PrefEntry.BoxedValue.GetType();
 
 				//Get a list of display name attributes or the enum name if not available
-				Il2CppSystem.Collections.Generic.List<string> enumNames = new(); ;// = Helpers.GetDisplayName(prefEnum);
+				Il2CppSystem.Collections.Generic.List<string> enumNames = new();
 				foreach(var value in Enum.GetValues(prefEnum))
 				{
 					FieldInfo info = prefEnum.GetField(value.ToString());
@@ -378,14 +363,6 @@ namespace UIFramework
 
 			void OnDestroy()
 			{
-				try
-				{
-					//ButtonGo.GetComponent<Button>().onClick.RemoveAllListeners();
-				}
-				catch (Exception ex)
-				{
-					Debug.Warning($"Can't find ButtonGo in OnDestroy {ex.Message}");
-				}
 			}
 		}
 		#region no support

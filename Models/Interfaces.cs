@@ -39,10 +39,6 @@ namespace UIFramework
 			/// </summary>
 			public void SaveAction();
 			public void DiscardAction();
-			/// <summary>
-			/// Describes the parent for where the parent container should be
-			/// </summary>
-			//public UIPanel TargetParent { get; }
 		}
 		/// <summary>
 		/// Models that contain submodels. Generally these are mods and categories representing tabs

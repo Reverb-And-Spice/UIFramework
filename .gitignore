@@ -387,3 +387,7 @@ FodyWeavers.xsd
 *.zip
 /_Misc/ThunderstorePackage/iListen2Sound-ObsAutoRecorder-1.2.1.zip
 /_Misc/ThunderstorePackage/Template/Template.zip
+/_Misc/AssetBundles/AssetBundles
+/_Misc/AssetBundles/AssetBundles.manifest
+/_Misc/AssetBundles/uiframework
+/_Misc/AssetBundles/uiframework.manifest

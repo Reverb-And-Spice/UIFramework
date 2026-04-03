@@ -60,17 +60,14 @@ namespace UIFramework
 
 		public class ModelMod : ModelModItem
 		{
-			//public List<IModelable> SubModels { get; set; } = new();
 			public List<ModelCategoryItem> Categories => SubModels.Cast<ModelCategoryItem>().ToList();
 			public MelonMod Instance { get; set; }
-			//public string ModName => Instance.Info.Identifier;
 
 			public override string Identifier => Instance.Info.Name;
 			public override string DisplayName => Identifier;
 
 			public virtual string Version => Instance.Info.Version;
 
-			//internal List<ModelBase> catModelList = new();
 
 
 			public ModelMod(MelonMod instance, List<MelonPreferences_Category> catList)
@@ -122,7 +119,6 @@ namespace UIFramework
 
 		public class ModelMelonCategory : ModelCategoryItem
 		{
-			//public List<IModelable> SubModels { get; set; }
 			public List<ModelMelonEntry> Entries => SubModels.Cast<ModelMelonEntry>().ToList();
 			/// <summary>
 			/// The MelonPreferences_Category object this adapts into the framework
@@ -155,11 +151,6 @@ namespace UIFramework
 			{
 				PrefCat.LoadFromFile();
 			}
-
-			/*public void AddSubModel(IEntry model)
-			{
-				SubModels.Add((IModelable)model);
-			}*/
 
 
 		}
@@ -217,7 +208,6 @@ namespace UIFramework
 				SavedValue = prefEntry.BoxedValue;
 				PrefEntry.OnEntryValueChangedUntyped.Subscribe(OnValueChanged);
 			}
-			//Called when the value changes 
 			protected void OnValueChanged(object oldVal, object newVal)
 			{
 				//SavedValue = newVal;
@@ -290,11 +280,6 @@ namespace UIFramework
 					return GameObject.Instantiate(_uiPrefabSource);
 				}
 			}
-
-			/*public void SaveAction()
-			{
-
-			}*/
 
 		}
 	}

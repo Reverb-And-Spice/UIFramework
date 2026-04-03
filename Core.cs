@@ -21,7 +21,7 @@ namespace UIFramework
 		/// <summary></summary>
 		public const string Author = "Reverb && Spice";
 		/// <summary></summary>
-		public const string Version = "0.5.1";
+		public const string Version = "0.6.0";
 	}
 
 	
@@ -50,10 +50,6 @@ namespace UIFramework
 
 		public override void OnUpdate()
 		{
-			//DiffLog($"");
-
-			
-
 			if (Input.GetKeyDown(KeyCode.F9))
 			{
 				if (CurrentScene == "loader")

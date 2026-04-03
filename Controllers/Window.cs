@@ -92,7 +92,7 @@ namespace UIFramework
 		public class WindowController : MonoBehaviour
 		{
 			public Color defaultTabColor = new Color(0.22f, 0.22f, 0.22f, 1f);
-			public Color openTabColor = new Color(0.549f, 0.549f, 0.549f, 1f);
+			public Color openTabColor = new Color(0.24f, 0.17f, 0.42f, 1f);
 
 			protected UIFModel.RootModel _model;
 			public UIFModel.IModelable Model { get { return _model; } }
@@ -115,7 +115,6 @@ namespace UIFramework
 			{
 				Log("WindowController Awake", true, 1);
 
-				//EntryModel = new UIFModel.RootModel();
 			}
 
 			public virtual void SetModel(UIFModel.RootModel model)
@@ -147,7 +146,6 @@ namespace UIFramework
 
 
 				BuildModList();
-				Deb("Main Window Full Path: " + Helpers.HierarchyUtility.GetGameObjectPath(this.gameObject));
 			}
 			
 			/// <summary>
