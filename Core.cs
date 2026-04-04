@@ -4,6 +4,8 @@ using Il2CppTMPro;
 using MelonLoader;
 using UnityEngine;
 using static UIFramework.Debug;
+using System.Diagnostics;
+using UnityEngine.InputSystem;
 
 [assembly: MelonInfo(typeof(UIFramework.Core), UIFramework.BuildInfo.Name, UIFramework.BuildInfo.Version, UIFramework.BuildInfo.Author)]
 [assembly: MelonGame("Buckethead Entertainment", "RUMBLE")]
@@ -24,7 +26,7 @@ namespace UIFramework
 		public const string Version = "0.6.0";
 	}
 
-	
+
 	/// <summary>
 	/// 
 	/// </summary>
@@ -34,6 +36,13 @@ namespace UIFramework
 
 		internal string CurrentScene = "";
 		internal bool isFirstLoad = true;
+
+
+		internal Stopwatch displayTime = new Stopwatch();
+
+		internal int inactiveTimeLimit = 6000;
+
+
 #pragma warning disable CS1591
 		public override void OnInitializeMelon()
 		{
@@ -41,7 +50,7 @@ namespace UIFramework
 			LoggerInstance.Msg("Initialized.");
 			Instance = this;
 			MelonPreferences.OnPreferencesSaved.Subscribe(MelPrefsSaved);
-			
+
 		}
 		public override void OnLateInitializeMelon()
 		{
@@ -58,10 +67,55 @@ namespace UIFramework
 					return;
 				}
 				UI.MainWindow.SetActive(!UI.MainWindow.activeSelf);
+
+				if (UI.MainWindow.activeSelf)
+					displayTime.Start();
+				else
+					displayTime.Reset();
+
 			}
+
+
+
+			if(isFirstLoad)
+				return;
+
+			if (displayTime.ElapsedMilliseconds > inactiveTimeLimit)
+			{
+				UI.MainWindow.SetActive(false);
+				displayTime.Reset();
+			}
+
+			if (Mouse.current != null)
+			{
+				Vector2 delta = Mouse.current.delta.ReadValue();
+				if (delta.sqrMagnitude > 0)
+				{
+
+					Debug.DiffLog($"Mouse moved: {delta}");
+					if(displayTime.IsRunning)
+						displayTime.Reset();
+
+				}
+				else
+				{
+					displayTime.Start();
+					Debug.DiffLog("Mouse not moving");
+				}
+			}
+			if (Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame)
+			{
+				if (displayTime.IsRunning)
+					displayTime.Reset();
+			}
+
+
+
 		}
 
 		
+
+
 
 		public override void OnSceneWasLoaded(int buildIndex, string sceneName)
 		{
@@ -69,22 +123,22 @@ namespace UIFramework
 			CurrentScene = sceneName.ToNormal();
 			if (CurrentScene == "loader")
 			{
-				
+
 			}
 
 			if (CurrentScene == "gym" && isFirstLoad) FirstGymLoad();
 
 			if (!isFirstLoad)
 			{
-				if(UI.MainWindow.activeSelf)
+				if (UI.MainWindow.activeSelf)
 				{
 					UI.MainWindow.SetActive(!Preferences.AutoHideOnSceneLoad.Value);
 				}
 			}
 		}
-			
-			
-		
+
+
+
 
 		internal void FirstGymLoad()
 		{
@@ -130,4 +184,4 @@ namespace UIFramework
 			Debug.Log($"Clicked: {button.DisplayName} ");
 		}
 	}
-}	
+}
