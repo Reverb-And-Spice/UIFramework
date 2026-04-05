@@ -40,7 +40,7 @@ namespace UIFramework
 
 		internal Stopwatch displayTime = new Stopwatch();
 
-		internal int inactiveTimeLimit => (InactivityTimeout?.Value * 1000) ?? 30000;
+		internal int inactiveTimeLimit => (Preferences.InactivityTimeout?.Value * 1000) ?? 30000;
 
 
 #pragma warning disable CS1591
@@ -61,7 +61,7 @@ namespace UIFramework
 		{
 			UiToggleInputCheck();
 
-			if(isFirstLoad)
+			if (isFirstLoad)
 				return;
 
 			AutoHideCheck();
@@ -71,61 +71,64 @@ namespace UIFramework
 		{
 			if (!Input.GetKeyDown(KeyCode.F9))
 				return;
-			
+
 			if (CurrentScene == "loader")
 			{
 				Debug.Warning("UIFramework does not work in the loader. Please finish calibrating.");
 				return;
 			}
 			UI.MainWindow.SetActive(!UI.MainWindow.activeSelf);
-			
+
 		}
 
 		private void AutoHideCheck()
 		{
 			//Don't proceed if Autohide preference is set to false or null
 			//Don't proceed if UI is inactive. Reset stopwatch if running
-			(!UI.MainWindow.activeSelf || AutoHideOnInactivity?.Value != true)
+			if (!UI.MainWindow.activeSelf || Preferences.AutoHideOnInactivity?.Value != true)
 			{
-				if(displayTime.isRunning)
+				if (displayTime.IsRunning)
 					displayTime.Reset();
 				return;
 			}
 
 			//Stop and reset stopwatch if user has interacted with mouse or keyboard
-			if(UserInteracted())
+			if (UserInteracted())
 			{
-				if(displayTime.isRunning)
+				if (displayTime.IsRunning)
 					displayTime.Reset();
 			}
 
 			//Start stopwatch if user stopped interacting
 			else
 			{
-				if(!displayTime.isRunning)
-					displayTime.Start();	
+				if (!displayTime.IsRunning)
+					displayTime.Start();
 			}
 
 			//Once user hasn't interacted with mouse or keyboard abev the inactive time limit, hide the UI window
-			if (displayTime.ElapsedMilliseconds > inactiveTimeLimit)
+			if (displayTime.ElapsedMilliseconds >= inactiveTimeLimit)
 				UI.MainWindow.SetActive(false);
 		}
 
 		private bool UserInteracted()
 		{
-			if(Mouse.current != null)
+			if (Mouse.current != null)
 			{
 				Vector2 delta = Mouse.current.delta.ReadValue();
 				if (delta.sqrMagnitude > 0)
 				{
+					DiffLog("Interaction Detected", true);
 					return true;
 				}
 			}
 
 			if (Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame)
 			{
+				DiffLog("Interaction Detected", true);
 				return true;
 			}
+			DiffLog("No Interaction Detected", true);
 			return false;
 		}
 
@@ -164,7 +167,7 @@ namespace UIFramework
 		{
 			Preferences.InitializePrefs();
 			UIFModel.ModelMod ModModel;
-			
+
 			//Show extra categories if debug mode is enabled
 			if (!Preferences.EnableDebugMode.Value)
 			{

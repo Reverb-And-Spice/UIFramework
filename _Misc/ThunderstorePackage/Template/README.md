@@ -1,15 +1,24 @@
-#### New in 0.5.1 (expand each for details)
+### New in 0.6.0
+<details><summary> New Feature: Hide UI on inactivity
+</summary>
+Added settings to hide the UI after a certain amount of inactivity with keyboard and mouse. 
 
-<details><summary> New Feature: Non-contiguous enum support </summary>
-You can now use enum types that are non-sequential and non-zero-based for your dropdowns
+Comes with new settings: 
+
+- `Auto Hide on Inactivity`
+- `Inactivity Timeout`
+
 </details>
-<details><summary> New Feature: Discard button </summary>
 
-Made discard button visible to load the saved values from the preferences file
 
+<details><summary>New Feature: Remembers last category opened for each mod</summary>
+Moving between mods will now show the last category you were on for that mod. Will default to the first category. No more having to select the same category again when switching between mods. 
 </details>
 
 
+<details><summary>New Feature: Selection highlighting</summary>
+Selected mods and categories will now be colored in the UI.
+</details>
 
 -----
 # For Users
@@ -95,4 +104,5 @@ public enum Example
 # Ongoing Development Disclosure
 This mod is in active development. The plan is to increase extensibility. **<ins>Basic MelonPreferences registration is stable and should always be backwards compatible.</ins>** So while advanced API usage will have a lot of changes for the time that this mod is in [Version 0.x.x](https://semver.org/#spec-item-4), mods that implement the basic use case of this framework don't have to worry about breaking in the future (as long as I don't mess up too bad). 
 
+### XML Documentation File
 You can place the .xml documentation file for UIFramework in the same folder as the dll to get intellisense documentation for the API. It is currently incomplete, however but I do add to it every update.
