@@ -84,11 +84,8 @@ namespace UIFramework
 		private void AutoHideCheck()
 		{
 			//Don't proceed if Autohide preference is set to false or null
-			if(!AutoHideOnInactivity?.Value ?? false)
-				return;
-
 			//Don't proceed if UI is inactive. Reset stopwatch if running
-			if(!UI.MainWindow.activeSelf)
+			(!UI.MainWindow.activeSelf || AutoHideOnInactivity?.Value != true)
 			{
 				if(displayTime.isRunning)
 					displayTime.Reset();
