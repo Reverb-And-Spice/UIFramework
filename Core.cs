@@ -97,19 +97,21 @@ namespace UIFramework
 
 			//Stop and reset stopwatch if user has interacted with mouse or keyboard
 			if(UserInteracted())
+			{
 				if(displayTime.isRunning)
 					displayTime.Reset();
+			}
 
 			//Start stopwatch if user stopped interacting
 			else
+			{
 				if(!displayTime.isRunning)
 					displayTime.Start();	
+			}
 
 			//Once user hasn't interacted with mouse or keyboard abev the inactive time limit, hide the UI window
 			if (displayTime.ElapsedMilliseconds > inactiveTimeLimit)
-			{
 				UI.MainWindow.SetActive(false);
-			}
 		}
 
 		private bool UserInteracted()
@@ -171,7 +173,7 @@ namespace UIFramework
 			{
 				ModModel = UI.Register(this, Preferences.CatUIFramework);
 			}
-			
+
 			else
 			{
 				ModModel = UI.Register(this, Preferences.CatUIFramework, Preferences.Experimental, Preferences.TestBooleans, Preferences.TestEmptyDisplayName);
