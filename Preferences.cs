@@ -14,6 +14,8 @@ namespace UIFramework
 		internal static MelonPreferences_Category CatUIFramework;
 		internal static MelonPreferences_Entry<bool> EnableDebugMode;
 		internal static MelonPreferences_Entry<bool> AutoHideOnSceneLoad;
+		internal static MelonPreferences_Entry<bool> AutoHideOnInactivity;
+		internal static MelonPreferences_Entry<int> InactivityTimeout;
 		
 		internal static MelonPreferences_Category Experimental;
 		internal static MelonPreferences_Entry<bool> TestBool;
@@ -43,6 +45,8 @@ namespace UIFramework
 			CatUIFramework.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
 			EnableDebugMode = CatUIFramework.CreateEntry("EnableDebugMode", false, "Enable Debug Logs", "Enables or disables debug logs for UIFramework.");
 			AutoHideOnSceneLoad = CatUIFramework.CreateEntry("AutoHideOnSceneLoad", true, "Auto Hide On Scene Load", "Hides the UI Automatically in between scenes.");
+			AutoHideOnInactivity = CatUIFramework.CreateEntry("AutohideOnInactivity", true, "Auto Hide on Inactivity", "Hide the UI if mouse and keyboard are inactive");
+			InactivityTimeout = CatUIFramework.CreateEntry("InactivityTimeout", 30, "Inactivity Time Out (Seconds)", "Number of seconds of no interaction for them to be counted as inactive");
 
 			Experimental = MelonPreferences.CreateCategory("UIFrameworkExperimental", "Experimental Settings");
 			Experimental.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));

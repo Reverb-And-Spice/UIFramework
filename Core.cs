@@ -40,7 +40,7 @@ namespace UIFramework
 
 		internal Stopwatch displayTime = new Stopwatch();
 
-		internal int inactiveTimeLimit = 6000;
+		internal int inactiveTimeLimit = (InactivityTimeout?.Value * 1000) ?? 30000;
 
 
 #pragma warning disable CS1591
@@ -57,6 +57,23 @@ namespace UIFramework
 
 		}
 
+		internal void ToggleUI()
+		{
+			if(UI.MainWindow.activeSelf)
+				HideUI();
+			else
+				ShowUI();
+		}
+
+		internal void ShowUI()
+		{
+			UI.MainWindow.SetActive(true);
+		}
+		internal void HideUI()
+		{
+			UI.MainWindow.SetActive(false);
+		}
+
 		public override void OnUpdate()
 		{
 			if (Input.GetKeyDown(KeyCode.F9))
@@ -66,56 +83,50 @@ namespace UIFramework
 					Debug.Warning("UIFramework does not work in the loader. Please finish calibrating.");
 					return;
 				}
-				UI.MainWindow.SetActive(!UI.MainWindow.activeSelf);
-
-				if (UI.MainWindow.activeSelf)
-					displayTime.Start();
-				else
-					displayTime.Reset();
-
+				ToggleUI();
 			}
-
-
-
 			if(isFirstLoad)
 				return;
 
-			if (displayTime.ElapsedMilliseconds > inactiveTimeLimit)
-			{
-				UI.MainWindow.SetActive(false);
-				displayTime.Reset();
+			
+			if(!AutoHideOnInactivity?.Value ?? false)
+			{ 
+				if(UI.MainWindow.activeSelf)
+				{
+
+					if(userInteracted)
+						if(displayTime.isRunning)
+							displayTime.Reset();
+					else
+						if(!displayTime.isRunning)
+							displayTime.Start();	
+
+					if (displayTime.ElapsedMilliseconds > inactiveTimeLimit)
+					{
+						HideUI();
+					}
+				}
 			}
 
-			if (Mouse.current != null)
+		}
+
+		private bool userInteracted()
+		{
+			if(Mouse.current != null)
 			{
 				Vector2 delta = Mouse.current.delta.ReadValue();
 				if (delta.sqrMagnitude > 0)
 				{
-
-					Debug.DiffLog($"Mouse moved: {delta}");
-					if(displayTime.IsRunning)
-						displayTime.Reset();
-
-				}
-				else
-				{
-					displayTime.Start();
-					Debug.DiffLog("Mouse not moving");
+					return true;
 				}
 			}
+
 			if (Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame)
 			{
-				if (displayTime.IsRunning)
-					displayTime.Reset();
+				return true;
 			}
-
-
-
+			false;
 		}
-
-		
-
-
 
 		public override void OnSceneWasLoaded(int buildIndex, string sceneName)
 		{
