@@ -40,7 +40,7 @@ namespace UIFramework
 
 		internal Stopwatch displayTime = new Stopwatch();
 
-		internal int inactiveTimeLimit = (InactivityTimeout?.Value * 1000) ?? 30000;
+		internal int inactiveTimeLimit => (InactivityTimeout?.Value * 1000) ?? 30000;
 
 
 #pragma warning disable CS1591
@@ -57,60 +57,62 @@ namespace UIFramework
 
 		}
 
-		internal void ToggleUI()
-		{
-			if(UI.MainWindow.activeSelf)
-				HideUI();
-			else
-				ShowUI();
-		}
-
-		internal void ShowUI()
-		{
-			UI.MainWindow.SetActive(true);
-		}
-		internal void HideUI()
-		{
-			UI.MainWindow.SetActive(false);
-		}
-
 		public override void OnUpdate()
 		{
-			if (Input.GetKeyDown(KeyCode.F9))
-			{
-				if (CurrentScene == "loader")
-				{
-					Debug.Warning("UIFramework does not work in the loader. Please finish calibrating.");
-					return;
-				}
-				ToggleUI();
-			}
+			UiToggleInputCheck();
+
 			if(isFirstLoad)
 				return;
 
-			
-			if(!AutoHideOnInactivity?.Value ?? false)
-			{ 
-				if(UI.MainWindow.activeSelf)
-				{
-
-					if(userInteracted)
-						if(displayTime.isRunning)
-							displayTime.Reset();
-					else
-						if(!displayTime.isRunning)
-							displayTime.Start();	
-
-					if (displayTime.ElapsedMilliseconds > inactiveTimeLimit)
-					{
-						HideUI();
-					}
-				}
-			}
+			AutoHideCheck();
 
 		}
+		private void UiToggleInputCheck()
+		{
+			if (!Input.GetKeyDown(KeyCode.F9))
+				return;
+			
+			if (CurrentScene == "loader")
+			{
+				Debug.Warning("UIFramework does not work in the loader. Please finish calibrating.");
+				return;
+			}
+			UI.MainWindow.SetActive(!UI.MainWindow.activeSelf);
+			
+		}
 
-		private bool userInteracted()
+		private void AutoHideCheck()
+		{
+			//Don't proceed if Autohide preference is set to false or null
+			if(!AutoHideOnInactivity?.Value ?? false)
+				return;
+
+			//Don't proceed if UI is inactive. Reset stopwatch if running
+			if(!UI.MainWindow.activeSelf)
+			{
+				if(displayTime.isRunning)
+					displayTime.Reset();
+				return;
+			}
+
+			//Stop and reset stopwatch if user has interacted with mouse or keyboard
+			if(UserInteracted())
+				if(displayTime.isRunning)
+					displayTime.Reset();
+
+			//Start stopwatch if user stopped interacting
+			else
+				if(!displayTime.isRunning)
+					displayTime.Start();	
+
+			//Once user hasn't interacted with mouse or keyboard abev the inactive time limit, hide the UI window
+			if (displayTime.ElapsedMilliseconds > inactiveTimeLimit)
+			{
+				UI.MainWindow.SetActive(false);
+			}
+		}
+
+		private bool UserInteracted()
 		{
 			if(Mouse.current != null)
 			{
@@ -125,12 +127,11 @@ namespace UIFramework
 			{
 				return true;
 			}
-			false;
+			return false;
 		}
 
 		public override void OnSceneWasLoaded(int buildIndex, string sceneName)
 		{
-#pragma warning restore CS1591
 			CurrentScene = sceneName.ToNormal();
 			if (CurrentScene == "loader")
 			{
@@ -147,6 +148,7 @@ namespace UIFramework
 				}
 			}
 		}
+#pragma warning restore CS1591
 
 
 
@@ -163,19 +165,20 @@ namespace UIFramework
 		{
 			Preferences.InitializePrefs();
 			UIFModel.ModelMod ModModel;
-			if (Preferences.EnableDebugMode.Value)
+			
+			//Show extra categories if debug mode is enabled
+			if (!Preferences.EnableDebugMode.Value)
+			{
+				ModModel = UI.Register(this, Preferences.CatUIFramework);
+			}
+			
+			else
 			{
 				ModModel = UI.Register(this, Preferences.CatUIFramework, Preferences.Experimental, Preferences.TestBooleans, Preferences.TestEmptyDisplayName);
 				UIFModel.ModelMelonCategory tester = (UIFModel.ModelMelonCategory)ModModel.GetSubmodel(Preferences.TestBooleans.Identifier);
 				UIFModel.ButtonEntry testButton = new UIFModel.ButtonEntry(CustomClick, "CustomButton", "just a test", "Custom Button");
 				tester.AddSubmodel(testButton);
 			}
-			else
-			{
-				ModModel = UI.Register(this, Preferences.CatUIFramework);
-			}
-
-
 
 			Prefabs.LoadAssetBundle();
 
@@ -187,7 +190,7 @@ namespace UIFramework
 
 		public void MelPrefsSaved(string s)
 		{
-			//Debug.Deb("MelPrefsSaved called " + s);
+
 		}
 
 		public void CustomClick(UIFController.Entry button)
