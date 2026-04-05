@@ -8,7 +8,7 @@ namespace UIFramework
 {
 	internal static class Debug
 	{
-		private static bool debugMode = true;
+		public static bool debugMode => Preferences.EnableDebugMode?.Value ?? true;
 		private static string lastDiffLogMessage = string.Empty;
 
 		/*private static GameObject DebugUi;

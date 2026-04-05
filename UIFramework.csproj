@@ -6,29 +6,32 @@
 		<RootNamespace>UIFramework</RootNamespace>
 		<AssemblyName>UIFramework</AssemblyName>
 		<NeutralLanguage>en-US</NeutralLanguage>
-		<LangVersion>latest</LangVersion>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<EmbedDocumentation>true</EmbedDocumentation> <!-- Don't actually know if this works lol	-->
+		<EmbedDocumentation>true</EmbedDocumentation>
+		<ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>None</ResolveAssemblyWarnOrErrorOnTargetArchitectureMismatch>
 
-
-
+		
+		
+		<RumblePath>G:\SteamLibrary\steamapps\common\RUMBLE</RumblePath>
+		
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Reference Include="G:\SteamLibrary\steamapps\common\RUMBLE\MelonLoader\net6\**\*.dll" Private="false" />
-		<Reference Include="G:\SteamLibrary\steamapps\common\RUMBLE\MelonLoader\net35\**\*.dll" Private="false" />
-		<Reference Include="G:\SteamLibrary\steamapps\common\RUMBLE\MelonLoader\Il2CppAssemblies\**\*.dll" Private="false" />
-		
-		
-		<None Remove="Assets\uiframework" />
-		<EmbeddedResource Include="Assets\uiframework" />
+		<Reference Include="$(RumblePath)\MelonLoader\net6\**\*.dll" Private="false" />
+		<Reference Include="$(RumblePath)\MelonLoader\net35\**\*.dll" Private="false" />
+		<Reference Include="$(RumblePath)\MelonLoader\Il2CppAssemblies\**\*.dll" Private="false" />
 	</ItemGroup>
 
-
+	<ItemGroup>
+		<EmbeddedResource Include="Assets\**" />
+	</ItemGroup>
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Exec Command="COPY &quot;$(TargetPath)&quot; &quot;G:\SteamLibrary\steamapps\common\RUMBLE\Mods&quot;" />
-		<Exec Command="COPY &quot;$(TargetDir)$(TargetName).xml&quot; &quot;G:\SteamLibrary\steamapps\common\RUMBLE\Mods&quot;" />
+		<Exec Command="COPY &quot;$(TargetPath)&quot; &quot;$(RumblePath)\Mods&quot;" />
+		<Exec Command="COPY &quot;$(TargetPath)&quot; &quot;$(ProjectDir)_Misc\ThunderstorePackage\Template\Mods&quot;" />
+		<Exec Command="COPY &quot;$(TargetDir)$(TargetName).xml&quot; &quot;$(ProjectDir)_Misc\ThunderstorePackage\Template\Mods&quot;" />
+		<Exec Command="COPY &quot;$(ProjectDir)README.md&quot; &quot;$(ProjectDir)_Misc\ThunderstorePackage\Template\&quot;" />
+		<Exec Command="COPY &quot;$(TargetDir)$(TargetName).xml&quot; &quot;$(RumblePath)\Mods&quot;" />
 		<Exec Command="COPY &quot;$(TargetDir)$(TargetName).xml&quot; &quot;$(ProjectDir)&quot;" />
 	</Target>
 </Project>

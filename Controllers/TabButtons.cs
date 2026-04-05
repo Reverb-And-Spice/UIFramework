@@ -1,0 +1,104 @@
+﻿using AssetsTools.NET.Extra;
+using Il2CppInterop.Runtime;
+//using Il2CppSystem.Collections.Generic;
+using Il2CppTMPro;
+using MelonLoader;
+using MelonLoader.Logging;
+using MonoMod.ModInterop;
+using System;
+//using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.Events;
+using UnityEngine.UI;
+//using static UI.UIFController;
+using static Unity.Collections.AllocatorManager;
+using static UIFramework.Debug;
+using System.Globalization;
+namespace UIFramework
+{
+
+	public partial class UIFController
+	{
+		//protected override GameObject UIPrefab { get { return Prefabs.TextPrefab; } }
+		public abstract class TabButtonController : SubModelController, IChildable
+		{
+
+			protected WindowController ParentWindow;
+			protected UIFModel.IHoldSubmodels _model => (UIFModel.IHoldSubmodels)_internalModel;
+
+			public override void ModelSet()
+			{
+				Label = _model.DisplayName;
+				ParentWindow = _rootWindow;
+			}
+
+			public string Label { set { gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
+			public ColorARGB TabColor { get; set; }
+			/// <summary>
+			/// Runs when the button is clicked. Implement this in inheriting classes. 
+			/// </summary>
+			/// <exception cref="NotImplementedException"></exception>
+			/// <remarks>IL2CPP does not like abstract methods 😭</remarks>
+			public virtual void OnSelect()
+			{
+				throw new NotImplementedException("Implement OnSelect in inheriting class");
+				//this.gameObject.GetComponent<Image>().color = ParentWindow.openTabColor;
+			}
+
+
+
+			void Start()
+			{
+				gameObject.GetComponent<Button>().onClick.AddListener((UnityAction)OnSelect);
+			}
+			void OnDestroy()
+			{
+				gameObject.GetComponent<Button>().onClick.RemoveAllListeners();
+			}
+
+
+		}
+
+
+		/// <summary>
+		/// 
+		/// </summary>
+		[RegisterTypeInIl2Cpp]
+		public class Mod : TabButtonController, IChildable
+		{
+
+			protected UIFModel.ModelMod ModModel => (UIFModel.ModelMod)_internalModel;
+
+			public override void OnSelect()
+			{
+				ParentWindow.TitleButtonText.text = $"{ModModel.DisplayName}\n{ModModel.Instance.Info.Version}";
+
+				ParentWindow.CatRegistryPanel.SetModel(_model);
+				//
+				//ParentWindow.ModRegistryPanel.SelectTab((UIFModel.IHoldSubmodels)Model);
+				
+
+
+
+			}
+
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		[RegisterTypeInIl2Cpp]
+		public class Category : TabButtonController, IChildable
+		{
+			public override void OnSelect()
+			{
+				ParentWindow.LastCategorySelected[ParentWindow.CatRegistryPanel.Model as UIFModel.ModelMod] = Model as UIFModel.ModelCategoryItem;
+				ParentWindow.PrefRegistryPanel.SetModel(_model);
+				
+
+			}
+		}
+	}
+}

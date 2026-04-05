@@ -1,12 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿//using System;
+//using System.Collections.Generic;
+using Il2CppSystem.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-
+using System.ComponentModel.DataAnnotations;
 namespace UIFramework
 {
+	/// <summary>
+	/// contains various helper functions
+	/// ToNormal: Normalizes a string
+	/// GetDisplayNames
+	/// </summary>
 	internal static class Helpers
 	{
 		/// <summary>
@@ -18,33 +25,6 @@ namespace UIFramework
 		///<remarks>Returns empty string if input only contains whitespace</remarks>
 		public static string ToNormal(this string text) => text.ToLower().Trim().Replace(" ", "");
 
-		internal static class HierarchyUtility
-		{
-			internal static string GetGameObjectPath(GameObject obj)
-			{
-				// Use StringBuilder for efficient string concatenation
-				StringBuilder builder = new StringBuilder();
-				Transform current = obj.transform;
-
-				// Traverse up the hierarchy until there are no more parents (i.e., we reach the root)
-				while (current != null)
-				{
-					// Insert the current object's name at the beginning of the path
-					builder.Insert(0, current.name);
-
-					// If it's not the root, add a path separator
-					if (current.parent != null)
-					{
-						builder.Insert(0, "/");
-					}
-
-					// Move to the next parent up the hierarchy
-					current = current.parent;
-				}
-
-				return builder.ToString();
-			}
-		}
 	}
 
 }

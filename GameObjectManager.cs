@@ -18,15 +18,14 @@ namespace UIFramework
 	internal static partial class Prefabs
 	{
 		/// <summary>
-		/// Root Game Object for all of UIFramework in DDOL
+		/// Root Game Object for all of UI in DDOL
 		/// </summary>
-		internal static GameObject UIFGameObjects = new GameObject("UIFramework");
+		internal static GameObject UIFGameObjects = new GameObject("UI");
 
 		/// <summary>
 		/// UI Assets from the asset bundle
 		/// </summary>
 		internal static GameObject AssetBundleLoaded;
-		//internal static GameObject PrefabSources = new GameObject("Prefabs");
 
 		/// <summary>
 		/// Temporary game object storage as they're being instantiated
@@ -45,9 +44,14 @@ namespace UIFramework
 		internal static GameObject IntPrefab;
 		internal static GameObject FloatPrefab;
 		internal static GameObject DoublePrefab;
+		internal static GameObject DropDownPrefab;
+		
 
 		internal static GameObject ButtonPrefab;
+
 		internal static Button MainActionButton;
+		internal static Button DiscardButton;
+		internal static Button MinimizeButton;
 
 		internal static void LoadAssetBundle()
 		{
@@ -56,25 +60,8 @@ namespace UIFramework
 			TempStorage.transform.SetParent(UIFGameObjects.transform,false);
 			TempStorage.SetActive(false);
 
-			AssetBundleLoaded = GameObject.Instantiate(LoadAssetFromStream<GameObject>(Core.Instance, "UIFramework.Assets.uiframework", "UIFramework"), UIFGameObjects.transform);
+			AssetBundleLoaded = GameObject.Instantiate(LoadAssetFromStream<GameObject>(Core.Instance, "UIFramework.Assets.uiframework", "UIframework"), UIFGameObjects.transform);
 			AssetBundleLoaded.name = "UIFrameworkAssets";
-			//AssetBundleLoaded.SetActive(false);
-			//Taco generated (text won't work witout this for some reason)
-			foreach (var tmpugui in AssetBundleLoaded.GetComponentsInChildren<TextMeshProUGUI>(true))
-			{
-				tmpugui.font = Resources.Load<TMP_FontAsset>("Fonts & Materials/Arial SDF");
-
-
-				var font = Resources.Load<Il2CppTMPro.TMP_FontAsset>("Fonts & Materials/Arial SDF");
-				if (font != null)
-				{
-					tmpugui.font = font;
-					tmpugui.fontSharedMaterial = font.material;
-					tmpugui.SetVerticesDirty();
-					tmpugui.SetMaterialDirty();
-				}
-			}
-			ApplyAndRebuild(AssetBundleLoaded);
 
 			
 			
@@ -88,17 +75,24 @@ namespace UIFramework
 			CatTab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "CategoryTab")?.gameObject;
 
 			TextPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryText")?.gameObject;
-			BoolPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryBoolean")?.gameObject;
+			BoolPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryBool")?.gameObject;
+			
 			IntPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryInt")?.gameObject;
 			FloatPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryFloat")?.gameObject;
 			DoublePrefab = GameObject.Instantiate(FloatPrefab, AssetBundleLoaded.transform);
 
+			DropDownPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryDropdown")?.gameObject;
+
 			ButtonPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryButton")?.gameObject;
 
+
 			MainActionButton = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "SaveActionButton")?.gameObject.GetComponent<Button>();
+			MinimizeButton = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "Minimize")?.gameObject.GetComponent<Button>();
+
+			DiscardButton = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "DiscardActionButton")?.gameObject.GetComponent<Button>();
+			DiscardButton.gameObject.SetActive(false);
 
 
-			
 
 			//MainActionButton.onClick.AddListener(MainButtonClick);
 
@@ -106,20 +100,23 @@ namespace UIFramework
 
 			//Add the appropriate components to each prefab for later use
 			MainCanvasSource.AddComponent<UIFController.WindowController>();
+
 			TextPrefab.AddComponent<UIFController.PrefText>();
 			BoolPrefab.AddComponent<UIFController.PrefBool>();
+			
 			IntPrefab.AddComponent<UIFController.PrefInt>();
 			FloatPrefab.AddComponent<UIFController.PrefFloat>();
 			DoublePrefab.AddComponent<UIFController.PrefDouble>();
+			
+			DropDownPrefab.AddComponent<UIFController.PrefDropDown>();
+
 			ButtonPrefab.AddComponent<UIFController.ButtonEntry>();
-			UIFController.Mod baseModTabController = ModTab.AddComponent<UIFController.Mod>();
-			Button ModButton = ModTab.GetComponent<Button>();
-			//ModButton.onClick.AddListener(baseModTabController.OnSelect);
 
-			UIFController.Category baseCatTabController = CatTab.AddComponent<UIFController.Category>();
-			Button CatButton = ModTab.GetComponent<Button>();
-			//CatButton.onClick.AddListener(baseCatTabController.OnSelect);
 
+
+			ModTab.AddComponent<UIFController.Mod>();
+
+			CatTab.AddComponent<UIFController.Category>();
 
 			//Add the component to the container sections
 			ModDisplayList.AddComponent<UIFController.Sidebar>();
@@ -128,24 +125,6 @@ namespace UIFramework
 
 
 			MainCanvasSource.SetActive(false);
-		}
-
-		static UnityAction MainButtonClick = new System.Action(() =>
-		{
-			Debug.Log("Main Action ButtonGo Clicked!", true, 0);
-		});
-
-		static GameObject GetInputPrefab(InputType type)
-		{
-			return type switch
-			{
-				InputType.TextField => TextPrefab,
-				InputType.Toggle => BoolPrefab,
-				InputType.NumericInt => IntPrefab,
-				InputType.NumericFloat => FloatPrefab,
-				
-				_ => null
-			};
 		}
 
 		#region Ulvak Generated
@@ -181,59 +160,5 @@ namespace UIFramework
 			return Il2CppStream;
 		}
 		#endregion
-
-		#region AIGenerated
-		/// <summary>
-		/// Wrapping gets disabled when loading and this reenables it
-		/// </summary>
-		/// <param name="root"></param>
-		internal static void ApplyAndRebuild(GameObject root)
-		{
-
-
-			if (root == null) return;
-
-			// 1) Configure TMP Components
-			var tmps = root.GetComponentsInChildren<TextMeshProUGUI>(true);
-			foreach (var t in tmps)
-			{
-				if (t == null) continue;
-				if (t.gameObject.name == "ButtonText")
-				{
-					t.enableWordWrapping = false; // Ensure wrapping is off for these
-					continue;
-				}
-				t.enableWordWrapping = true;
-				// Overflow mode ensures text wraps and fills the space, 
-				// rather than cutting off or masking.
-				t.overflowMode = TextOverflowModes.Overflow;
-
-				// Ensure this is not set to shrink the text
-				t.enableAutoSizing = false;
-			}
-
-			// 2) Force Layout Update
-			// Instead of forcing individual RectTransforms, we find the 
-			// top-most parent that has a layout group or is the root 
-			// and force a complete rebuild.
-			Canvas.ForceUpdateCanvases();
-
-			/*
-			 * this part of the code didn't work but doesn't seem to be needed?
-			 * // This finds all LayoutGroups and ContentSizeFitters in the root
-			// and forces them to re-evaluate their children's sizes.
-			//var layouts = root.GetComponentsInChildren<LayoutGroup>(true);
-			foreach (var l in layouts)
-			{
-				LayoutRebuilder.ForceRebuildLayoutImmediate(l.transform as RectTransform);
-			}*/
-			// Final pass to make sure everything is clean
-			Canvas.ForceUpdateCanvases();
-
-		}
-
-		#endregion
 	}
-
-
 }
