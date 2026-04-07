@@ -1,0 +1,133 @@
+using MelonLoader;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using UnityEngine;
+using UnityEngine.Bindings;
+using UnityEngine.Events;
+using UnityEngine.UI;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+namespace UIFramework
+{
+	/// <summary>
+	/// primary public facing class, modders will interact with this to register their preferences and build the UI.
+	/// </summary>
+	public static class UI
+	{
+
+		internal static UIFModel.RootModel ModelInstance = new();
+		internal static GameObject MainWindow;
+
+		internal static UIFController.WindowController WindowInstance;
+		/// <summary>
+		/// Registers a mod and its categories to the UI instance. 
+		/// </summary>
+		/// <param name="modInstance">Instance of your MelonMod class</param>
+		/// <param name="categories">The range of MelonPreferences_Category objects used by your mod.</param>
+		/// <remarks>
+		/// Unless the dependency was explicitly declared, Don't use before OnLateInitializeMelon.
+		/// Currently, registration after the first gym load means your mod won't show up on the mod list
+		/// 
+		/// </remarks>
+		/// <returns>A reference to the created Mod Model for further customization</returns>
+		public static UIFModel.ModelMod Register(MelonMod modInstance, params MelonPreferences_Category[] categories)
+		{
+			UIFModel.ModelMod NewModModel = new(modInstance, categories.ToList());
+			ModelInstance.AddSubmodel(NewModModel);
+			return NewModModel;
+		}
+		/// <summary>
+		/// Registers a mod with no categories to the framework. Categories need to be manually added
+		/// </summary>
+		/// <param name="modInstance">Instance of your MelonMod class</param>
+		public static UIFModel.ModelMod Register(MelonMod modInstance)
+		{
+			UIFModel.ModelMod NewModModel = new(modInstance);
+			ModelInstance.AddSubmodel(NewModModel);
+			return NewModModel;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		internal static void InitializeUIObjects()
+		{
+			MainWindow = GameObject.Instantiate(Prefabs.MainCanvasSource, Prefabs.UIFGameObjects.transform);
+			MainWindow.name = "MainWindow";
+			MainWindow.SetActive(true);
+			WindowInstance = MainWindow.GetComponent<UIFController.WindowController>();
+
+		}
+		/// <summary>
+		/// 
+		/// </summary>
+		internal static void BuildUI()
+		{
+			WindowInstance.SetModel(ModelInstance);
+
+		}
+
+		public static GameObject GetPrefab(InputType input)
+		{
+			GameObject selectedPrefab;
+			switch (input)
+			{
+				case InputType.TextField:
+					selectedPrefab = GameObject.Instantiate(Prefabs.TextPrefab);
+					break;
+				case InputType.Toggle:
+					selectedPrefab = GameObject.Instantiate(Prefabs.BoolPrefab);
+					break;
+				case InputType.NumericInt:
+					selectedPrefab = GameObject.Instantiate(Prefabs.IntPrefab);
+					break;
+				case InputType.NumericFloat:
+					selectedPrefab = GameObject.Instantiate(Prefabs.FloatPrefab);
+					break;
+				case InputType.NumericDouble:
+					selectedPrefab = GameObject.Instantiate(Prefabs.DoublePrefab);
+					break;
+				case InputType.Button:
+					selectedPrefab = GameObject.Instantiate(Prefabs.ButtonPrefab);
+					break;
+				case InputType.Dropdown:
+					selectedPrefab = GameObject.Instantiate(Prefabs.DropDownPrefab);
+					break;
+				default:
+					selectedPrefab = GameObject.Instantiate(Prefabs.TextPrefab);
+					break;
+			}
+
+			selectedPrefab.transform.SetParent(Prefabs.TempStorage.transform);
+			return selectedPrefab;
+		}
+	}
+	public enum InputType
+	{
+		[Display(Name = "Default", Description = "Defaults to basic string input")]
+		Default,
+		[Display(Name = "Text Field", Description = "Basic text field input")]
+		TextField,
+		[Display(Name = "Toggle", Description = "A simple on/off toggle")]
+		Toggle,
+		[Display(Name = "Int input", Description = "An Input for inputing Numeric Integers")]
+		NumericInt,
+		[Display(Name = "Float input", Description = "An Input for inputing Floating Point Numbers")]
+		NumericFloat,
+		//[Display(Name = "Double input", Description = "An Input for inputing Double Precision Floating Point Numbers")]
+		NumericDouble,
+		[Display(Name = "Button", Description = "A simple button that can be clicked to trigger an action")]
+		Button,
+		[Display(Name = "Dropdown", Description = "A dropdown menu for selecting from multiple options")]
+		Dropdown,
+		/*Slider,
+		MultiCheckbox,
+		RadioButton*/
+	}
+
+	
+}

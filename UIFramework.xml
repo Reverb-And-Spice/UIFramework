@@ -252,104 +252,6 @@
             This allows for custom behavior before the actual category gets saved
             </remarks>
         </member>
-        <member name="T:UIFramework.BuildInfo">
-            <summary></summary>
-        </member>
-        <member name="F:UIFramework.BuildInfo.Name">
-            <summary></summary>
-        </member>
-        <member name="F:UIFramework.BuildInfo.Author">
-            <summary></summary>
-        </member>
-        <member name="F:UIFramework.BuildInfo.Version">
-            <summary></summary>
-        </member>
-        <member name="T:UIFramework.Core">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:UIFramework.Debug.DiffLog(System.String,System.Boolean,System.Int32)">
-            <summary>
-            Call in OnUpdate to monitor variables per frame but only logs if they change
-            </summary>
-            <param name="message"></param>
-            <param name="debugOnly"></param>
-            <param name="logLevel"></param>
-        </member>
-        <member name="M:UIFramework.Debug.Log(System.String,System.Boolean,System.Int32)">
-            <summary>
-            
-            </summary>
-            <param name="message"></param>
-            <param name="debugOnly"></param>
-            <param name="logLevel"></param>
-        </member>
-        <member name="T:UIFramework.UI">
-            <summary>
-            primary public facing class, modders will interact with this to register their preferences and build the UI.
-            </summary>
-        </member>
-        <member name="M:UIFramework.UI.Register(MelonLoader.MelonMod,MelonLoader.MelonPreferences_Category[])">
-            <summary>
-            Registers a mod and its categories to the UI instance. 
-            </summary>
-            <param name="modInstance">Instance of your MelonMod class</param>
-            <param name="categories">The range of MelonPreferences_Category objects used by your mod.</param>
-            <remarks>
-            Unless the dependency was explicitly declared, Don't use before OnLateInitializeMelon.
-            Currently, registration after the first gym load means your mod won't show up on the mod list
-            
-            </remarks>
-            <returns>A reference to the created Mod Model for further customization</returns>
-        </member>
-        <member name="M:UIFramework.UI.Register(MelonLoader.MelonMod)">
-            <summary>
-            Registers a mod with no categories to the framework. Categories need to be manually added
-            </summary>
-            <param name="modInstance">Instance of your MelonMod class</param>
-        </member>
-        <member name="M:UIFramework.UI.InitializeUIObjects">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:UIFramework.UI.BuildUI">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="F:UIFramework.Prefabs.UIFGameObjects">
-            <summary>
-            Root Game Object for all of UI in DDOL
-            </summary>
-        </member>
-        <member name="F:UIFramework.Prefabs.AssetBundleLoaded">
-            <summary>
-            UI Assets from the asset bundle
-            </summary>
-        </member>
-        <member name="F:UIFramework.Prefabs.TempStorage">
-            <summary>
-            Temporary game object storage as they're being instantiated
-            </summary>
-        </member>
-        <member name="T:UIFramework.Helpers">
-            <summary>
-            contains various helper functions
-            ToNormal: Normalizes a string
-            GetDisplayNames
-            </summary>
-        </member>
-        <member name="M:UIFramework.Helpers.ToNormal(System.String)">
-             <summary>
-             Returns a normalized version of the specified string by converting it to lowercase, trimming whitespace, and
-             removing all spaces.
-             </summary>
-             <param name="text">The string to normalize. Cannot be null.</param>
-             <returns>A normalized string with all spaces removed, trimmed, and converted to lowercase.</returns>
-            <remarks>Returns empty string if input only contains whitespace</remarks>
-        </member>
         <member name="T:UIFramework.UIFModel">
             <summary>
             Models define how the UI is built. The heirarchy is simple and follows melonpreferences basic structure
@@ -617,6 +519,104 @@
             If a custom one is provided, it will return an instance of that instead
             </summary>
             <returns>TODO: Move this to the UI builders as this is ui logic</returns>
+        </member>
+        <member name="T:UIFramework.BuildInfo">
+            <summary></summary>
+        </member>
+        <member name="F:UIFramework.BuildInfo.Name">
+            <summary></summary>
+        </member>
+        <member name="F:UIFramework.BuildInfo.Author">
+            <summary></summary>
+        </member>
+        <member name="F:UIFramework.BuildInfo.Version">
+            <summary></summary>
+        </member>
+        <member name="T:UIFramework.Core">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:UIFramework.Debug.DiffLog(System.String,System.Boolean,System.Int32)">
+            <summary>
+            Call in OnUpdate to monitor variables per frame but only logs if they change
+            </summary>
+            <param name="message"></param>
+            <param name="debugOnly"></param>
+            <param name="logLevel"></param>
+        </member>
+        <member name="M:UIFramework.Debug.Log(System.String,System.Boolean,System.Int32)">
+            <summary>
+            
+            </summary>
+            <param name="message"></param>
+            <param name="debugOnly"></param>
+            <param name="logLevel"></param>
+        </member>
+        <member name="T:UIFramework.UI">
+            <summary>
+            primary public facing class, modders will interact with this to register their preferences and build the UI.
+            </summary>
+        </member>
+        <member name="M:UIFramework.UI.Register(MelonLoader.MelonMod,MelonLoader.MelonPreferences_Category[])">
+            <summary>
+            Registers a mod and its categories to the UI instance. 
+            </summary>
+            <param name="modInstance">Instance of your MelonMod class</param>
+            <param name="categories">The range of MelonPreferences_Category objects used by your mod.</param>
+            <remarks>
+            Unless the dependency was explicitly declared, Don't use before OnLateInitializeMelon.
+            Currently, registration after the first gym load means your mod won't show up on the mod list
+            
+            </remarks>
+            <returns>A reference to the created Mod Model for further customization</returns>
+        </member>
+        <member name="M:UIFramework.UI.Register(MelonLoader.MelonMod)">
+            <summary>
+            Registers a mod with no categories to the framework. Categories need to be manually added
+            </summary>
+            <param name="modInstance">Instance of your MelonMod class</param>
+        </member>
+        <member name="M:UIFramework.UI.InitializeUIObjects">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:UIFramework.UI.BuildUI">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:UIFramework.Prefabs.UIFGameObjects">
+            <summary>
+            Root Game Object for all of UI in DDOL
+            </summary>
+        </member>
+        <member name="F:UIFramework.Prefabs.AssetBundleLoaded">
+            <summary>
+            UI Assets from the asset bundle
+            </summary>
+        </member>
+        <member name="F:UIFramework.Prefabs.TempStorage">
+            <summary>
+            Temporary game object storage as they're being instantiated
+            </summary>
+        </member>
+        <member name="T:UIFramework.Helpers">
+            <summary>
+            contains various helper functions
+            ToNormal: Normalizes a string
+            GetDisplayNames
+            </summary>
+        </member>
+        <member name="M:UIFramework.Helpers.ToNormal(System.String)">
+             <summary>
+             Returns a normalized version of the specified string by converting it to lowercase, trimming whitespace, and
+             removing all spaces.
+             </summary>
+             <param name="text">The string to normalize. Cannot be null.</param>
+             <returns>A normalized string with all spaces removed, trimmed, and converted to lowercase.</returns>
+            <remarks>Returns empty string if input only contains whitespace</remarks>
         </member>
         <member name="T:UIFramework.Preferences">
             <summary>
