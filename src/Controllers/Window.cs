@@ -91,6 +91,11 @@ namespace UIFramework
 		[RegisterTypeInIl2Cpp]
 		public class WindowController : MonoBehaviour
 		{
+			void Awake()
+			{
+				Log("WindowController Awake", true, 1);
+			}
+
 			public Color defaultTabColor = new Color(0.22f, 0.22f, 0.22f, 1f);
 			public Color openTabColor = new Color(0.24f, 0.17f, 0.42f, 1f);
 
@@ -108,14 +113,38 @@ namespace UIFramework
 
 			public TextMeshProUGUI TitleButtonText;
 
-			public Dictionary<UIFModel.ModelMod, UIFModel.ModelCategoryItem> LastCategorySelected = new();
+			public UIFModel.ModelModItem SelectedMod => _selectedMod;
+			private UIFModel.ModelModItem _selectedMod = null;
 
-			
-			void Awake()
+			public UIFModel.ModelCategoryItem SelectedCategory => _selectedCategory;
+			private UIFModel.ModelCategoryItem _selectedCategory = null;
+
+			public Dictionary<UIFModel.ModelModItem, UIFModel.ModelCategoryItem> LastCategorySelected = new();
+
+
+			public void SetSelectedMod(UIFModel.ModelModItem mod)
 			{
-				Log("WindowController Awake", true, 1);
+				_selectedMod = mod;
+				TitleButtonText.text = $"{mod.DisplayName}\n{mod.Instance.Info.Version}";
+
+				CatRegistryPanel.SetModel(mod);
+
+				UIFModel.ModelCategoryItem lastSelected = null;
+				if (LastCategorySelected.ContainsKey(mod as UIFModel.ModelModItem))
+					lastSelected = LastCategorySelected[mod as UIFModel.ModelModItem];
+
+
+				PrefRegistryPanel.SetModel(lastSelected ?? (UIFModel.ModelCategoryItem)mod.SubModels[0]);
 
 			}
+			public void SetSelectedCategory(UIFModel.ModelCategoryItem cat)
+			{
+				_selectedCategory = cat;
+				PrefRegistryPanel.SetModel(cat);
+				LastCategorySelected[_selectedMod] = cat;
+
+			}
+
 
 			public virtual void SetModel(UIFModel.RootModel model)
 			{
@@ -171,7 +200,7 @@ namespace UIFramework
 			public virtual void SaveButtonClick()
 			{
 
-				for (int i = PrefRegistryPanel.gameObject.transform.childCount - 1; i >= 0; i--)
+/*				for (int i = PrefRegistryPanel.gameObject.transform.childCount - 1; i >= 0; i--)
 				{
 					//Error handling per child to prevent breaking the whole loop.
 					try
@@ -185,10 +214,10 @@ namespace UIFramework
 						Debug.Warning($"Error in entry saving loop {PrefRegistryPanel.gameObject.transform.childCount - i}:");
 						Debug.Error(ex.Message);
 					}
-				}
+				}*/
 
 				CatRegistryPanel.Model?.SaveAction();
-				PrefRegistryPanel.SaveAction();
+				//PrefRegistryPanel.SaveAction();
 				PrefRegistryPanel.Infanticide();
 				PrefRegistryPanel.BuildFromModelList();
 			}

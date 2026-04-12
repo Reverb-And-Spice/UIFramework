@@ -15,7 +15,6 @@ namespace UIFramework
 
 	public partial class UIFModel
 	{
-		#region Interfaces
 		/// <summary>
 		/// Implemented by all models
 		/// </summary>
@@ -116,6 +115,5 @@ namespace UIFramework
 
 			}
 		}
-		#endregion
 	}
 }

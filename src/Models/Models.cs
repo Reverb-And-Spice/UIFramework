@@ -60,16 +60,8 @@ namespace UIFramework
 
 		public class ModelMod : ModelModItem
 		{
-			public List<ModelCategoryItem> Categories => SubModels.Cast<ModelCategoryItem>().ToList();
-			public MelonMod Instance { get; set; }
-
-			public override string Identifier => Instance.Info.Name;
-			public override string DisplayName => Identifier;
-
-			public virtual string Version => Instance.Info.Version;
-
-
-
+			
+			public override MelonMod Instance { get; set; }
 			public ModelMod(MelonMod instance, List<MelonPreferences_Category> catList)
 			{
 				Instance = instance;
@@ -84,37 +76,7 @@ namespace UIFramework
 			{
 				Instance = instance;
 			}
-			/// <summary>
-			/// Calls individual category models' SaveAction method.
-			/// </summary>
-			public override void SaveAction()
-			{
-				foreach (IModelable model in SubModels)
-				{
-					try
-					{
-						model.SaveAction();
-					}
-					catch (Exception ex)
-					{
-						Debug.Log($"Error saving category {model.Identifier} for mod {Instance.Info.Name}: {ex.Message}", false, 2);
-					}
-				}
-			}
-			public override void DiscardAction()
-			{
-				foreach (IModelable model in SubModels)
-				{
-					try
-					{
-						model.DiscardAction();
-					}
-					catch (Exception ex)
-					{
-						Debug.Log($"Error loading category {model.Identifier} for mod {Instance.Info.Name}: {ex.Message}", false, 2);
-					}
-				}
-			}
+			
 		}
 
 		public class ModelMelonCategory : ModelCategoryItem
@@ -221,7 +183,7 @@ namespace UIFramework
 			{
 				SavedValue = BoxedValue;
 			}
-			/// </inheritdoc>
+			///	<inheritdoc/>
 			public override void DiscardAction()
 			{
 
@@ -271,8 +233,6 @@ namespace UIFramework
 						default:
 							Debug.Log("Unsupported type detected with no custom widget prefab provided. Defaulting to text input. Creating custom component recommended", false, 1);
 							return UI.GetPrefab(InputType.TextField);
-
-
 					}
 				}
 				else

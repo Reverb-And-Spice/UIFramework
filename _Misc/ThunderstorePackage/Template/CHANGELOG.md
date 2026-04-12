@@ -1,3 +1,24 @@
+# Version 0.6.1
+
+<details><summary>New Feature: Exposed OnModSaved event for modders</summary>
+
+You can now subscribe to the `OnModSaved` event that triggers when the saved button is clicked while your mod is selected. 
+This is an alternative for `OnPreferencesSaved` from MelonPreferences which gets called per category.
+This one is called once and only if your mod is selected.
+```cs
+UI.Register(this, OBSAutoRecorderSettings, TestCategory1, TestCategory2...).OnModSaved += MyModSaved;
+```
+
+</details>
+<details><summary>Bug Fix: Increased Supported Mod Name Length</summary>
+Longer mod names can now fit into the mod list
+
+<sup>*btw while text wrapping is disabled in mod list buttons, your MelonInfo name property does support spaces and line breaks that you can add manually if your mod name is still too long to fit into one line</sup>
+</details>
+
+<details><summary>Bug Fix: Fixed bug that called the selected category save action twice</summary>
+</details>
+
 # Version 0.6.0
 <details><summary>New Feature: Hide UI on inactivity </summary>
 Added settings to hide the UI after a certain amount of inactivity with keyboard and mouse. 

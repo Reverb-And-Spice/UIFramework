@@ -23,7 +23,7 @@ namespace UIFramework
 		/// <summary></summary>
 		public const string Author = "Reverb && Spice";
 		/// <summary></summary>
-		public const string Version = "0.6.0";
+		public const string Version = "0.6.1";
 	}
 
 
@@ -53,7 +53,7 @@ namespace UIFramework
 
 		}
 		public override void OnLateInitializeMelon()
-		{
+		{ 
 
 		}
 
@@ -118,17 +118,17 @@ namespace UIFramework
 				Vector2 delta = Mouse.current.delta.ReadValue();
 				if (delta.sqrMagnitude > 0)
 				{
-					DiffLog("Interaction Detected", true);
+					//DiffLog("Interaction Detected", true);
 					return true;
 				}
 			}
 
 			if (Keyboard.current != null && Keyboard.current.anyKey.wasPressedThisFrame)
 			{
-				DiffLog("Interaction Detected", true);
+				//DiffLog("Interaction Detected", true);
 				return true;
 			}
-			DiffLog("No Interaction Detected", true);
+			//DiffLog("No Interaction Detected", true);
 			return false;
 		}
 
@@ -198,6 +198,10 @@ namespace UIFramework
 		public void CustomClick(UIFController.Entry button)
 		{
 			Debug.Log($"Clicked: {button.DisplayName} ");
+		}
+		private void SinglesaveClick()
+		{
+			Debug.Log("Clicked Single Save Button");
 		}
 	}
 }

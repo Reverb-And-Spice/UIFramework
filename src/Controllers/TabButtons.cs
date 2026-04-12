@@ -74,11 +74,8 @@ namespace UIFramework
 
 			public override void OnSelect()
 			{
-				ParentWindow.TitleButtonText.text = $"{ModModel.DisplayName}\n{ModModel.Instance.Info.Version}";
 
-				ParentWindow.CatRegistryPanel.SetModel(_model);
-				//
-				//ParentWindow.ModRegistryPanel.SelectTab((UIFModel.IHoldSubmodels)Model);
+				ParentWindow.SetSelectedMod(ModModel);
 				
 
 
@@ -94,10 +91,7 @@ namespace UIFramework
 		{
 			public override void OnSelect()
 			{
-				ParentWindow.LastCategorySelected[ParentWindow.CatRegistryPanel.Model as UIFModel.ModelMod] = Model as UIFModel.ModelCategoryItem;
-				ParentWindow.PrefRegistryPanel.SetModel(_model);
-				
-
+				ParentWindow.SetSelectedCategory((UIFModel.ModelCategoryItem)_internalModel);
 			}
 		}
 	}

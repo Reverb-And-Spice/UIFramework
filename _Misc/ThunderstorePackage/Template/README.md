@@ -1,23 +1,19 @@
-### New in 0.6.0
-<details><summary> New Feature: Hide UI on inactivity
-</summary>
-Added settings to hide the UI after a certain amount of inactivity with keyboard and mouse. 
+### New in 0.6.1
+<details><summary>Bug Fix: Increased Supported Mod Name Length</summary>
+Longer mod names can now fit into the mod list
 
-Comes with new settings: 
-
-- `Auto Hide on Inactivity`
-- `Inactivity Timeout`
-
+<sup>*btw while text wrapping is disabled in mod list buttons, your MelonInfo name property does support spaces and line breaks that you can add manually if your mod name is still too long to fit into one line</sup>
 </details>
 
+<details><summary>New Feature: Exposed OnModSaved event for modders</summary>
 
-<details><summary>New Feature: Remembers last category opened for each mod</summary>
-Moving between mods will now show the last category you were on for that mod. Will default to the first category. No more having to select the same category again when switching between mods. 
-</details>
+You can now subscribe to the `OnModSaved` event that triggers when the saved button is clicked while your mod is selected. 
+This is an alternative for `OnPreferencesSaved` from MelonPreferences which gets called per category.
+This one is called once and only if your mod is selected.
+```cs
+UI.Register(this, OBSAutoRecorderSettings, TestCategory1, TestCategory2...).OnModSaved += MyModSaved;
+```
 
-
-<details><summary>New Feature: Selection highlighting</summary>
-Selected mods and categories will now be colored in the UI.
 </details>
 
 -----
@@ -34,11 +30,25 @@ The save button writes it to the file for permanent storage. Closing your game m
 # For Modders 
 Add `[assembly: MelonAdditionalDependencies("UIFramework")]` to your AssemblyInfo. This prevents your mod from calling on UIFramework before it's been initialized.
 
-[Declare](#If-you-havent-used-melonpreferences-before) your MelonPreferences in `OnInitializeMelon` and then register them to the UI.
+[Define](#If-you-havent-used-melonpreferences-before) your MelonPreferences in `OnInitializeMelon` and then register them to the UI.
 ```cs
 UI.Register(this, TestCategory1, TestCategory2...);
 ```
 Right now, support is limited to common types like `string`, `int`, `bool`, `double`, `float`, and `enums` without the flags attribute. Working on expanding this. 
+
+
+### Optional: OnSave Event Handler
+You can add an event handler that gets called when the save button is clicked while your mod is selected.
+```cs
+private void MyModSaved()
+{
+    // Do something when the save button is clicked while your mod is selected
+}
+```
+```cs
+UI.Register(this, OBSAutoRecorderSettings, TestCategory1, TestCategory2...).OnModSaved += MyModSaved;
+```
+
 
 -----
 
@@ -48,24 +58,19 @@ Right now, support is limited to common types like `string`, `int`, `bool`, `dou
 ### Here's instructions for basic usage as well as a link to the official documentation for MelonPreferences from the MelonLoader wiki
 
 
-#### 1. Set a file location. Make sure the directory exists for your mod. Otherwise, it will not cause an error but your preferences don't save at all.
+#### 1. Define a file location. 
+Make sure the directory exists for your mod. Otherwise, it will not fail silently and your preferences don't save at all.
 ```cs
-private const string USER_DATA = "UserData/TestMod/";
+private const string USER_DATA = "UserData/MyMod/";
 private const string CONFIG_FILE = "config.cfg";
 if (!Directory.Exists(USER_DATA))
     Directory.CreateDirectory(USER_DATA);
 ```
-#### 2.  Declare, create, and set a file path for your categories
+#### 2. Declare MelonPreferences_Category and MelonPreferences_Entry variables
 ```cs
 private MelonPreferences_Category TestCategory1;
-TestCategory1 = MelonPreferences.CreateCategory("Test Cat 1");
-TestCategory1.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
-
 private MelonPreferences_Category TestCategory2;
-TestCategory2 = MelonPreferences.CreateCategory("Test Cat 2");
-TestCategory2.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
 ```
-#### 3. Declare your entries.
 ```cs
 private MelonPreferences_Entry<string> TestEntry11;
 private MelonPreferences_Entry<int> TestEntry12;
@@ -73,6 +78,16 @@ private MelonPreferences_Entry<int> TestEntry12;
 private MelonPreferences_Entry<float> TestEntry21;
 private MelonPreferences_Entry<bool> TestEntry22;
 ```
+
+#### 3.  Call the CreateCategory method and set file paths
+```cs
+TestCategory1 = MelonPreferences.CreateCategory("TestCat1", "Category DisplayName 1");
+TestCategory1.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
+
+TestCategory2 = MelonPreferences.CreateCategory("TestCat2", "Category DisplayName 2");
+TestCategory2.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
+```
+
 #### 4. Create Entries by calling the .CreateEntry method on the category they go in. Parameters are `Identifier`, `Default Value`, `Display Name`, and `Description`
 ```cs
 TestEntry11 = TestCategory1.CreateEntry("Entry 1-1", "Test Val", "Display Name1", "Test String");

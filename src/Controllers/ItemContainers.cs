@@ -115,8 +115,6 @@ namespace UIFramework
 					{
 						ViewController.Model = model;
 					}
-
-
 				}
 			}
 			/// <summary>
@@ -162,24 +160,6 @@ namespace UIFramework
 		[RegisterTypeInIl2Cpp]
 		public class TopBar : ListArea
 		{
-			public override void SetModel(UIFModel.IHoldSubmodels model)
-			{
-				base.SetModel(model);
-
-				UIFModel.ModelCategoryItem lastSelected = null;
-				try
-				{
-					if(_rootWindow.LastCategorySelected.ContainsKey(Model as UIFModel.ModelMod))
-						lastSelected = _rootWindow.LastCategorySelected[Model as UIFModel.ModelMod];
-				}
-				catch (Exception ex) 
-				{
-					Debug.Log(ex.Message);
-				}
-
-				_rootWindow.PrefRegistryPanel.SetModel(lastSelected ?? (UIFModel.ModelCategoryItem)_model.SubModels[0]);
-			}
-
 		}
 		/// <summary>
 		/// Main body of the UI. Lists individual preferences

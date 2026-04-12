@@ -15,7 +15,6 @@ namespace UIFramework
 
 	public partial class UIFModel
 	{
-		#region Abstracts
 		public abstract class ModelBase : IModelable
 		{
 
@@ -71,7 +70,7 @@ namespace UIFramework
 			/// <summary>
 			/// Called when the discard button is pressed
 			/// </summary>
-			public virtual void DiscardAction()
+			public override void DiscardAction()
 			{
 
 			}
@@ -82,6 +81,12 @@ namespace UIFramework
 
 		public abstract class ModelModItem : SelectableModelBase
 		{
+			public List<ModelCategoryItem> Categories => SubModels.Cast<ModelCategoryItem>().ToList();
+			public abstract MelonMod Instance { get; set; }
+			public override string Identifier => Instance.Info.Name;
+			public override string DisplayName => Identifier;
+
+			public virtual string Version => Instance.Info.Version;
 			/// <inheritdoc/>
 			public override GameObject GetNewUIInstance()
 			{
@@ -101,7 +106,43 @@ namespace UIFramework
 			{
 				AddSubmodel(categoryModel.Cast<IModelable>().ToArray());
 			}
-
+			/// <summary>
+			/// Calls individual category models' SaveAction method.
+			/// </summary>
+			public override void SaveAction()
+			{
+				foreach (IModelable model in SubModels)
+				{
+					try
+					{
+						model.SaveAction();
+					}
+					catch (Exception ex)
+					{
+						Debug.Log($"Error saving category {model.Identifier} for mod {Instance.Info.Name}: {ex.Message}", false, 2);
+					}
+				}
+				OnModSaved?.Invoke();
+			}
+			public override void DiscardAction()
+			{
+				foreach (IModelable model in SubModels)
+				{
+					try
+					{
+						model.DiscardAction();
+					}
+					catch (Exception ex)
+					{
+						Debug.Log($"Error loading category {model.Identifier} for mod {Instance.Info.Name}: {ex.Message}", false, 2);
+					}
+				}
+			}
+			/// <summary>
+			/// Subscribe to this event to run code after all the categories for the mod have been saved.
+			/// This will only run if your mod is the currently selelcted mod. 
+			/// </summary>
+			public event Action OnModSaved;
 
 		}
 		public abstract class ModelCategoryItem : SelectableModelBase
@@ -121,7 +162,7 @@ namespace UIFramework
 		public abstract class ModelEntryItem : ModelBase, IEntry
 		{
 			
-			/// </inheritdoc>
+			/// <inheritdoc/>
 			public abstract string Description { get; }
 			
 			/// <summary>
@@ -134,9 +175,7 @@ namespace UIFramework
 			/// </summary>
 			public virtual EntryState SaveState {get; set;}
 
-			public virtual void DiscardAction() { }
+			public override void DiscardAction() { }
 		}
-
-		#endregion
 	}
 }
