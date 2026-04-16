@@ -63,7 +63,7 @@ namespace UIFramework
 
 			if (isFirstLoad)
 				return;
-
+			Debug.DiffLog($"UI is Visible {UI.IsVisible}",true);
 			AutoHideCheck();
 
 		}
@@ -91,7 +91,7 @@ namespace UIFramework
 					displayTime.Reset();
 				return;
 			}
-
+			
 			//Stop and reset stopwatch if user has interacted with mouse or keyboard
 			if (UserInteracted())
 			{

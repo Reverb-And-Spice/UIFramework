@@ -21,7 +21,7 @@ namespace UIFramework
 
 		internal static UIFModel.RootModel ModelInstance = new();
 		internal static GameObject MainWindow;
-
+		public static bool IsVisible { get { return MainWindow.activeSelf; }  }
 		internal static UIFController.WindowController WindowInstance;
 		/// <summary>
 		/// Registers a mod and its categories to the UI instance. 
@@ -37,6 +37,9 @@ namespace UIFramework
 		/// So UI.Register((MelonBase)this, Category1, Category2,...);
 		/// </remarks>
 		/// <returns>A reference to the created Mod Model for further customization</returns>
+		[Obsolete(".Register() will be a different function in the future to support plugins.\n " +
+			"When that happens, no code changes are needed but you will need to rebuild your project so the compiler can find the correct method\n" +
+			"To future-proof your mod, Explicitly cast your mod instance to MelonBase when registering")]
 		public static UIFModel.ModelMod Register(MelonMod modInstance, params MelonPreferences_Category[] categories)
 		{
 			return Register((MelonBase)modInstance, categories);
@@ -68,13 +71,16 @@ namespace UIFramework
 		/// So UI.Register((MelonBase)this);
 		/// </remarks>
 		/// <param name="modInstance">Instance of your MelonMod class</param>
+		[Obsolete(".Register() will be a different function in the future to support plugins.\n " +
+			"When that happens, no code changes are needed but you will need to rebuild your project so the compiler can find the correct method\n" +
+			"To future-proof your mod, Explicitly cast your mod instance to MelonBase when registering")]
 		public static UIFModel.ModelMod Register(MelonMod modInstance)
 		{
 			return Register(modInstance);
 		}
 
 		/// <summary>
-		/// Registers a mod with no categories to the framework. Categories need to be manually added
+		/// Registers a mod or plugin with no categories to the framework. Categories need to be manually added
 		/// </summary>
 		/// <param name="modInstance">Instance of your MelonMod class</param>
 		public static UIFModel.ModelMod Register(MelonBase modInstance)

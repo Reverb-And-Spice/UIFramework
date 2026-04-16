@@ -1,3 +1,14 @@
+# New in 0.6.2
+<details><summary>New Feature: Plugin support</summary>
+I just completely forgot about those.
+
+<sup>I did have to change the .Register() function's signature. Right now, I have an overload for the old function for backwards compatibility. More details at the bottom of the page </sup>
+</details>
+
+<details><summary>New Feature: Exposed UI.IsVisible Property</summary>
+Your mod can now check if UIFramework is currently open. 
+</details>
+
 # Version 0.6.1
 
 <details><summary>New Feature: Exposed OnModSaved event for modders</summary>
