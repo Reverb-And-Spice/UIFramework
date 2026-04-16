@@ -61,8 +61,8 @@ namespace UIFramework
 		public class ModelMod : ModelModItem
 		{
 			
-			public override MelonMod Instance { get; set; }
-			public ModelMod(MelonMod instance, List<MelonPreferences_Category> catList)
+			public override MelonBase Instance { get; set; }
+			public ModelMod(MelonBase instance, List<MelonPreferences_Category> catList)
 			{
 				Instance = instance;
 
@@ -72,7 +72,7 @@ namespace UIFramework
 
 				}
 			}
-			public ModelMod(MelonMod instance)
+			public ModelMod(MelonBase instance)
 			{
 				Instance = instance;
 			}

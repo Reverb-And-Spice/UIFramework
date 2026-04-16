@@ -82,7 +82,7 @@ namespace UIFramework
 		public abstract class ModelModItem : SelectableModelBase
 		{
 			public List<ModelCategoryItem> Categories => SubModels.Cast<ModelCategoryItem>().ToList();
-			public abstract MelonMod Instance { get; set; }
+			public abstract MelonBase Instance { get; set; }
 			public override string Identifier => Instance.Info.Name;
 			public override string DisplayName => Identifier;
 
