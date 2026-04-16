@@ -14,7 +14,7 @@
 		
 		<RumblePath>G:\SteamLibrary\steamapps\common\RUMBLE</RumblePath>
 		
-	</PropertyGroup>
+	</PropertyGroup> 
 
 	<ItemGroup>
 		<Reference Include="$(RumblePath)\MelonLoader\net6\**\*.dll" Private="false" />
