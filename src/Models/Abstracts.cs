@@ -144,9 +144,28 @@ namespace UIFramework
 			/// </summary>
 			public event Action OnModSaved;
 
+			public event Action<ModelModItem> OnUiUpdateRequest;
+
+			private bool _isUpdateRequestQueued = false;
+			public void RequestUpdateUI() => _isUpdateRequestQueued = true;
+			void Update()
+			{
+				if (!_isUpdateRequestQueued)
+					return;
+				
+				OnUiUpdateRequest?.Invoke(this);
+				_isUpdateRequestQueued= false;
+				
+			}
+
 		}
 		public abstract class ModelCategoryItem : SelectableModelBase
 		{
+			public ModelModItem ParentMod { get; set; }
+			protected ModelCategoryItem(ModelModItem parentMod)
+			{
+				ParentMod = parentMod;
+			}
 			/// <inheritdoc/>
 			public override GameObject GetNewUIInstance()
 			{
@@ -161,7 +180,11 @@ namespace UIFramework
 
 		public abstract class ModelEntryItem : ModelBase, IEntry
 		{
-			
+			public ModelCategoryItem ParentCategory { get; set; }
+			public ModelEntryItem(ModelCategoryItem parentCategory)
+			{
+				ParentCategory = parentCategory;
+			}
 			/// <inheritdoc/>
 			public abstract string Description { get; }
 			
@@ -176,6 +199,64 @@ namespace UIFramework
 			public virtual EntryState SaveState {get; set;}
 
 			public override void DiscardAction() { }
+
+
+			#region UI Commands
+			
+			#endregion
+		}
+
+		/// <summary>
+		/// A model for interfacing with a piece of data.
+		/// </summary>
+		public abstract class ModelDataEntryBase: ModelEntryItem
+		{
+			protected ModelDataEntryBase(ModelCategoryItem parentCategory) : base(parentCategory) { }
+
+			public abstract object BoxedValue {get; protected set;}
+			public virtual bool TryApply(object value)
+			{
+				bool result = false;
+				try
+				{
+					BoxedValue = value;
+					result = true;
+				}
+				catch (Exception ex)
+				{
+					Debug.Log($"ModelDataEntry TryApply: {ex.Message}\n{ex.StackTrace}", false, 2);
+					result = false;
+
+				}
+				return result;
+			}
+			//untested AI generated codbe
+			public void SetDataValue(object newValue)
+			{
+				Type targetType = BoxedValue.GetType();
+
+				try
+				{
+					// Enums need specialized handling if they aren't already the correct type
+					if (targetType.IsEnum)
+					{
+						// If it's already the enum type, cast it; otherwise, parse/convert
+						BoxedValue = newValue is string str 
+							? Enum.Parse(targetType, str, true) 
+							: Enum.ToObject(targetType, newValue);
+					}
+					else
+					{
+						// Handles String-to-Int, Bool-to-Int, String-to-Bool, etc.
+						BoxedValue = Convert.ChangeType(newValue, targetType);
+					}
+				}
+				catch (Exception ex)
+				{
+					MelonLogger.Error($"Conversion failed: {newValue} to {targetType.Name}. {ex.Message}");
+				}
+			}
+
 		}
 	}
 }

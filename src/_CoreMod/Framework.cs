@@ -169,5 +169,32 @@ namespace UIFramework
 		RadioButton*/
 	}
 
+	public class UIProperties
+	{
+		//universal
+		public bool IsEnabled{get; set;}
+		public bool IsHidden{get; set;}
+		public bool IsReadOnly{get; set;}
+		
+		//text fields
+		public bool IsPasswordField{get; set;}
+		public bool IsRightToLeft{get; set;}
+
+		//appearance
+		//universal
+		public Color DisplayNameColor {get; set;}
+		public Color DescriptionColor {get; set;}
+		
+		public Color EntryBaseColor{get; set;}
+		public Color EntryDataSectionColor{get; set;}
+
+		public int DisplayNameFontSize {get; set;}
+		public int DescriptionFontSize {get; set;}
+
+
+
+
+	}
+
 	
 }

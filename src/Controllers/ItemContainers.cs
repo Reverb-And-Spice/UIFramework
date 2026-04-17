@@ -35,7 +35,7 @@ namespace UIFramework
 		public abstract class ListArea : SubModelController
 		{
 			protected UIFModel.IHoldSubmodels _model => (UIFModel.IHoldSubmodels)_internalModel;
-			
+
 			public virtual void ContainerReset()
 			{
 				Model = null;
@@ -67,6 +67,7 @@ namespace UIFramework
 					return;
 				ContainerReset();
 				Model = model;
+				_rootWindow = FindRootWindow();
 				BuildFromModelList();
 			}
 
@@ -81,8 +82,9 @@ namespace UIFramework
 				{
 					GameObject uiElement = model.GetNewUIInstance();//GameObject.Instantiate(GetUIPrefabForModel(model), this.gameObject.transform);
 					uiElement.SetActive(true);
-					uiElement.transform.SetParent(this.gameObject.transform,false);
-
+					uiElement.transform.SetParent(this.gameObject.transform, false);
+					uiElement.transform.localScale = Vector3.one;
+					uiElement.transform.localPosition = Vector3.zero;
 
 
 					IChildable ViewController;
@@ -96,14 +98,15 @@ namespace UIFramework
 							ViewController = uiElement.GetComponent<UIFController.Entry>();
 							_rootWindow.CatRegistryPanel.SelectTab(Model as UIFModel.IHoldSubmodels);
 							break;
-						case UIFModel.IHoldSubmodels tabModel:
+						case UIFModel.SelectableModelBase tabModel:
 							ViewController = uiElement.GetComponent<UIFController.TabButtonController>();
 							try
 							{
 								_rootWindow.ModRegistryPanel.SelectTab(Model as UIFModel.IHoldSubmodels);
-							}catch (Exception ex)
+							}
+							catch (Exception ex)
 							{
-								Debug.Log(ex.Message);
+								Debug.Log($"{ex.Message}");// _rootWindow is null? {_rootWindow is null}. Model type: {Model.GetType}. Model is null? {Model is null}", true);
 							}
 							break;
 						default:
@@ -116,6 +119,8 @@ namespace UIFramework
 						ViewController.Model = model;
 					}
 				}
+				LayoutRebuilder.ForceRebuildLayoutImmediate(GetComponent<RectTransform>());
+
 			}
 			/// <summary>
 			/// 
@@ -123,10 +128,12 @@ namespace UIFramework
 			/// <param name="buttonModel"></param>
 			public void SelectTab(UIFModel.IHoldSubmodels buttonModel)
 			{
-				for(int i = 0; i < transform.childCount; i++)
+				for (int i = 0; i < transform.childCount; i++)
 				{
 					TabButtonController tabButton = transform.GetChild(i).GetComponent<TabButtonController>();
-					if(tabButton.Model == buttonModel)
+					if (tabButton is null)
+						return;
+					if (tabButton.Model == buttonModel)
 					{
 						tabButton.GetComponent<Image>().color = _rootWindow.openTabColor;
 					}
@@ -176,7 +183,7 @@ namespace UIFramework
 			{
 				SelectedCategory?.SaveAction();
 
-				
+
 
 			}
 			/// <inheritdoc/>
@@ -185,7 +192,7 @@ namespace UIFramework
 				SelectedCategory.DiscardAction();
 				BuildFromModelList();
 			}
-			
+
 		}
 	}
 }

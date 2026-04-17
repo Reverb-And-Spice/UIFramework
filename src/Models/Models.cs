@@ -68,7 +68,7 @@ namespace UIFramework
 
 				foreach (MelonPreferences_Category cat in catList)
 				{
-					SubModels.Add(new ModelMelonCategory(cat));
+					SubModels.Add(new ModelMelonCategory(cat, this));
 
 				}
 			}
@@ -94,12 +94,13 @@ namespace UIFramework
 			/// <summary>
 			/// Creates a new instance of this class based on a MelonPreferences_Category
 			/// </summary>
-			public ModelMelonCategory(MelonPreferences_Category cat)
+			public ModelMelonCategory(MelonPreferences_Category cat, ModelModItem parentMod)
+				: base(parentMod)
 			{
 				PrefCat = cat;
 				foreach (MelonPreferences_Entry entry in PrefCat.Entries)
 				{
-					SubModels.Add(new ModelMelonEntry(entry));
+					SubModels.Add(new ModelMelonEntry(entry, this));
 				}
 
 			}
@@ -120,13 +121,13 @@ namespace UIFramework
 		/// <summary>
 		/// 
 		/// </summary>
-		public class ModelMelonEntry : ModelEntryItem
+		public class ModelMelonEntry : ModelDataEntryBase
 		{
 
 			/// <summary>
 			/// MelonPreferences_Entry this model is meant to adapt
 			/// </summary>
-			public virtual MelonPreferences_Entry PrefEntry { get; set; }
+			public MelonPreferences_Entry PrefEntry { get; set; }
 			/// <inheritdoc/>
 			public override string Identifier => PrefEntry.Identifier;
 			/// <inheritdoc/>
@@ -137,34 +138,16 @@ namespace UIFramework
 			/// <summary>
 			/// Direct access to the PrefEntry boxedvalue property
 			/// </summary>
-			public object BoxedValue
+			public override object BoxedValue
 			{
 				get => PrefEntry.BoxedValue;
-				set => PrefEntry.BoxedValue = value;
-			}
-
-
-			public bool TryApply(object value)
-			{
-				bool result = false;
-				try
-				{
-					BoxedValue = value;
-					result = true;
-				}
-				catch (Exception ex)
-				{
-					Debug.Log($"ModelMelonEntry TryApply: {ex.Message}", false, 2);
-					result = false;
-
-				}
-				return result;
-
+				protected set => PrefEntry.BoxedValue = value;
 			}
 			/// <summary>
 			/// Creates a new instance of this object based around a MelonPreferences_Entry object
 			/// </summary>
-			public ModelMelonEntry(MelonPreferences_Entry prefEntry)
+			public ModelMelonEntry(MelonPreferences_Entry prefEntry, ModelCategoryItem parentCategory)
+				: base(parentCategory)
 			{
 				PrefEntry = prefEntry;
 				SavedValue = prefEntry.BoxedValue;

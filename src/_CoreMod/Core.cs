@@ -6,6 +6,8 @@ using UnityEngine;
 using static UIFramework.Debug;
 using System.Diagnostics;
 using UnityEngine.InputSystem;
+using UnityEngine.Jobs;
+using System.Collections;
 
 [assembly: MelonInfo(typeof(UIFramework.Core), UIFramework.BuildInfo.Name, UIFramework.BuildInfo.Version, UIFramework.BuildInfo.Author)]
 [assembly: MelonGame("Buckethead Entertainment", "RUMBLE")]
@@ -23,7 +25,7 @@ namespace UIFramework
 		/// <summary></summary>
 		public const string Author = "Reverb && Spice";
 		/// <summary></summary>
-		public const string Version = "0.6.1";
+		public const string Version = "0.7.1";
 	}
 
 
@@ -36,20 +38,27 @@ namespace UIFramework
 
 		internal string CurrentScene = "";
 		internal bool isFirstLoad = true;
-
+		internal GameObject ModUIWindow;
 
 		internal Stopwatch displayTime = new Stopwatch();
 
 		internal int inactiveTimeLimit => (Preferences.InactivityTimeout?.Value * 1000) ?? 30000;
 
+		
+
+
 
 #pragma warning disable CS1591
 		public override void OnInitializeMelon()
 		{
-
-			LoggerInstance.Msg("Initialized.");
+			rightGrip.AddBinding("<XRController>{RightHand}/grip");
+			rightPrimary.AddBinding("<XRController>{RightHand}/primaryButton");
+			leftGrip.AddBinding("<XRController>{LeftHand}/grip");
+			leftPrimary.AddBinding("<XRController>{LeftHand}/primaryButton");
+			map.Enable();
 			Instance = this;
 			MelonPreferences.OnPreferencesSaved.Subscribe(MelPrefsSaved);
+			LoggerInstance.Msg("Initialized.");
 
 		}
 		public override void OnLateInitializeMelon()
@@ -63,13 +72,13 @@ namespace UIFramework
 
 			if (isFirstLoad)
 				return;
-			Debug.DiffLog($"UI is Visible {UI.IsVisible}",true);
+			//Debug.DiffLog($"UI is Visible {UI.IsVisible}",true);
 			AutoHideCheck();
 
 		}
 		private void UiToggleInputCheck()
 		{
-			if (!Input.GetKeyDown(KeyCode.F9))
+			if (!(Input.GetKeyDown(KeyCode.F9) || VRActivationAction()))
 				return;
 
 			if (CurrentScene == "loader")
@@ -81,6 +90,54 @@ namespace UIFramework
 
 		}
 
+		#region Baumritter-generated
+		//VR input variables
+		private static InputActionMap map = new InputActionMap("Tha Map");
+		private static InputAction rightGrip = map.AddAction("Right Trigger");
+		private static InputAction rightPrimary = map.AddAction("Right Primary");
+		private static InputAction leftGrip = map.AddAction("Left Trigger");
+		private static InputAction leftPrimary = map.AddAction("Left Primary");
+		private bool VRButtonsPressed = false;
+		/// <summary>
+		/// Checks if activation by VR input has been pressed
+		/// </summary>
+		/// <returns></returns>
+		/// <remarks>
+		/// Code yoinked from Baumritter's ModUI
+		/// </remarks>
+		private bool VRActivationAction()
+        {
+			if (isFirstLoad)
+				return false;
+			if (!Preferences.VrInputToggle.Value)
+				return false;
+            float High = 0.9f;
+            float Low = 0.1f;
+			float tRightDepress = rightGrip.ReadValue<float>();
+			float pRightPress = rightPrimary.ReadValue<float>();
+			float tLeftDepress = leftGrip.ReadValue<float>();
+			float pLeftPress = rightPrimary.ReadValue<float>();
+
+/*			Debug.DiffLog($"TR: {tRightDepress}\n" +
+				$"PR: {pRightPress}\n" +
+				$"TL: {tLeftDepress}\n" +
+				$"PL: {pLeftPress}", true);*/
+
+
+
+			if (tRightDepress >= High && pRightPress >= High && tLeftDepress >= High && pLeftPress >= High && !VRButtonsPressed)
+            {
+                VRButtonsPressed = true;
+                return true;
+            }
+            if (tRightDepress <= Low && pRightPress <= Low && tLeftDepress <= Low && pLeftPress <= Low && VRButtonsPressed)
+            {
+                VRButtonsPressed = false;
+            }
+            return false;
+
+        }
+		#endregion
 		private void AutoHideCheck()
 		{
 			//Don't proceed if Autohide preference is set to false or null
@@ -108,7 +165,13 @@ namespace UIFramework
 
 			//Once user hasn't interacted with mouse or keyboard abev the inactive time limit, hide the UI window
 			if (displayTime.ElapsedMilliseconds >= inactiveTimeLimit)
+			{
 				UI.MainWindow.SetActive(false);
+				if(Preferences.HijackModUI.Value)
+				{
+					ModUIWindow?.SetActive(false);
+				}
+			}
 		}
 
 		private bool UserInteracted()
@@ -134,6 +197,7 @@ namespace UIFramework
 
 		public override void OnSceneWasLoaded(int buildIndex, string sceneName)
 		{
+			Debug.Log($"Current buildIndex = {buildIndex} was loaded. sceneName = {sceneName}");
 			CurrentScene = sceneName.ToNormal();
 			if (CurrentScene == "loader")
 			{
@@ -147,6 +211,7 @@ namespace UIFramework
 				if (UI.MainWindow.activeSelf)
 				{
 					UI.MainWindow.SetActive(!Preferences.AutoHideOnSceneLoad.Value);
+					ModUIWindow?.SetActive(!(Preferences.HijackModUI.Value && Preferences.AutoHideOnSceneLoad.Value));
 				}
 			}
 		}
@@ -158,7 +223,7 @@ namespace UIFramework
 		internal void FirstGymLoad()
 		{
 			BuildUI();
-
+			MelonCoroutines.Start(FindModUI());
 
 			isFirstLoad = false;
 		}
@@ -184,10 +249,19 @@ namespace UIFramework
 
 			Prefabs.LoadAssetBundle();
 
-			UI.InitializeUIObjects();
+			UI.InitializeUIObjects();			
+			UI.MainWindow.SetActive(false);
 			UI.BuildUI();
 
-			UI.MainWindow.SetActive(false);
+		}
+
+		public IEnumerator FindModUI()
+		{
+			yield return null;
+			GameObject uiObject = GameObject.Find("Game Instance/UI");
+			GameObject modUiWindow = uiObject.transform.Find("Mod_Setting_UI").gameObject;
+			ModUIWindow = modUiWindow;
+		
 		}
 
 		public void MelPrefsSaved(string s)

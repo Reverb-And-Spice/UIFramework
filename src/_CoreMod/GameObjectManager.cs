@@ -12,6 +12,7 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using static Il2CppSystem.DateTimeParse;
 using Il2CppExitGames.Client.Photon;
+using MelonLoader.TinyJSON;
 
 namespace UIFramework
 {
@@ -31,6 +32,8 @@ namespace UIFramework
 		/// Temporary game object storage as they're being instantiated
 		/// </summary>
 		internal static GameObject TempStorage = new GameObject("TempStorage");
+		internal static GameObject HiddenStorage = new GameObject("HiddenStorage");
+
 		public static GameObject MainCanvasSource;
 		internal static GameObject ModDisplayList;
 		internal static GameObject CatDisplayList;
@@ -60,6 +63,8 @@ namespace UIFramework
 			TempStorage.transform.SetParent(UIFGameObjects.transform,false);
 			TempStorage.SetActive(false);
 
+			HiddenStorage.transform.SetParent(UIFGameObjects.transform,false);
+			HiddenStorage.SetActive(false);
 			AssetBundleLoaded = GameObject.Instantiate(LoadAssetFromStream<GameObject>(Core.Instance, "UIFramework.Assets.uiframework", "UIframework"), UIFGameObjects.transform);
 			AssetBundleLoaded.name = "UIFrameworkAssets";
 
@@ -91,6 +96,30 @@ namespace UIFramework
 
 			DiscardButton = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "DiscardActionButton")?.gameObject.GetComponent<Button>();
 			DiscardButton.gameObject.SetActive(false);
+
+
+			MainCanvasSource.transform.SetParent(HiddenStorage.transform, false);
+
+			/*//skip direct children of main window
+			 * ModDisplayList.transform.SetParent(HiddenStorage.transform, false);
+			 * CatDisplayList.transform.SetParent(HiddenStorage.transform, false);
+			PrefDisplayList.transform.SetParent(HiddenStorage.transform,false);*/
+
+			ModTab.transform.SetParent(HiddenStorage.transform, false);
+			CatTab.transform.SetParent(HiddenStorage.transform, false);
+
+			TextPrefab.transform.SetParent(HiddenStorage.transform,false);
+			BoolPrefab.transform.SetParent(HiddenStorage.transform, false);
+
+			IntPrefab.transform.SetParent(HiddenStorage.transform, false);
+			FloatPrefab.transform.SetParent(HiddenStorage.transform, false);
+			DoublePrefab.transform.SetParent(HiddenStorage.transform ,false);
+
+			DropDownPrefab.transform.SetParent(HiddenStorage.transform, false );
+
+			ButtonPrefab.transform.SetParent(HiddenStorage.transform,false );
+
+
 
 
 

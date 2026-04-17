@@ -1,3 +1,20 @@
+### New in 0.7.1
+<details><summary>New setting: VR Toggle</summary>
+Toggle UI Framework window using your controllers by pressing both grips on both hands
+and pressing both primary buttons on both hands (X and A)
+
+</details>
+<details><summary>New setting: Force Hide ModUI</summary>
+Never leave ModUI accidentally open again. 
+Enabling this setting will make UI Framework hide the ModUI window when UI Framework hides. 
+This setting does not support the inactivity timer if ModUI is open by itself but does support hide on scene load
+
+</details>
+<details><summary>Bug fix: (hopefully) Fix layout quirks involving scroll views</summary>
+Hopefully, this fixes the issue with tabs all being squished to one side or only half showing.
+
+</details>
+
 ### New in 0.6.2
 <details><summary>New Feature: Plugin support</summary>
 I just completely forgot about those.
@@ -12,7 +29,7 @@ Your mod can now check if UIFramework is currently open.
 -----
 # For Users
 Drop the dll in your mods folder. 
-#### **Default toggle is the `F9` key**
+### **Default toggle is the `F9` key**
 
 Changing a value of an entry automatically updates the value of the preference and is applied. How that preference's parent mod reacts depends on the modder's implementation.
 
@@ -39,8 +56,11 @@ private void MyModSaved()
 }
 ```
 ```cs
-UI.Register(this, OBSAutoRecorderSettings, TestCategory1, TestCategory2...).OnModSaved += MyModSaved;
+UI.Register((MelonBase)this, OBSAutoRecorderSettings, TestCategory1, TestCategory2...).OnModSaved += MyModSaved;
 ```
+<sup>Casting to melonbase isn't necessary but it forces your compiler to use the newer MelonBase registration instead of the obsolete MelonMod registration
+In the future, all mods will be registered as MelonBase by default and the cast won't be needed. 
+But the cast makes sure that your mod won't break when the old MelonMod registration gets removed</sup>
 
 
 -----
@@ -130,4 +150,5 @@ UI.Register((MelonBase)this, TestCategory1, TestCategory2);
 Okay, so for real this time: **<ins>Basic MelonPreferences registration is stable and should always be backwards compatible.</ins>** 
 
 ### XML Documentation File
-You can place the .xml documentation file for UIFramework in the same folder as the dll to get intellisense documentation for the API. It is currently incomplete, however but I do add to it every update.
+You can place the .xml documentation file for UIFramework in the same folder as the dll to get intellisense documentation for the API. 
+It is currently incomplete, however but I do add to it every update.

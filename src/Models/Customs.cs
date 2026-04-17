@@ -27,12 +27,14 @@ namespace UIFramework
 			/// <inheritdoc/>
 			public override string Identifier => _identifier;
 
-			public EmptyCategory(string identifier, string displayName)
+			public EmptyCategory(string identifier, string displayName, ModelModItem parentMod = null)
+				: base(parentMod)
 			{
 				_identifier = identifier;
 				_displayName = displayName;
 			}
-			public EmptyCategory(string identifier)
+			public EmptyCategory(string identifier, ModelModItem parentMod = null)
+				: base(parentMod)
 			{
 				_identifier = identifier;
 				_displayName = identifier;
@@ -65,7 +67,8 @@ namespace UIFramework
 			public Action<UIFController.ButtonEntry> OnClick;
 
 
-			public ButtonEntry(Action<UIFController.ButtonEntry> onClick, string name, string description = "", string displayName = "")
+			public ButtonEntry(Action<UIFController.ButtonEntry> onClick, string name, string description = "", string displayName = "", ModelCategoryItem parentCategory = null)
+				: base(parentCategory)
 			{
 				_name = name;
 				_description = description;
