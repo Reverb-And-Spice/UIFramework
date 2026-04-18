@@ -214,7 +214,7 @@ namespace UIFramework
 						case Enum:
 							return UI.GetPrefab(InputType.Dropdown);
 						default:
-							Debug.Log("Unsupported type detected with no custom widget prefab provided. Defaulting to text input. Creating custom component recommended", false, 1);
+							Debug.Log("Unsupported type detected with no custom widget prefab provided. Defaulting to text input. Creating custom component recommended", true, 1);
 							return UI.GetPrefab(InputType.TextField);
 					}
 				}

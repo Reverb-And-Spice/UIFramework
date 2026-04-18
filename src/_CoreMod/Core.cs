@@ -44,9 +44,6 @@ namespace UIFramework
 
 		internal int inactiveTimeLimit => (Preferences.InactivityTimeout?.Value * 1000) ?? 30000;
 
-		
-
-
 
 #pragma warning disable CS1591
 		public override void OnInitializeMelon()

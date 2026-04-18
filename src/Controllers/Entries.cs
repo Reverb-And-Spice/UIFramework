@@ -1,9 +1,15 @@
 ﻿using AssetsTools.NET.Extra;
 using Il2CppInterop.Runtime;
+using Il2CppSystem.Collections.Generic;
 using Il2CppTMPro;
 using MelonLoader;
 using MelonLoader.Logging;
 using MonoMod.ModInterop;
+using System.ComponentModel.DataAnnotations;
+using System.Reflection;
+using Tomlet;
+using Tomlet.Models;
+
 //using System;
 /*using System.Linq;
 using System.Text;
@@ -11,11 +17,8 @@ using System.Threading.Tasks;*/
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-using static Unity.Collections.AllocatorManager;
 using static UIFramework.Debug;
-using Il2CppSystem.Collections.Generic;
-using System.Reflection;
-using System.ComponentModel.DataAnnotations;
+using static Unity.Collections.AllocatorManager;
 namespace UIFramework
 {
 	public partial class UIFController
@@ -26,18 +29,21 @@ namespace UIFramework
 			/// <summary>
 			/// Sets the description text
 			/// </summary>
-			public virtual string DescriptionText { 
-				get { return this.gameObject.transform.Find("Description").gameObject.GetComponent<TextMeshProUGUI>().text; } 
-				set { this.gameObject.transform.Find("Description").gameObject.GetComponent<TextMeshProUGUI>().text = value; } }
+			public virtual string DescriptionText
+			{
+				get { return this.gameObject.transform.Find("Description").gameObject.GetComponent<TextMeshProUGUI>().text; }
+				set { this.gameObject.transform.Find("Description").gameObject.GetComponent<TextMeshProUGUI>().text = value; }
+			}
 			/// <summary>
 			/// Sets the identifier text
 			/// </summary>
-			public virtual string DisplayName {
+			public virtual string DisplayName
+			{
 				get { return this.gameObject.gameObject.transform.Find("Data/Label").gameObject.GetComponent<TextMeshProUGUI>().text; }
 				set { this.gameObject.gameObject.transform.Find("Data/Label").gameObject.GetComponent<TextMeshProUGUI>().text = value; }
 			}
 
-			public virtual EntryState EntryStatus {get; set;}
+			public virtual EntryState EntryStatus { get; set; }
 
 			/// <summary>
 			/// Runs when the model property has been set. 
@@ -59,6 +65,31 @@ namespace UIFramework
 				DisplayName = EntryModel.DisplayName;
 				EntryModel.OnUICreated?.Invoke(this);
 			}
+			/// <summary>
+			/// Serializes an object into the toml string representation of that object
+			/// </summary>
+			/// <param name="input"></param>
+			/// <returns></returns>
+			public string ToTomlString(object input)
+			{
+				return TomletMain.ValueFrom(input).SerializedValue;
+			}
+			/// <summary>
+			/// Parses a toml string into an object of type with its value.
+			/// </summary>
+			/// <param name="input"></param>
+			/// <param name="targetType"></param>
+			/// <returns></returns>
+			public object FromTomlString(string input, Type targetType)
+			{
+				string wrappedEntry = $"temp = {input.Trim()}";
+
+				TomlParser parser = new TomlParser();
+				TomlDocument inputToml = parser.Parse(wrappedEntry);
+				TomlValue inputVal = inputToml.GetValue("temp");
+
+				return TomletMain.To(targetType, inputVal);
+			}
 		}
 
 		/// <summary>
@@ -67,10 +98,10 @@ namespace UIFramework
 		/// </summary>
 		public abstract class MelonEntry : Entry
 		{
-			
+
 
 			/// <inheritdoc/>
-			public override void ModelSet() { base.ModelSet();}
+			public override void ModelSet() { base.ModelSet(); }
 
 			/// <inheritdoc/>
 			public virtual bool ValidationCheck()
@@ -86,14 +117,15 @@ namespace UIFramework
 				base.SaveAction();
 			}
 
-			public virtual void ApplyValueToPref(){ }
+			public virtual void ApplyValueToPref() { }
 		}
 
 
 		/// <summary>
 		/// Base controller for text fields 
 		/// </summary>
-		public abstract class TextInputEntry : MelonEntry
+		[RegisterTypeInIl2Cpp]
+		public class TextInputEntry : MelonEntry
 		{
 			/// <summary>
 			/// TODO: This is jank. Deal with this by creating a base class for preference entries that aren't based on melonloader.
@@ -110,9 +142,48 @@ namespace UIFramework
 			/// <inheritdoc/>
 			public override void ModelSet()
 			{
-				textField.text = _prefModel.BoxedValue.ToString();
+				//textField.text = _prefModel.BoxedValue.ToString();
+				//TomletMain.TomlStringFrom(_prefModel.BoxedValue).Trim();
+				if (_prefModel.BoxedValue.GetType() == typeof(string))
+				{
+					textField.text = (string)_prefModel.BoxedValue;
+				}
+				else
+				{
+					try
+					{
+						textField.text = ToTomlString(_prefModel.BoxedValue);
+						Debug.Log(ToTomlString(_prefModel.BoxedValue), true);
+					}
+					catch (Exception ex)
+					{
+						Debug.Log($"{ex.Message}\n{ex.StackTrace}");
+					}
+				}
 				base.ModelSet();
-			} 
+			}
+			public override void ApplyValueToPref()
+			{
+				if (_prefModel.BoxedValue.GetType() == typeof(string))
+				{
+					_prefModel.SetDataValue(textField.text);
+				}
+				else
+				{
+					try
+					{
+						if (textField.text.Trim() != "")
+						{
+							_prefModel.SetDataValue(FromTomlString(textField.text, _prefModel.BoxedValue.GetType()));
+							Debug.Log($"Toml data parsed {FromTomlString(textField.text, _prefModel.BoxedValue.GetType())}");
+						}
+					}
+					catch (Exception ex)
+					{
+						Log(ex.Message, false, 2);
+					}
+				}
+			}
 
 			public override void EditCheck()
 			{
@@ -127,7 +198,7 @@ namespace UIFramework
 			public virtual void EditStart(string s)
 			{
 				textField.textComponent.fontStyle = FontStyles.Normal;
-			} 
+			}
 			public virtual void EditEnd(string s)
 			{
 				textField.textComponent.fontStyle = FontStyles.Italic;
@@ -145,109 +216,6 @@ namespace UIFramework
 		/// 
 		/// </summary>
 		[RegisterTypeInIl2Cpp]
-
-		public class PrefText : TextInputEntry
-		{
-			/// <summary>
-			///
-			/// </summary>
-			public virtual string EnteredValue => textField.text;
-			/// <inheritdoc/>
-
-			public override void ApplyValueToPref()
-			{
-				try
-				{
-					if (EnteredValue.Trim() != "")
-					{
-						_prefModel.SetDataValue(EnteredValue);
-					}
-				}
-				catch (Exception ex)
-				{
-					Log(ex.Message, false, 2);
-				}
-			}
-		}
-		/// <summary>
-		/// 
-		/// </summary>
-		[RegisterTypeInIl2Cpp]
-		public class PrefInt : TextInputEntry
-		{
-			public int EnteredValue => int.Parse(textField.text);
-			/// <inheritdoc/>
-			public override void ApplyValueToPref()
-			{
-				try
-				{
-					if (textField.text.Trim() != "")
-					{
-						_prefModel.SetDataValue(int.Parse(textField.text.Trim()));
-					}
-				}
-				catch (Exception ex)
-				{
-					Log($"{ex.Message} {textField.text}", false, 2);
-				}
-				
-			}
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		[RegisterTypeInIl2Cpp]
-		public class PrefFloat : TextInputEntry
-		{
-			public float EnteredValue => float.Parse(textField.text);
-
-			public override void ApplyValueToPref()
-			{
-				try
-				{
-					if (textField.text.Trim() != "")
-					{
-						_prefModel.SetDataValue(float.Parse(textField.text.Trim()));
-					}
-				}
-				catch (Exception ex)
-				{
-					Log($"{ex.Message} {textField.text}", false, 2);
-				}
-				
-			}
-		}
-		/// <summary>
-		/// 
-		/// </summary>
-		[RegisterTypeInIl2Cpp]
-		public class PrefDouble : TextInputEntry
-		{
-			public double EnteredValue => double.Parse(textField.text);
-			/// <inheritdoc/>
-
-			public override void ApplyValueToPref()
-			{
-				try
-				{
-					if (textField.text.Trim() != "")
-					{
-						_prefModel.SetDataValue(double.Parse(textField.text.Trim()));
-					}
-				}
-				catch (Exception ex)
-				{
-					Log($"{ex.Message} {textField.text}", false, 2);
-				}
-				
-			}
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		[RegisterTypeInIl2Cpp]
 		public class PrefBool : MelonEntry
 		{
 			protected Toggle toggle => this.gameObject.transform.Find("Data/Toggle").gameObject.GetComponent<Toggle>();
@@ -258,17 +226,17 @@ namespace UIFramework
 			{
 				toggle.isOn = (bool)_prefModel.BoxedValue;
 				toggle.onValueChanged.AddListener((UnityAction<bool>)OnValueChanged);
-				
+
 				base.ModelSet();
 
 			}
 			/// <inheritdoc/>
 			public override void EditCheck()
 			{
-				
+
 			}
 
-			public void OnValueChanged(bool newValue )
+			public void OnValueChanged(bool newValue)
 			{
 				ApplyValueToPref();
 			}
@@ -286,7 +254,7 @@ namespace UIFramework
 			}
 		}
 
-		
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -306,7 +274,7 @@ namespace UIFramework
 
 				//Get a list of display name attributes or the enum name if not available
 				Il2CppSystem.Collections.Generic.List<string> enumNames = new();
-				foreach(var value in Enum.GetValues(prefEnum))
+				foreach (var value in Enum.GetValues(prefEnum))
 				{
 					FieldInfo info = prefEnum.GetField(value.ToString());
 					DisplayAttribute attr = info?.GetCustomAttribute<DisplayAttribute>();
@@ -314,7 +282,7 @@ namespace UIFramework
 					_indexToValueMap.Add(Convert.ToInt32(value));
 				}
 
-				
+
 				dropdown.ClearOptions();
 				dropdown.AddOptions(enumNames);
 
@@ -327,10 +295,10 @@ namespace UIFramework
 			/// <inheritdoc/>
 			public override void EditCheck()
 			{
-				
+
 			}
 
-			public void OnValueChanged(int index )
+			public void OnValueChanged(int index)
 			{
 				ApplyValueToPref();
 			}
