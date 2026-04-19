@@ -46,7 +46,7 @@ namespace UIFramework
 		internal static GameObject BoolPrefab;
 		internal static GameObject IntPrefab;
 		internal static GameObject FloatPrefab;
-		internal static GameObject DoublePrefab;
+		//internal static GameObject DoublePrefab;
 		internal static GameObject DropDownPrefab;
 		
 
@@ -84,7 +84,7 @@ namespace UIFramework
 			
 			IntPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryInt")?.gameObject;
 			FloatPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryFloat")?.gameObject;
-			DoublePrefab = GameObject.Instantiate(FloatPrefab, AssetBundleLoaded.transform);
+			//DoublePrefab = GameObject.Instantiate(FloatPrefab, AssetBundleLoaded.transform);
 
 			DropDownPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryDropdown")?.gameObject;
 
@@ -135,7 +135,7 @@ namespace UIFramework
 			
 			IntPrefab.AddComponent<UIFController.TextInputEntry>();
 			FloatPrefab.AddComponent<UIFController.TextInputEntry>();
-			DoublePrefab.AddComponent<UIFController.TextInputEntry>();
+			//DoublePrefab.AddComponent<UIFController.TextInputEntry>();
 			
 			DropDownPrefab.AddComponent<UIFController.PrefDropDown>();
 

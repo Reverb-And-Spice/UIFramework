@@ -205,14 +205,25 @@ namespace UIFramework
 							return UI.GetPrefab(InputType.Toggle);
 						case string:
 							return UI.GetPrefab(InputType.TextField);
-						case int:
-							return UI.GetPrefab(InputType.NumericInt);
-						case float:
-							return UI.GetPrefab(InputType.NumericFloat);
-						case double:
-							return UI.GetPrefab(InputType.NumericDouble);
 						case Enum:
 							return UI.GetPrefab(InputType.Dropdown);
+
+						//numerics
+						//integer types
+						case sbyte:
+						case byte:
+						case short:
+						case ushort:
+						case int:
+						case uint:
+						case long:
+						case ulong:
+							return UI.GetPrefab(InputType.NumericInt);
+						//floating point types
+						case float:
+						case double:
+						case decimal:
+							return UI.GetPrefab(InputType.NumericFloat);
 						default:
 							Debug.Log("Unsupported type detected with no custom widget prefab provided. Defaulting to text input. Creating custom component recommended", true, 1);
 							return UI.GetPrefab(InputType.TextField);
