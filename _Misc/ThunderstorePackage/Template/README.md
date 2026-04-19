@@ -1,32 +1,14 @@
-### New in 0.7.1
-<details><summary>New setting: VR Toggle</summary>
-Toggle UI Framework window using your controllers by pressing both grips on both hands
-and pressing both primary buttons on both hands (X and A)
+<sup> btw: The changelog doubles as a feature list </sup> 
+### New in 0.8.0
+<details><summary>New Feature: Expanded Type Support</summary>
+Serialization and parsing is now handled by Tomlet. 
+Anything Tomlet supports is now technically supported by UIFramework.
 
-</details>
-<details><summary>New setting: Force Hide ModUI</summary>
-Never leave ModUI accidentally open again. 
-Enabling this setting will make UI Framework hide the ModUI window when UI Framework hides. 
-This setting does not support the inactivity timer if ModUI is open by itself but does support hide on scene load
-
-</details>
-<details><summary>Bug fix: (hopefully) Fix layout quirks involving scroll views</summary>
-Hopefully, this fixes the issue with tabs all being squished to one side or only half showing.
-
-</details>
-
-### New in 0.6.2
-<details><summary>New Feature: Plugin support</summary>
-I just completely forgot about those.
-
-<sup>I did have to change the .Register() function's signature. Right now, I have an overload for the old function for backwards compatibility. More details at the bottom of the page </sup>
-</details>
-
-<details><summary>New Feature: Exposed UI.IsVisible Property</summary>
-Your mod can now check if UIFramework is currently open. 
-</details>
+More details in the [For Modders](#for-modders) section
+</details> 
 
 -----
+
 # For Users
 Drop the dll in your mods folder. 
 ### **Default toggle is the `F9` key**
@@ -44,7 +26,17 @@ Add `[assembly: MelonAdditionalDependencies("UIFramework")]` to your AssemblyInf
 ```cs
 UI.Register(this, TestCategory1, TestCategory2...);
 ```
-Right now, support is limited to common types like `string`, `int`, `bool`, `double`, `float`, and `enums` without the flags attribute. Working on expanding this. 
+~~Right now, support is limited to common types like `string`, `int`, `bool`, `double`, `float`, and `enums` without the flags attribute. Working on expanding this.~~
+
+### Type Support: Whatever works with Tomlet
+<details> <summary>Expanded Type Support details</summary>
+
+Support is no longer limited to the types mentioned above. Serialization and parsing is now handled by [Tomlet](https://github.com/SamboyCoding/Tomlet). 
+This means that it supports types described in [Toml 1.0.0](https://toml.io/en/v1.0.0) and whatever Tomlet supports. [You can even make your own custom mappers](https://github.com/SamboyCoding/Tomlet/blob/master/README.md#creating-your-own-mappers)
+
+Caveat: Types handled by Tomlet will be presented as regular text inputs and they might not always look good. Numerics will have the appropriate filters.
+I do plan to continue expanding the number of custom UI presenters like I did with enums and booleans.
+ </details>
 
 
 ### Optional: OnSave Event Handler

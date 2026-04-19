@@ -128,9 +128,6 @@ namespace UIFramework
 				case InputType.NumericFloat:
 					selectedPrefab = GameObject.Instantiate(Prefabs.FloatPrefab);
 					break;
-				case InputType.NumericDouble:
-					selectedPrefab = GameObject.Instantiate(Prefabs.DoublePrefab);
-					break;
 				case InputType.Button:
 					selectedPrefab = GameObject.Instantiate(Prefabs.ButtonPrefab);
 					break;
@@ -158,8 +155,6 @@ namespace UIFramework
 		NumericInt,
 		[Display(Name = "Float input", Description = "An Input for inputing Floating Point Numbers")]
 		NumericFloat,
-		//[Display(Name = "Double input", Description = "An Input for inputing Double Precision Floating Point Numbers")]
-		NumericDouble,
 		[Display(Name = "Button", Description = "A simple button that can be clicked to trigger an action")]
 		Button,
 		[Display(Name = "Dropdown", Description = "A dropdown menu for selecting from multiple options")]

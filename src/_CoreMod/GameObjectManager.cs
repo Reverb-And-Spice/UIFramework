@@ -113,7 +113,7 @@ namespace UIFramework
 
 			IntPrefab.transform.SetParent(HiddenStorage.transform, false);
 			FloatPrefab.transform.SetParent(HiddenStorage.transform, false);
-			DoublePrefab.transform.SetParent(HiddenStorage.transform ,false);
+			//DoublePrefab.transform.SetParent(HiddenStorage.transform ,false);
 
 			DropDownPrefab.transform.SetParent(HiddenStorage.transform, false );
 

@@ -13,7 +13,7 @@ using Tomlet.Models;
 using System.Text;
 using System.Threading.Tasks;*/
 using static UIFramework.Debug;
-using TMPro.TMP_InputField;
+using Il2CppTMPro;
 namespace UIFramework.Validation
 {
 	public partial class UIFValidator : ValueValidator
@@ -24,7 +24,7 @@ namespace UIFramework.Validation
 
     public interface ITextInputOptionsProvider
     {
-        public  TMPro.TMP_InputField.ContentType ContentType {get; set;}
+        public  TMP_InputField.ContentType ContentType {get; set;}
         public bool IsRichText {get; set;}
         public bool IsReadOnly {get; set;}
         public int FontSize {get; set;}
@@ -49,7 +49,7 @@ namespace UIFramework.Validation
 
     public interface InteractionEventProvider
     {
-        public event action<EventArgs> Interaction;
+        public event Action<EventArgs> Interaction;
     }
 
     public interface UifButton
