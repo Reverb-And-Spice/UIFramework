@@ -275,4 +275,14 @@ namespace UIFramework
 			Debug.Log("Clicked Single Save Button");
 		}
 	}
+	[AttributeUsage(AttributeTargets.Assembly)]
+	public class UIInfoAttribute : Attribute
+	{
+		public string Name { get; }
+
+		public UIInfoAttribute(string name)
+		{
+			Name = name;
+		}
+	}
 }

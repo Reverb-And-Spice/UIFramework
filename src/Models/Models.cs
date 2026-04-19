@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -62,9 +63,15 @@ namespace UIFramework
 		{
 			
 			public override MelonBase Instance { get; set; }
+			
 			public ModelMod(MelonBase instance, List<MelonPreferences_Category> catList)
 			{
 				Instance = instance;
+				try
+				{
+					_displayName = typeof(MelonBase).GetCustomAttribute<UIInfoAttribute>()?.Name ?? Identifier;
+				}
+				catch (Exception ex) { }
 
 				foreach (MelonPreferences_Category cat in catList)
 				{

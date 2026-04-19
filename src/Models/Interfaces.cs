@@ -72,7 +72,7 @@ namespace UIFramework
 			public string Identifier { get; }
 			
 			/// <summary>
-			/// Description of the entry
+			/// Name of the entry
 			/// </summary>
 			public string Description { get; }
 			/// <summary>

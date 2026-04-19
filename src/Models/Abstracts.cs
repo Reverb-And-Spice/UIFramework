@@ -84,6 +84,7 @@ namespace UIFramework
 			public List<ModelCategoryItem> Categories => SubModels.Cast<ModelCategoryItem>().ToList();
 			public abstract MelonBase Instance { get; set; }
 			public override string Identifier => Instance.Info.Name;
+			public string _displayName;
 			public override string DisplayName => Identifier;
 
 			public virtual string Version => Instance.Info.Version;
