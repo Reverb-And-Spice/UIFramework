@@ -69,7 +69,9 @@ namespace UIFramework
 				Instance = instance;
 				try
 				{
-					_displayName = typeof(MelonBase).GetCustomAttribute<UIInfoAttribute>()?.Name ?? Identifier;
+					Type type = instance.GetType();
+					Assembly ass = type.Assembly;
+					_displayName = ass.GetCustomAttribute<UIInfoAttribute>()?.DisplayName ?? Identifier;
 				}
 				catch (Exception ex) { }
 

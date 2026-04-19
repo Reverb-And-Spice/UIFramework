@@ -31,8 +31,8 @@ namespace UIFramework
 			/// </summary>
 			public virtual string DescriptionText
 			{
-				get { return this.gameObject.transform.Find("Name").gameObject.GetComponent<TextMeshProUGUI>().text; }
-				set { this.gameObject.transform.Find("Name").gameObject.GetComponent<TextMeshProUGUI>().text = value; }
+				get { return this.gameObject.transform.Find("Description").gameObject.GetComponent<TextMeshProUGUI>().text; }
+				set { this.gameObject.transform.Find("Description").gameObject.GetComponent<TextMeshProUGUI>().text = value; }
 			}
 			/// <summary>
 			/// Sets the identifier text

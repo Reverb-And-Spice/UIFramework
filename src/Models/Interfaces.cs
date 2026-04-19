@@ -21,7 +21,7 @@ namespace UIFramework
 		public interface IModelable
 		{
 			/// <summary>
-			/// Name for the model
+			/// DisplayName for the model
 			/// </summary>
 			public string Identifier { get; }
 			/// <summary>
@@ -67,12 +67,12 @@ namespace UIFramework
 		{
 			
 			/// <summary>
-			/// Name/ID of the entry
+			/// DisplayName/ID of the entry
 			/// </summary>
 			public string Identifier { get; }
 			
 			/// <summary>
-			/// Name of the entry
+			/// DisplayName of the entry
 			/// </summary>
 			public string Description { get; }
 			/// <summary>

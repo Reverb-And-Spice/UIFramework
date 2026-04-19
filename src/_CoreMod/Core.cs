@@ -278,11 +278,11 @@ namespace UIFramework
 	[AttributeUsage(AttributeTargets.Assembly)]
 	public class UIInfoAttribute : Attribute
 	{
-		public string Name { get; }
+		public string DisplayName { get; }
 
-		public UIInfoAttribute(string name)
+		public UIInfoAttribute(string displayName)
 		{
-			Name = name;
+			DisplayName = displayName;
 		}
 	}
 }

@@ -85,7 +85,7 @@ namespace UIFramework
 			public abstract MelonBase Instance { get; set; }
 			public override string Identifier => Instance.Info.Name;
 			public string _displayName;
-			public override string DisplayName => Identifier;
+			public override string DisplayName => _displayName;
 
 			public virtual string Version => Instance.Info.Version;
 			/// <inheritdoc/>

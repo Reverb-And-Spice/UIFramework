@@ -4,8 +4,15 @@
 Serialization and parsing is now handled by Tomlet. 
 Anything Tomlet supports is now technically supported by UIFramework.
 
-More details in the [For Modders](#for-modders) section
+More details in the [Type Support](##type-support-whatever-works-with-tomlet) section
 </details> 
+
+<details><summary>New feature: Custom display name attribute</summary>
+
+Just add `[assembly: UIInfo("My Mod's Better\nDisplay Name")]` to your assembly attributes to display your 
+mod's name differently on its button in UI Framework. Yes, it supports line breaks
+
+</details>
 
 -----
 
@@ -54,6 +61,12 @@ UI.Register((MelonBase)this, OBSAutoRecorderSettings, TestCategory1, TestCategor
 In the future, all mods will be registered as MelonBase by default and the cast won't be needed. 
 But the cast makes sure that your mod won't break when the old MelonMod registration gets removed</sup>
 
+
+### Optional: Custom display names
+
+
+Add `[assembly: UIInfo("My Mod's Better\nDisplay Name")]` to your assembly attributesto change how the mod's name is displayed
+in the UI. Line breaks are supported.
 
 -----
 
