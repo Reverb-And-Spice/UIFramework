@@ -234,28 +234,7 @@ namespace UIFramework
 			//untested AI generated codbe
 			public void SetDataValue(object newValue)
 			{
-				Type targetType = BoxedValue.GetType();
-
-				try
-				{
-					// Enums need specialized handling if they aren't already the correct type
-					if (targetType.IsEnum)
-					{
-						// If it's already the enum type, cast it; otherwise, parse/convert
-						BoxedValue = newValue is string str 
-							? Enum.Parse(targetType, str, true) 
-							: Enum.ToObject(targetType, newValue);
-					}
-					else
-					{
-						// Handles String-to-Int, Bool-to-Int, String-to-Bool, etc.
-						BoxedValue = Convert.ChangeType(newValue, targetType);
-					}
-				}
-				catch (Exception ex)
-				{
-					MelonLogger.Error($"Conversion failed: {newValue} to {targetType.Name}. {ex.Message}");
-				}
+				BoxedValue = newValue;
 			}
 			protected GameObject _uiPrefabSource;
 			/// <summary>
