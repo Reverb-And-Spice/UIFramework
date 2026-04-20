@@ -312,7 +312,7 @@ namespace UIFramework
 		[RegisterTypeInIl2Cpp]
 		public class ButtonEntry : Entry
 		{
-			UIFModel.ButtonEntry ButtonEntry => (UIFModel.ButtonEntry)EntryModel;
+			UIFModel.ButtonEntry ButtonModel=> (UIFModel.ButtonEntry)EntryModel;
 			public GameObject ButtonGo;
 			/// <inheritdoc/>
 			public override void ModelSet()
@@ -324,7 +324,7 @@ namespace UIFramework
 
 			public void OnClickRelay()
 			{
-				ButtonEntry.OnClick?.Invoke(this);
+				ButtonModel.OnClick?.Invoke(this);
 			}
 
 			void OnDestroy()

@@ -1,11 +1,28 @@
 <sup> btw: The changelog doubles as a feature list </sup> 
 ### New in 0.8.0
+
+***Modders read this first one***
+<details><summary>New Feature: Improved MelonPreferences_Entry.Value Behavior</summary>
+
+The Value property for entries won't update anymore until the saved button is clicked.
+This also means you can now subscribe to individual entries OnEntryValueChanged event and be notified if, well it changes. It also provides parameters for old and new values
+
+</details>
+
 <details><summary>New Feature: Expanded Type Support</summary>
 Serialization and parsing is now handled by Tomlet. 
 Anything Tomlet supports is now technically supported by UIFramework.
 
-More details in the [For Modders](#for-modders) section
+More details in the [Type Support](##type-support-whatever-works-with-tomlet) section
 </details> 
+
+<details><summary>New feature: Custom display name attribute</summary>
+
+Just add `[assembly: UIInfo("My Mod's Better\nDisplay Name")]` to your assembly attributes to display your 
+mod's name differently on its button in UI Framework. Yes, it supports line breaks
+
+</details>
+
 
 -----
 
@@ -13,7 +30,11 @@ More details in the [For Modders](#for-modders) section
 Drop the dll in your mods folder. 
 ### **Default toggle is the `F9` key**
 
-Changing a value of an entry automatically updates the value of the preference and is applied. How that preference's parent mod reacts depends on the modder's implementation.
+
+~~Changing a value of an entry automatically updates the value of the preference and is applied. How that preference's parent mod reacts depends on the modder's implementation.~~
+
+<sup>* the above is no longer true as of 0.8.0. Values will not update until the saved button has been clicked</sup>
+
 
 The save button writes it to the file for permanent storage. Closing your game might also save preferences to file automatically depending on whether it's closed from the game window or through Steam. **Stopping through Steam doesn't save because it force closes it.**
 
@@ -54,6 +75,12 @@ UI.Register((MelonBase)this, OBSAutoRecorderSettings, TestCategory1, TestCategor
 In the future, all mods will be registered as MelonBase by default and the cast won't be needed. 
 But the cast makes sure that your mod won't break when the old MelonMod registration gets removed</sup>
 
+
+### Optional: Custom display names
+
+
+Add `[assembly: UIInfo("My Mod's Better\nDisplay Name")]` to your assembly attributesto change how the mod's name is displayed
+in the UI. Line breaks are supported.
 
 -----
 
@@ -102,6 +129,10 @@ TestEntry21 = TestCategory2.CreateEntry("Entry 2-1", "0.5126", "Display Name 3",
 TestEntry22 = TestCategory2.CreateEntry("Entry 2-2", true, "Display Name 4", "Test bool");
 ```
 https://melonwiki.xyz/#/modders/preferences?id=melon-preferences
+
+### Events
+- `MelonPreferences_Entry.OnEntryValueChanged`: Event that fires when the value is changed (Value is applied when you hit the save button in the UI Framework window). Provides oldValue and newValue parameters so you can monitor if it's been changed from the previous values. 
+Must be subscribed with via the `.Subscribe()` method instead of `+=`
 
 -----
 
