@@ -147,8 +147,8 @@ namespace UIFramework
 			/// </summary>
 			public override object BoxedValue
 			{
-				get => PrefEntry.BoxedValue;
-				protected set => PrefEntry.BoxedValue = value;
+				get => PrefEntry.BoxedEditedValue;
+				protected set => PrefEntry.BoxedEditedValue = value;
 			}
 			/// <summary>
 			/// Creates a new instance of this object based around a MelonPreferences_Entry object
@@ -176,7 +176,7 @@ namespace UIFramework
 			///	<inheritdoc/>
 			public override void DiscardAction()
 			{
-
+				
 			}
 		}
 	}
