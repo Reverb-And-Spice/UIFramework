@@ -38,6 +38,8 @@ namespace UIFramework
 		public abstract string GetDefaultValueAsString();
 		public abstract string GetValueAsString();
 
+        public abstract TomlValue Save();
+
 		public Action<object, object> OnEntryValueChangedUntyped;
 		protected void FireUntypedValueChanged(object old, object neew)
 		{
@@ -53,8 +55,8 @@ namespace UIFramework
 			get => myValue;
 			set
 			{
-				/*if (Validator != null)
-                    value = (T)Validator.EnsureValid(value);*/
+				if (Validator != null)
+                    value = (T)Validator.EnsureValid(value);
 
 				if ((myValue == null && value == null) || (myValue != null && myValue.Equals(value)))
 					return;
@@ -63,7 +65,7 @@ namespace UIFramework
 				myValue = value;
 				EditedValue = myValue;
 				OnEntryValueChanged?.Invoke(old, value);
-				//OnValueChanged?.Invoke(old, value);
+				//OnValueChanged?.Invoke(old, value); //deprecated in melonprefs
 				FireUntypedValueChanged(old, value);
 			}
 		}
@@ -94,9 +96,19 @@ namespace UIFramework
 		public override string GetDefaultValueAsString() => DefaultValue?.ToString();
 		public override string GetValueAsString() => Value?.ToString();
 
+		public override void Loa
+
 		public InputType InputUIType;
-
-
+        public override TomlValue Save()
+        {
+            Value = EditedValue;
+            TomlValue returnval = TomletMain.ValueFrom(Value);
+            returnval.Comments.PrecedingComment = Description;
+            returnval.Comments.InlineComment = Comment;
+            if (!string.IsNullOrEmpty(returnval.Comments.InlineComment))
+                returnval.Comments.InlineComment.Replace('\n', ' ');
+            return returnval;
+        }
 
 	}
 }
