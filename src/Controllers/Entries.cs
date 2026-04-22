@@ -96,12 +96,14 @@ namespace UIFramework
 		/// Inherit this class to create your own custom entry controllers for your own input controls.
 		/// TODO: Refactor this to suggest non-melon related settings storage
 		/// </summary>
-		public abstract class MelonEntry : Entry
+		public abstract class DataEntry : Entry
 		{
 
 
 			/// <inheritdoc/>
-			public override void ModelSet() { base.ModelSet(); }
+			//public override void ModelSet() { base.ModelSet(); }
+
+			virtual protected UIFModel.ModelDataEntryBase _prefModel => (UIFModel.ModelDataEntryBase)EntryModel;
 
 			/// <inheritdoc/>
 			public virtual bool ValidationCheck()
@@ -125,12 +127,13 @@ namespace UIFramework
 		/// Base controller for text fields 
 		/// </summary>
 		[RegisterTypeInIl2Cpp]
-		public class TextInputEntry : MelonEntry
+		public class TextInputEntry : DataEntry
 		{
 			/// <summary>
 			/// TODO: This is jank. Deal with this by creating a base class for preference entries that aren't based on melonloader.
 			/// </summary>
-			protected UIFModel.ModelDataEntryBase _prefModel => (UIFModel.ModelDataEntryBase)EntryModel;
+			//protected UIFModel.ModelDataEntryBase _prefModel => (UIFModel.ModelDataEntryBase)EntryModel;
+
 			/// <summary>
 			/// Returns the textfield
 			/// </summary>
@@ -216,10 +219,10 @@ namespace UIFramework
 		/// 
 		/// </summary>
 		[RegisterTypeInIl2Cpp]
-		public class PrefBool : MelonEntry
+		public class PrefBool : DataEntry
 		{
 			protected Toggle toggle => this.gameObject.transform.Find("Data/Toggle").gameObject.GetComponent<Toggle>();
-			protected UIFModel.ModelDataEntryBase _prefModel => (UIFModel.ModelDataEntryBase)EntryModel;
+			//protected override UIFModel.ModelDataEntryBase _prefModel => (UIFModel.ModelDataEntryBase)EntryModel;
 			public bool EnteredValue => this.gameObject.transform.Find("Data/Toggle").gameObject.GetComponent<Toggle>().isOn;
 			/// <inheritdoc/>
 			public override void ModelSet()
@@ -254,12 +257,20 @@ namespace UIFramework
 			}
 		}
 
+		[RegisterTypeInIl2Cpp]
+		public class PrefSlider : DataEntry
+		{
+			protected Slider Slider => this.gameObject.transform.Find("Data/SliderControl").gameObject.GetComponent<UnityEngine.UI.Slider>();
+			
+
+		}
+
 
 		/// <summary>
 		/// 
 		/// </summary>
 		[RegisterTypeInIl2Cpp]
-		public class PrefDropDown : MelonEntry
+		public class PrefDropDown : DataEntry
 		{
 			protected UIFModel.ModelDataEntryBase _prefModel => (UIFModel.ModelDataEntryBase)EntryModel;
 			public System.Collections.Generic.List<int> _indexToValueMap = new();
@@ -337,7 +348,7 @@ namespace UIFramework
 		/// 
 		/// </summary>
 		/*[RegisterTypeInIl2Cpp]
-		public class PrefMulti : MelonEntry
+		public class PrefMulti : DataEntry
 		{
 
 		}
@@ -345,7 +356,7 @@ namespace UIFramework
 		/// 
 		/// </summary>
 		[RegisterTypeInIl2Cpp]
-		public class PrefSlider : MelonEntry
+		public class PrefSlider : DataEntry
 		{
 
 		}
