@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using Tomlet;
 using Tomlet.Models;
-
+using UIFramework.ValidationControls;
 //using System;
 /*using System.Linq;
 using System.Text;
@@ -260,9 +260,69 @@ namespace UIFramework
 		[RegisterTypeInIl2Cpp]
 		public class PrefSlider : DataEntry
 		{
-			protected Slider Slider => this.gameObject.transform.Find("Data/SliderControl").gameObject.GetComponent<UnityEngine.UI.Slider>();
-			
+			protected Slider Slider => gameObject.transform.Find("Data/SliderControl").gameObject.GetComponent<UnityEngine.UI.Slider>();
+			protected TMP_InputField _textField => gameObject.transform.Find("Data/DisplayText").gameObject.GetComponent<TMP_InputField>();
+			protected virtual INumericSliderProvider SliderSettings => _prefModel.Validator as INumericSliderProvider;
 
+			public override void ModelSet()
+			{
+				_textField.onEndEdit.AddListener((UnityAction<string>)EditEnd);
+				_textField.onSelect.AddListener((UnityAction<string>)EditStart);
+
+				Slider.minValue = SliderSettings?.Min ?? 0;
+				Slider.maxValue = SliderSettings?.Max ?? 100;
+				Slider.value = Convert.ToSingle(_prefModel.BoxedValue);
+				Slider.onValueChanged.AddListener((UnityAction<float>)OnValueChanged);
+				if (_prefModel.BoxedValue is int or byte or short or long or sbyte or ushort or uint or ulong) 
+				{ 
+					Slider.wholeNumbers = true; 
+					_textField.contentType = TMP_InputField.ContentType.IntegerNumber;
+					_textField.text = Slider.value.ToString("F0");
+				} else 
+				{
+					Slider.wholeNumbers = false; 
+					_textField.contentType = TMP_InputField.ContentType.DecimalNumber;
+					_textField.text = Slider.value.ToString("F" + SliderSettings?.DecimalPlaces);
+				}
+				
+
+				base.ModelSet();
+			}
+
+			public void OnValueChanged(float newValue)
+			{
+				_textField.text = newValue.ToString(_textField.contentType == TMP_InputField.ContentType.IntegerNumber ? "F0" : "F" + SliderSettings?.DecimalPlaces);
+				ApplyValueToPref();
+				Debug.Log($"Slider value changed to {newValue}", true);
+			}
+
+			public override void ApplyValueToPref()
+			{
+				_prefModel.TryApply(Convert.ChangeType(Slider.value, _prefModel.BoxedValue.GetType()));
+			}
+			public virtual void EditStart(string s)
+			{
+				_textField.textComponent.fontStyle = FontStyles.Normal;
+			}
+			public virtual void EditEnd(string s)
+			{
+				_textField.textComponent.fontStyle = FontStyles.Italic;
+			
+				if (float.TryParse(s, out float result))
+				{
+					if (SliderSettings != null)
+					{
+						result = Mathf.Clamp(result, SliderSettings.Min, SliderSettings.Max);
+					}
+					Slider.value = result;
+					ApplyValueToPref();
+				}
+				else
+				{
+					Debug.Log($"Invalid input for slider: {s}", false, 2);
+					_textField.text = Slider.value.ToString(_textField.contentType == TMP_InputField.ContentType.IntegerNumber ? "F0" : "F" + SliderSettings?.DecimalPlaces);
+				}
+			}
 		}
 
 
@@ -323,7 +383,7 @@ namespace UIFramework
 		[RegisterTypeInIl2Cpp]
 		public class ButtonEntry : Entry
 		{
-			UIFModel.ButtonEntry ButtonModel=> (UIFModel.ButtonEntry)EntryModel;
+			UIFModel.ButtonEntry ButtonModel => (UIFModel.ButtonEntry)EntryModel;
 			public GameObject ButtonGo;
 			/// <inheritdoc/>
 			public override void ModelSet()

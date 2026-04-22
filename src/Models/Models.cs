@@ -1,10 +1,12 @@
 ﻿using MelonLoader;
+using MelonLoader.Preferences;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using UIFramework.ValidationControls;
 using UnityEngine;
 using UnityEngine.Events;
 using static UIFramework.UIFController;
@@ -142,6 +144,9 @@ namespace UIFramework
 			/// <inheritdoc/>
 			public override string Description => PrefEntry.Description;
 
+			public ValueValidator MelonValidator => PrefEntry.Validator;
+			public override UIFValidator Validator => MelonValidator as UIFValidator;
+
 			/// <summary>
 			/// Direct access to the PrefEntry boxedvalue property
 			/// </summary>
@@ -159,6 +164,9 @@ namespace UIFramework
 				PrefEntry = prefEntry;
 				SavedValue = prefEntry.BoxedValue;
 				PrefEntry.OnEntryValueChangedUntyped.Subscribe(OnValueChanged);
+
+				
+
 			}
 			protected void OnValueChanged(object oldVal, object newVal)
 			{

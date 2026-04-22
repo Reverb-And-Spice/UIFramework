@@ -14,7 +14,7 @@ using System.Text;
 using System.Threading.Tasks;*/
 using static UIFramework.Debug;
 using Il2CppTMPro;
-namespace UIFramework.Validation
+namespace UIFramework.ValidationControls
 {
 	public partial class UIFValidator : ValueValidator
 	{
@@ -41,13 +41,21 @@ namespace UIFramework.Validation
 		public List<string> DropdownOptionNames { get; set; }
 	}
 
-	public interface NumericSliderProvider
+	public interface INumericSliderProvider
 	{
-		public int Min { get; set; }
-		public int Max { get; set; }
+		public float Min { get; set; }
+		public float Max { get; set; }
+		public int DecimalPlaces { get; set; }
 	}
 
-	public interface NumericUpDownProvider
+	public class UIFSlider : UIFValidator, INumericSliderProvider
+	{
+		public float Min { get; set; }
+		public float Max { get; set; }
+		public int DecimalPlaces { get; set; } = 5;
+	}
+
+	public interface INumericUpDownProvider
 	{
 		public float Increments { get; set; }
 	}
@@ -57,7 +65,7 @@ namespace UIFramework.Validation
 		public event Action<EventArgs> Interaction;
 	}
 
-	public interface UifButton
+	public interface IUifButton
 	{
 		public string ButtonText { get; set; }
 		public string Identifier { get; set; }

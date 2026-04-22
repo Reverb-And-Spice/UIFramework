@@ -134,6 +134,9 @@ namespace UIFramework
 				case InputType.Dropdown:
 					selectedPrefab = GameObject.Instantiate(Prefabs.DropDownPrefab);
 					break;
+				case InputType.Slider:
+					selectedPrefab = GameObject.Instantiate(Prefabs.SliderPrefab);
+					break;
 				default:
 					selectedPrefab = GameObject.Instantiate(Prefabs.TextPrefab);
 					break;
@@ -159,7 +162,9 @@ namespace UIFramework
 		Button,
 		[Display(Name = "Dropdown", Description = "A dropdown menu for selecting from multiple options")]
 		Dropdown,
-		/*Slider,
+		[Display(Name = "Slider", Description = "A slider for selecting a value within a range")]
+		Slider,
+		/*
 		MultiCheckbox,
 		RadioButton*/
 	}

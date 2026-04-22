@@ -48,7 +48,7 @@ namespace UIFramework
 		internal static GameObject FloatPrefab;
 		//internal static GameObject DoublePrefab;
 		internal static GameObject DropDownPrefab;
-		
+		internal static GameObject SliderPrefab;
 
 		internal static GameObject ButtonPrefab;
 
@@ -68,8 +68,7 @@ namespace UIFramework
 			AssetBundleLoaded = GameObject.Instantiate(LoadAssetFromStream<GameObject>(Core.Instance, "UIFramework.Assets.uiframework", "UIframework"), UIFGameObjects.transform);
 			AssetBundleLoaded.name = "UIFrameworkAssets";
 
-			
-			
+
 			MainCanvasSource = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "UICanvas")?.gameObject;
 
 			ModDisplayList = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "ModRegCont")?.gameObject;
@@ -87,6 +86,7 @@ namespace UIFramework
 			//DoublePrefab = GameObject.Instantiate(FloatPrefab, AssetBundleLoaded.transform);
 
 			DropDownPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryDropdown")?.gameObject;
+			SliderPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntrySlider")?.gameObject;
 
 			ButtonPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryButton")?.gameObject;
 
@@ -116,6 +116,7 @@ namespace UIFramework
 			//DoublePrefab.transform.SetParent(HiddenStorage.transform ,false);
 
 			DropDownPrefab.transform.SetParent(HiddenStorage.transform, false );
+			SliderPrefab.transform.SetParent(HiddenStorage.transform, false);
 
 			ButtonPrefab.transform.SetParent(HiddenStorage.transform,false );
 
@@ -138,6 +139,7 @@ namespace UIFramework
 			//DoublePrefab.AddComponent<UIFController.TextInputEntry>();
 			
 			DropDownPrefab.AddComponent<UIFController.PrefDropDown>();
+			SliderPrefab.AddComponent<UIFController.PrefSlider>();
 
 			ButtonPrefab.AddComponent<UIFController.ButtonEntry>();
 

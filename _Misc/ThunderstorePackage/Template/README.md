@@ -23,6 +23,12 @@ mod's name differently on its button in UI Framework. Yes, it supports line brea
 
 </details>
 
+<details><summary>New Feature: Sliders!</summary>
+
+You can now implement sliders for numeric vlaues.
+
+</details>
+
 
 -----
 
@@ -81,6 +87,10 @@ But the cast makes sure that your mod won't break when the old MelonMod registra
 
 Add `[assembly: UIInfo("My Mod's Better\nDisplay Name")]` to your assembly attributesto change how the mod's name is displayed
 in the UI. Line breaks are supported.
+
+## Basic UI Customization
+
+`ExperimentalSlider = Experimental.CreateEntry("SliderTest", 0.5f, "Test Slider", "Test Slider",false, false, new ValidationExtras.UIFSlider { Min = 0, Max = 1, DecimalPlaces = 3 }); `
 
 -----
 

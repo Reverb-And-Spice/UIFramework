@@ -9,6 +9,8 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Events;
 using static UIFramework.UIFController;
+using MelonLoader.Preferences;
+using UIFramework.ValidationControls;
 
 namespace UIFramework
 {
@@ -213,6 +215,7 @@ namespace UIFramework
 		public abstract class ModelDataEntryBase: ModelEntryItem
 		{
 			protected ModelDataEntryBase(ModelCategoryItem parentCategory) : base(parentCategory) { }
+			public abstract UIFValidator Validator { get; }
 
 			public abstract object BoxedValue {get; protected set;}
 			public virtual bool TryApply(object value)
@@ -258,6 +261,8 @@ namespace UIFramework
 			{
 				if (_uiPrefabSource == null)
 				{
+					if(Validator is INumericSliderProvider)
+						return UI.GetPrefab(InputType.Slider);
 
 					switch (BoxedValue)
 					{
