@@ -25,7 +25,7 @@ mod's name differently on its button in UI Framework. Yes, it supports line brea
 
 <details><summary>New Feature: Sliders!</summary>
 
-You can now implement sliders for numeric vlaues.
+Modders can now implement sliders for numeric vlaues.
 
 </details>
 
@@ -89,6 +89,8 @@ Add `[assembly: UIInfo("My Mod's Better\nDisplay Name")]` to your assembly attri
 in the UI. Line breaks are supported.
 
 ## Basic UI Customization
+
+### Sliders
 
 `ExperimentalSlider = Experimental.CreateEntry("SliderTest", 0.5f, "Test Slider", "Test Slider",false, false, new ValidationExtras.UIFSlider { Min = 0, Max = 1, DecimalPlaces = 3 }); `
 
