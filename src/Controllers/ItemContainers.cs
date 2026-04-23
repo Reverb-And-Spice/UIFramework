@@ -81,7 +81,10 @@ namespace UIFramework
 				foreach (UIFModel.IModelable model in _model.SubModels)
 				{
 					if (model.IsHidden)
+					{
+						Debug.Log($"Model {model.DisplayName} is hidden, skipping UI creation.", true);
 						continue;
+					}
 						
 					GameObject uiElement = model.GetNewUIInstance();//GameObject.Instantiate(GetUIPrefabForModel(model), this.gameObject.transform);
 					uiElement.SetActive(true);

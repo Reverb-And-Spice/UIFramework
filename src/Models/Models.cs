@@ -136,14 +136,14 @@ namespace UIFramework
 		/// <summary>
 		/// 
 		/// </summary>
-		public class ModelMelonEntry : ModelDataEntryBase
+		public class ModelMelonEntry : ModelDataEntryBase, IModelable
 		{
 
 			/// <summary>
 			/// MelonPreferences_Entry this model is meant to adapt
 			/// </summary>
 			public MelonPreferences_Entry PrefEntry { get; set; }
-			public override bool IsHidden 
+			public override bool IsHidden
 			{
 				get => PrefEntry.IsHidden; 
 				set => PrefEntry.IsHidden = value;

@@ -156,7 +156,7 @@ namespace UIFramework
 					try
 					{
 						textField.text = ToTomlString(_prefModel.BoxedValue);
-						Debug.Log(ToTomlString(_prefModel.BoxedValue), true);
+						//Debug.Log(ToTomlString(_prefModel.BoxedValue), true);
 					}
 					catch (Exception ex)
 					{
@@ -178,7 +178,7 @@ namespace UIFramework
 						if (textField.text.Trim() != "")
 						{
 							_prefModel.SetDataValue(FromTomlString(textField.text, _prefModel.BoxedValue.GetType()));
-							Debug.Log($"Toml data parsed {FromTomlString(textField.text, _prefModel.BoxedValue.GetType())}");
+							//Debug.Log($"Toml data parsed {FromTomlString(textField.text, _prefModel.BoxedValue.GetType())}");
 						}
 					}
 					catch (Exception ex)
@@ -293,7 +293,7 @@ namespace UIFramework
 			{
 				_textField.text = newValue.ToString(_textField.contentType == TMP_InputField.ContentType.IntegerNumber ? "F0" : "F" + SliderSettings?.DecimalPlaces);
 				ApplyValueToPref();
-				Debug.Log($"Slider value changed to {newValue}", true);
+				//Debug.Log($"Slider value changed to {newValue}", true);
 			}
 
 			public override void ApplyValueToPref()

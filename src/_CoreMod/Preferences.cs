@@ -74,7 +74,7 @@ namespace UIFramework
 			TestEnum = Experimental.CreateEntry("TestEnum", InputType.TextField, "Test Enum", "This is a test enum.");
 			NonZeroEnum = Experimental.CreateEntry("Non-Zero", NonZeroBased.a,"Non-zero-based enum test", "This tests enums that don't start from zero");
 			NonContiguousEnum = Experimental.CreateEntry("Non-Cont", NonContiguous.z, "Non-Contiguous enum test", "This tests enums that have gaps in between the explicitlyi named values");
-			TestList = Experimental.CreateEntry("TestList", new List<int> { 1, 2, 3 }, "Test List", "This is a test list of integers.");
+			TestList = Experimental.CreateEntry("TestList", new List<int> { 1, 2, 3 }, "Test List", "This is a test list of integers.",true);
 			TestListString = Experimental.CreateEntry("TestStringList", new List<string> { "hello", "world", "hi" }, "this is a test list of strings"); 
 			
 			TestEmptyDisplayName = MelonPreferences.CreateCategory("EmptyDisplayName");
