@@ -9,7 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using Tomlet;
 using Tomlet.Models;
-using UIFramework.ValidationControls;
+using UIFramework.ValidatorExtensions;
 //using System;
 /*using System.Linq;
 using System.Text;
@@ -262,7 +262,7 @@ namespace UIFramework
 		{
 			protected Slider Slider => gameObject.transform.Find("Data/SliderControl").gameObject.GetComponent<UnityEngine.UI.Slider>();
 			protected TMP_InputField _textField => gameObject.transform.Find("Data/DisplayText").gameObject.GetComponent<TMP_InputField>();
-			protected virtual INumericSliderHints SliderSettings => _prefModel.Validator as INumericSliderHints;
+			protected virtual ISliderDescriptor SliderSettings => _prefModel.Validator as ISliderDescriptor;
 
 			public override void ModelSet()
 			{

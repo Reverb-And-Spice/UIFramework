@@ -26,7 +26,7 @@ namespace UIFramework
 			private string _identifier;
 			/// <inheritdoc/>
 			public override string Identifier => _identifier;
-
+			public override bool IsHidden { get; set; } = false;
 			public EmptyCategory(string identifier, string displayName, ModelModItem parentMod = null)
 				: base(parentMod)
 			{
@@ -55,6 +55,7 @@ namespace UIFramework
 			private string _displayName;
 			/// <inheritdoc/>
 			public override string DisplayName => _displayName;
+			public override bool IsHidden { get; set; }
 
 			/// <summary>
 			/// This is only to satisfy the contract for IEntry. 

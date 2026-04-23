@@ -25,7 +25,7 @@ mod's name differently on its button in UI Framework. Yes, it supports line brea
 
 <details><summary>New Feature: Sliders!</summary>
 
-You can now implement sliders for numeric vlaues.
+Modders can now implement sliders for numeric vlaues.
 
 </details>
 
@@ -88,9 +88,48 @@ But the cast makes sure that your mod won't break when the old MelonMod registra
 Add `[assembly: UIInfo("My Mod's Better\nDisplay Name")]` to your assembly attributesto change how the mod's name is displayed
 in the UI. Line breaks are supported.
 
-## Basic UI Customization
+## Entry Interaction Type Configuration
+#### Validator piggybacking details
 
-`ExperimentalSlider = Experimental.CreateEntry("SliderTest", 0.5f, "Test Slider", "Test Slider",false, false, new ValidationExtras.UIFSlider { Min = 0, Max = 1, DecimalPlaces = 3 }); `
+Melonloader has a custom validator feature by inheriting the ValueValidator class.
+
+```cs
+public class CustomValidator : ValueValidator
+{
+    // These two are required members
+    public override bool IsValid(object value) { return true; }
+	public override object EnsureValid(object value) { return value; }
+}
+```
+UI Framework has some built in prefabs that let you change how your Preference Entries are represented. 
+These are controlled by implementing interfaces from UIFramework.ValidationControls. 
+
+UI Framework's ValidationControls namespace contains interfaces you can implement into your validator class. Each interface has required member implementations. So, if you want a slider, the declaration for your validator becomes
+```cs
+public class CustomValidator : ValueValidator, INumericSliderProvider
+{
+    // These two are required members. You can implement actual validators here or just return true and return the same value
+    public override bool IsValid(object value) { return true; }
+	public override object EnsureValid(object value) { return value; }
+
+    //You can set default values or set them when you pass a new instance into the validator parameter
+    public float Min { get; set; } = 0;
+	public float Max { get; set; } = 100;
+    public int DecimalPlaces { get; set; } = 5
+}
+```
+Most interfaces haven't been implemented yet but I will list the available ones below as they get added
+
+
+### Sliders
+
+The UI will represent your entry with a slider if you add a validator that implements the INumericSliderProvider.
+
+It also comes with a concrete class with the required members already implemented. So you can just pass a new instance and set its properties with `new UIFSlider {min = 0, Max = 1, DecimalPlaces = 3};` passed into the ValueValidator parameter of the category's CreateEntry() parameter.
+
+`ExperimentalSlider = Experimental.CreateEntry("SliderTest", 0.5f, "Test Slider", "Test Slider",false, false, new ValidationControls.UIFSlider { Min = 0, Max = 1, DecimalPlaces = 3 }); `
+
+
 
 -----
 

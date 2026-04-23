@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using UIFramework.ValidationControls;
+using UIFramework.ValidatorExtensions;
 using UnityEngine;
 using UnityEngine.Events;
 using static UIFramework.UIFController;
@@ -34,6 +34,7 @@ namespace UIFramework
 
 			public string Identifier => _name;
 			public string DisplayName => _name;
+			public bool IsHidden { get; set; } = false;
 
 			public void SetName(string name)
 			{
@@ -155,7 +156,7 @@ namespace UIFramework
 			public override string Description => PrefEntry.Description;
 
 			public ValueValidator MelonValidator => PrefEntry.Validator;
-			public override UIFValidator Validator => MelonValidator as UIFValidator;
+			public override DefaultValidator Validator => MelonValidator as DefaultValidator;
 
 			/// <summary>
 			/// Direct access to the PrefEntry boxedvalue property
