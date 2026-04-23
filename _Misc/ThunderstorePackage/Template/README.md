@@ -23,11 +23,22 @@ mod's name differently on its button in UI Framework. Yes, it supports line brea
 
 </details>
 
-<details><summary>New Feature: Sliders!</summary>
+<details><summary>New Feature: Sliders! (and maybe more eventually 👀)</summary>
 
-Modders can now implement sliders for numeric vlaues.
+Modders can now implement sliders for numeric vlaues. And a new system for future expansions
 
 </details>
+
+<details><summary>New Feature: Support IsHidden property for entries.</summary>
+
+Entries with IsHidden set to true won't be visible in the UI anymore
+
+</details>
+
+<details><summary>Bug Fix: Fixed issue with UI Framework *displaying* ModUI's window instead of hiding</summary>
+whoops
+</details>
+
 
 
 -----
@@ -88,46 +99,60 @@ But the cast makes sure that your mod won't break when the old MelonMod registra
 Add `[assembly: UIInfo("My Mod's Better\nDisplay Name")]` to your assembly attributesto change how the mod's name is displayed
 in the UI. Line breaks are supported.
 
-## Entry Interaction Type Configuration
-#### Validator piggybacking details
+## Interaction Type Configuration
+### Validator Extension system 
 
-Melonloader has a custom validator feature by inheriting the ValueValidator class.
+Melonloader has a custom validator feature that you can use by inheriting the ValueValidator class.
+Here's an example of a custom validator that approves everything.
 
 ```cs
 public class CustomValidator : ValueValidator
 {
     // These two are required members
     public override bool IsValid(object value) { return true; }
-	public override object EnsureValid(object value) { return value; }
+    public override object EnsureValid(object value) { return value; }
 }
 ```
-UI Framework has some built in prefabs that let you change how your Preference Entries are represented. 
-These are controlled by implementing interfaces from UIFramework.ValidationControls. 
 
-UI Framework's ValidationControls namespace contains interfaces you can implement into your validator class. Each interface has required member implementations. So, if you want a slider, the declaration for your validator becomes
+In UI Framework, we use this system to describe how the entry is represented in the UI. 
+This is done through implementing interfaces in the UIFramework.ValidationExtensions namespace.
+
+
+UI Framework's ValidationControls namespace contains interfaces you can implement into your validator class. 
+Each interface has required member implementations. So, if you want a slider, the declaration for your validator becomes
 ```cs
-public class CustomValidator : ValueValidator, INumericSliderProvider
+using UIFramework.ValidationExtensions;
+public class CustomValidator : ValueValidator, SliderDescriptor
 {
-    // These two are required members. You can implement actual validators here or just return true and return the same value
+    // These two are required members from MelonPreferences Value Validator. 
+    // You can implement actual validators here or just return true and return the same value
     public override bool IsValid(object value) { return true; }
 	public override object EnsureValid(object value) { return value; }
 
     //You can set default values or set them when you pass a new instance into the validator parameter
     public float Min { get; set; } = 0;
-	public float Max { get; set; } = 100;
+    public float Max { get; set; } = 100; 
     public int DecimalPlaces { get; set; } = 5
 }
 ```
+Now, when you create your entry, you can pass a new instance of your validator with the appropriate properties set for the slider to be represented in the UI:
+```
+MySlider = Category.CreateEntry("MySlider", 0.5f, "My Slider", "Float Slider",false, false, new SliderDescriptor { Min = 0, Max = 1, DecimalPlaces = 3 });
+```
+
 Most interfaces haven't been implemented yet but I will list the available ones below as they get added
 
+I will also have a default concrete class for each interface that has the required members implemented 
+so you can just set the properties when you create a new instance of the class instead of having to make your own validator class.
 
 ### Sliders
+#### Interface: `ISliderDescriptor`
+#### Default extended validator: `SliderDescriptor`
+The UI will represent your entry with a slider if you add a validator that implements `SliderDescriptor`.
 
-The UI will represent your entry with a slider if you add a validator that implements the INumericSliderProvider.
 
-It also comes with a concrete class with the required members already implemented. So you can just pass a new instance and set its properties with `new UIFSlider {min = 0, Max = 1, DecimalPlaces = 3};` passed into the ValueValidator parameter of the category's CreateEntry() parameter.
 
-`ExperimentalSlider = Experimental.CreateEntry("SliderTest", 0.5f, "Test Slider", "Test Slider",false, false, new ValidationControls.UIFSlider { Min = 0, Max = 1, DecimalPlaces = 3 }); `
+`MySlider = Category.CreateEntry("MySlider", 0.5f, "My Slider", "Float Slider",false, false, new SliderDescriptor { Min = 0, Max = 1, DecimalPlaces = 3 });`
 
 
 
