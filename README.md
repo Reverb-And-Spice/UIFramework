@@ -88,11 +88,24 @@ But the cast makes sure that your mod won't break when the old MelonMod registra
 Add `[assembly: UIInfo("My Mod's Better\nDisplay Name")]` to your assembly attributesto change how the mod's name is displayed
 in the UI. Line breaks are supported.
 
-## Basic UI Customization
+## Entry Control Type Configuration
+
+UI Framework has some built in prefabs that let you change how your Preference Entries are represented. 
+These are controlled by implementing interfaces from UIFramework.ValidationControls. 
+
+Most of those haven't been implemented yet but I will list the available ones below as they get added
+
+
 
 ### Sliders
 
-`ExperimentalSlider = Experimental.CreateEntry("SliderTest", 0.5f, "Test Slider", "Test Slider",false, false, new ValidationExtras.UIFSlider { Min = 0, Max = 1, DecimalPlaces = 3 }); `
+The UI will represent your entry with a slider if you add a validator that implements the INumericSliderProvider.
+
+It also comes with a concrete class with the required members already implemented. So you can just pass a new instance and set its properties with `new UIFSlider {min = 0, Max = 1, DecimalPlaces = 3};` passed into the ValueValidator parameter of the category's CreateEntry() parameter.
+
+`ExperimentalSlider = Experimental.CreateEntry("SliderTest", 0.5f, "Test Slider", "Test Slider",false, false, new ValidationControls.UIFSlider { Min = 0, Max = 1, DecimalPlaces = 3 }); `
+
+
 
 -----
 
