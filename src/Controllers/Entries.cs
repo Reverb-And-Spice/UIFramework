@@ -262,7 +262,7 @@ namespace UIFramework
 		{
 			protected Slider Slider => gameObject.transform.Find("Data/SliderControl").gameObject.GetComponent<UnityEngine.UI.Slider>();
 			protected TMP_InputField _textField => gameObject.transform.Find("Data/DisplayText").gameObject.GetComponent<TMP_InputField>();
-			protected virtual INumericSliderProvider SliderSettings => _prefModel.Validator as INumericSliderProvider;
+			protected virtual INumericSliderHints SliderSettings => _prefModel.Validator as INumericSliderHints;
 
 			public override void ModelSet()
 			{
