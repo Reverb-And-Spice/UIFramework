@@ -208,7 +208,8 @@ namespace UIFramework
 				if (UI.MainWindow.activeSelf)
 				{
 					UI.MainWindow.SetActive(!Preferences.AutoHideOnSceneLoad.Value);
-					ModUIWindow?.SetActive(!(Preferences.HijackModUI.Value && Preferences.AutoHideOnSceneLoad.Value));
+					if(Preferences.HijackModUI.Value && ModUIWindow?.activeSelf)
+						ModUIWindow?.SetActive(!(Preferences.AutoHideOnSceneLoad.Value));
 				}
 			}
 		}
