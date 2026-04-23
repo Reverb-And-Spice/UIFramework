@@ -165,6 +165,7 @@ namespace UIFramework
 		public abstract class ModelCategoryItem : SelectableModelBase
 		{
 			public ModelModItem ParentMod { get; set; }
+			public abstract bool IsHidden {get; set;}
 			protected ModelCategoryItem(ModelModItem parentMod)
 			{
 				ParentMod = parentMod;
@@ -190,6 +191,7 @@ namespace UIFramework
 			}
 			/// <inheritdoc/>
 			public abstract string Description { get; }
+			public abstract bool IsHidden {get; set;}
 			
 			/// <summary>
 			/// Called when the corresponding UI element is created

@@ -97,6 +97,11 @@ namespace UIFramework
 			/// The MelonPreferences_Category object this adapts into the framework
 			/// </summary>
 			public MelonPreferences_Category PrefCat;
+			public override bool IsHidden 
+			{
+				get => PrefCat.IsHidden; 
+				set => PrefCat.IsHidden = value;
+			}
 			/// <inheritdoc/>
 			public override string Identifier => PrefCat.Identifier;
 			/// <inheritdoc/>
@@ -137,6 +142,11 @@ namespace UIFramework
 			/// MelonPreferences_Entry this model is meant to adapt
 			/// </summary>
 			public MelonPreferences_Entry PrefEntry { get; set; }
+			public override bool IsHidden 
+			{
+				get => PrefEntry.IsHidden; 
+				set => PrefEntry.IsHidden = value;
+			}
 			/// <inheritdoc/>
 			public override string Identifier => PrefEntry.Identifier;
 			/// <inheritdoc/>

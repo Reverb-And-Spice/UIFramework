@@ -28,6 +28,7 @@ namespace UIFramework
 			/// User-facing display name. Should return Identifier if not assigned to a value
 			/// </summary>
 			public string DisplayName { get; }
+			public bool IsHidden {get; set;}
 			/// <summary>
 			/// Instantiates a new Game object associated with them model
 			/// </summary>

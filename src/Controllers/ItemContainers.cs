@@ -80,6 +80,9 @@ namespace UIFramework
 				Infanticide();
 				foreach (UIFModel.IModelable model in _model.SubModels)
 				{
+					if (model.IsHidden)
+						continue;
+						
 					GameObject uiElement = model.GetNewUIInstance();//GameObject.Instantiate(GetUIPrefabForModel(model), this.gameObject.transform);
 					uiElement.SetActive(true);
 					uiElement.transform.SetParent(this.gameObject.transform, false);
@@ -95,6 +98,7 @@ namespace UIFramework
 					switch (model)
 					{
 						case UIFModel.IEntry entryModel:
+
 							ViewController = uiElement.GetComponent<UIFController.Entry>();
 							_rootWindow.CatRegistryPanel.SelectTab(Model as UIFModel.IHoldSubmodels);
 							break;
