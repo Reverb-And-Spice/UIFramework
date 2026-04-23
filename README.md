@@ -137,7 +137,7 @@ public class CustomValidator : ValueValidator, SliderDescriptor
 ```
 Now, when you create your entry, you can pass a new instance of your validator with the appropriate properties set for the slider to be represented in the UI:
 ```
-MySlider = Category.CreateEntry("MySlider", 0.5f, "My Slider", "Float Slider",false, false, new CustomValidator { Min = 0, Max = 1, DecimalPlaces = 3 });
+MySlider = Category.CreateEntry("MySlider", 0.5f, "My Slider", "Float Slider",false, false, new SliderDescriptor { Min = 0, Max = 1, DecimalPlaces = 3 });
 ```
 
 Most interfaces haven't been implemented yet but I will list the available ones below as they get added
