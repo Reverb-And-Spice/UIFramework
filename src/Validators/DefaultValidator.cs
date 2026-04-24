@@ -75,10 +75,14 @@ namespace UIFramework.ValidatorExtensions
 	}
 
 
+	///	<summary>
+	/// Presents the entry as a dropdown and describes the options within it.
+	/// </summary>
 	public interface IDynamicDropdownDescriptor
 	{
 		public List<string> DropdownOptionNames { get; set; }
 	}
+	/// <see cref="IDynamicDropdownDescriptor"/>
 	public class DynamicDropdownDescriptor : DefaultValidator, IDynamicDropdownDescriptor
 	{
 		public List<string> DropdownOptionNames { get; set; } = new List<string>();
@@ -86,7 +90,7 @@ namespace UIFramework.ValidatorExtensions
 
 
 	/// <summary>
-	/// 
+	/// Implementing this will present the entry as a slider in the UI
 	/// </summary>
 	public interface ISliderDescriptor
 	{
@@ -114,15 +118,29 @@ namespace UIFramework.ValidatorExtensions
 		public int DecimalPlaces { get; set; } = 5;
 	}
 
+	/// <summary>
+	/// Describes numeric up down controls
+	/// </summary>
 	public interface INumericUpDownDescriptor
 	{
 		public float Increments { get; set; }
+	}
+	///<inheritdoc cref = INumericUpDownDescriptor/>
+	public class NumericUpDownDescriptor, DefaultValidator, INumericUpDownDescriptor
+	{
+
 	}
 
 	public interface IInteractable
 	{
 		public event Action<EventArgs> Interaction;
 	}
+
+	public interface ICustomUIProvider
+	{
+		public GameObject WidgetPrefab {get; set;}
+	}
+
 
 	public interface IUifButton
 	{
