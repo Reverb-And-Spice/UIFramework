@@ -11,6 +11,7 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using UIFramework.ValidatorExtensions;
 namespace UIFramework
 {
 	/// <summary>
@@ -103,9 +104,11 @@ namespace UIFramework
 
 		}
 
-		public static CreateButtonEntry(MelonPreferences_Category category, string buttonText, string displayName, string description, EventHandler handler)
+		public static void CreateButtonEntry(MelonPreferences_Category category, string buttonText, string displayName, string description, EventHandler handler)
+			
 		{
-			category.CreateEntry<ButtonAsEntry>($"PlaceHolder{handler.GetHashCode.ToString().Substring(0,7)}", false, displayName, description, false, true, new ButtonAsEntry{Handler = handler});
+			ButtonAsEntry button = new ButtonAsEntry { Handler = handler, ButtonText = buttonText, DisplayName = displayName, Description = description };
+			category.CreateEntry<ButtonAsEntry>($"PlaceHolder{handler.GetHashCode().ToString().Substring(0,7)}", button, displayName, description, false, true, button);
 		}
 		/// <summary>
 		/// 

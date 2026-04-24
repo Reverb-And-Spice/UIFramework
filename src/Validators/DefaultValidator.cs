@@ -7,6 +7,7 @@ using System.Reflection;
 using System;
 using Tomlet;
 using Tomlet.Models;
+using UnityEngine;
 
 //using System;
 /*using System.Linq;
@@ -38,7 +39,7 @@ namespace UIFramework.ValidatorExtensions
 		public int CharacterLimit { get; set; }
 		public bool IsReadOnly { get; set; }
 	}
-	/// <inheritdoc cref="It"/>
+	/// <inheritdoc cref="ITextInputBehaviorDescriptor"/>
 	public class TextInputBehaviorDescriptor : DefaultValidator, ITextInputBehaviorDescriptor
 	{
 		public TMP_InputField.ContentType ContentType { get; set; } = TMP_InputField.ContentType.Standard;
@@ -123,12 +124,16 @@ namespace UIFramework.ValidatorExtensions
 	/// </summary>
 	public interface INumericUpDownDescriptor
 	{
+		/// <summary>
+		/// 0 = default (1 for ints, 0.1 for floats). 
+		/// </summary>
 		public float Increments { get; set; }
 	}
-	///<inheritdoc cref = INumericUpDownDescriptor/>
+	///<inheritdoc cref="INumericUpDownDescriptor"/>
 	public class NumericUpDownDescriptor : DefaultValidator, INumericUpDownDescriptor
 	{
-
+		/// <inheritdoc>
+		public float Increments { get; set; }
 	}
 
 	public interface IInteractable
@@ -138,7 +143,7 @@ namespace UIFramework.ValidatorExtensions
 
 	public interface ICustomUIProvider
 	{
-		public GameObject WidgetPrefab {get; set;}
+		public GameObject WidgetPrefab { get; set; }
 	}
 
 
