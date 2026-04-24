@@ -39,6 +39,10 @@ Entries with IsHidden set to true won't be visible in the UI anymore
 whoops
 </details>
 
+<details><summary>Bug Fix: Finally suppressed saved and loaded message from MelonPreferneces</summary>
+I somehow missed an entire boolean 
+</details>
+
 
 
 -----

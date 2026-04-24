@@ -124,12 +124,16 @@ namespace UIFramework
 			/// <inheritdoc/>
 			public override void SaveAction()
 			{
-				PrefCat.SaveToFile();
+				PrefCat.SaveToFile(false);
 			}
 
 			public override void DiscardAction()
 			{
-				PrefCat.LoadFromFile();
+				PrefCat.LoadFromFile(false);
+				foreach (ModelMelonEntry entry in Entries)
+				{
+					entry.DiscardAction();
+				}
 			}
 		}
 
@@ -195,7 +199,9 @@ namespace UIFramework
 			///	<inheritdoc/>
 			public override void DiscardAction()
 			{
-				
+				//Debug.Log($"MelonEntry discard action called. Current BoxedEditedValue: {PrefEntry.BoxedEditedValue}, actual BoxedValue: {PrefEntry.BoxedValue}", true);
+				//Discard the BoxedEditedValue and reset it to the actual value of the preference
+				PrefEntry.BoxedEditedValue = PrefEntry.BoxedValue;
 			}
 		}
 	}
