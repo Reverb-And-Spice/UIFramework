@@ -126,7 +126,7 @@ namespace UIFramework.ValidatorExtensions
 		public float Increments { get; set; }
 	}
 	///<inheritdoc cref = INumericUpDownDescriptor/>
-	public class NumericUpDownDescriptor, DefaultValidator, INumericUpDownDescriptor
+	public class NumericUpDownDescriptor : DefaultValidator, INumericUpDownDescriptor
 	{
 
 	}
@@ -142,11 +142,22 @@ namespace UIFramework.ValidatorExtensions
 	}
 
 
-	public interface IUifButton
+	public interface IButtonDescriptor
 	{
 		public string ButtonText { get; set; }
-		public string Identifier { get; set; }
+		public string DisplayName { get; set; }
 		public string Description { get; set; }
+		public EventHandler Handler { get; set; }
+	}
+
+	internal class ButtonAsEntry : DefaultValidator, IButtonDescriptor
+	{
+		public override bool IsValid(object value) { return true; }
+		public override object EnsureValid(object value) { return false; }
+		public string ButtonText { get; set; } = "";
+		public string DisplayName { get; set; } = "";
+		public string Description { get; set; } = "";
+		public EventHandler Handler { get; set; }
 	}
 
 }

@@ -102,6 +102,11 @@ namespace UIFramework
 			WindowInstance = MainWindow.GetComponent<UIFController.WindowController>();
 
 		}
+
+		public static CreateButtonEntry(MelonPreferences_Category category, string buttonText, string displayName, string description, EventHandler handler)
+		{
+			category.CreateEntry<ButtonAsEntry>($"PlaceHolder{handler.GetHashCode.ToString().Substring(0,7)}", false, displayName, description, false, true, new ButtonAsEntry{Handler = handler});
+		}
 		/// <summary>
 		/// 
 		/// </summary>
