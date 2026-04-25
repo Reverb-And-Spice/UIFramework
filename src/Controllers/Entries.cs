@@ -58,12 +58,18 @@ namespace UIFramework
 			public virtual void SaveAction()
 			{
 			}
-
+			/// <summary>
+			/// 
+			/// </summary>
 			public override void ModelSet()
 			{
+				SetData();
 				DescriptionText = EntryModel.Description;
 				DisplayName = EntryModel.DisplayName;
-				EntryModel.OnUICreated?.Invoke(this);
+			}
+			public virtual void SetData()
+			{
+
 			}
 			/// <summary>
 			/// Serializes an object into the toml string representation of that object
@@ -143,7 +149,7 @@ namespace UIFramework
 			/// </summary>
 			public string PlaceHolderText { set { this.gameObject.transform.Find("Data/TextControl/Text Area/Placeholder").gameObject.GetComponent<TextMeshProUGUI>().text = value; } }
 			/// <inheritdoc/>
-			public override void ModelSet()
+			public override void SetData()
 			{
 				//textField.text = _prefModel.ModelBoxedValue.ToString();
 				//TomletMain.TomlStringFrom(_prefModel.ModelBoxedValue).Trim();
@@ -163,7 +169,6 @@ namespace UIFramework
 						Debug.Log($"{ex.Message}\n{ex.StackTrace}");
 					}
 				}
-				base.ModelSet();
 			}
 			public override void ApplyValueToPref()
 			{
@@ -215,6 +220,73 @@ namespace UIFramework
 			}
 		}
 
+
+		[RegisterTypeInIl2Cpp]
+		public class PrefSlider : DataEntry
+		{
+			protected Slider Slider => gameObject.transform.Find("Data/SliderControl").gameObject.GetComponent<UnityEngine.UI.Slider>();
+			protected TMP_InputField _textField => gameObject.transform.Find("Data/TextControl").gameObject.GetComponent<TMP_InputField>();
+			protected virtual ISliderDescriptor SliderSettings => _prefModel.Validator as ISliderDescriptor;
+
+			public override void SetData()
+			{
+				_textField.onEndEdit.AddListener((UnityAction<string>)EditEnd);
+				_textField.onSelect.AddListener((UnityAction<string>)EditStart);
+
+				Slider.minValue = SliderSettings?.Min ?? 0;
+				Slider.maxValue = SliderSettings?.Max ?? 100;
+				Slider.value = Convert.ToSingle(_prefModel.ModelBoxedValue);
+				Slider.onValueChanged.AddListener((UnityAction<float>)OnValueChanged);
+				if (_prefModel.ModelBoxedValue is int or byte or short or long or sbyte or ushort or uint or ulong)
+				{
+					Slider.wholeNumbers = true;
+					_textField.contentType = TMP_InputField.ContentType.IntegerNumber;
+					_textField.text = Slider.value.ToString("F0");
+				}
+				else
+				{
+					Slider.wholeNumbers = false;
+					_textField.contentType = TMP_InputField.ContentType.DecimalNumber;
+					_textField.text = Slider.value.ToString("F" + SliderSettings?.DecimalPlaces);
+				}
+			}
+
+			public void OnValueChanged(float newValue)
+			{
+				_textField.text = newValue.ToString(_textField.contentType == TMP_InputField.ContentType.IntegerNumber ? "F0" : "F" + SliderSettings?.DecimalPlaces);
+				ApplyValueToPref();
+				//Debug.Log($"Slider value changed to {newValue}", true);
+			}
+
+			public override void ApplyValueToPref()
+			{
+				_prefModel.TryApply(Convert.ChangeType(Slider.value, _prefModel.ModelBoxedValue.GetType()));
+			}
+			public virtual void EditStart(string s)
+			{
+				_textField.textComponent.fontStyle = FontStyles.Normal;
+			}
+			public virtual void EditEnd(string s)
+			{
+				_textField.textComponent.fontStyle = FontStyles.Italic;
+
+				if (float.TryParse(s, out float result))
+				{
+					if (SliderSettings != null)
+					{
+						result = Mathf.Clamp(result, SliderSettings.Min, SliderSettings.Max);
+					}
+					Slider.value = result;
+					ApplyValueToPref();
+				}
+				else
+				{
+					Debug.Log($"Invalid input for slider: {s}", false, 2);
+					_textField.text = Slider.value.ToString(_textField.contentType == TMP_InputField.ContentType.IntegerNumber ? "F0" : "F" + SliderSettings?.DecimalPlaces);
+				}
+			}
+		}
+
 		/// <summary>
 		/// 
 		/// </summary>
@@ -225,12 +297,10 @@ namespace UIFramework
 			//protected override UIFModel.ModelDataEntryBase _prefModel => (UIFModel.ModelDataEntryBase)EntryModel;
 			public bool EnteredValue => this.gameObject.transform.Find("Data/ToggleControl").gameObject.GetComponent<Toggle>().isOn;
 			/// <inheritdoc/>
-			public override void ModelSet()
+			public override void SetData()
 			{
 				toggle.isOn = (bool)_prefModel.ModelBoxedValue;
 				toggle.onValueChanged.AddListener((UnityAction<bool>)OnValueChanged);
-
-				base.ModelSet();
 
 			}
 			/// <inheritdoc/>
@@ -257,73 +327,7 @@ namespace UIFramework
 			}
 		}
 
-		[RegisterTypeInIl2Cpp]
-		public class PrefSlider : DataEntry
-		{
-			protected Slider Slider => gameObject.transform.Find("Data/SliderControl").gameObject.GetComponent<UnityEngine.UI.Slider>();
-			protected TMP_InputField _textField => gameObject.transform.Find("Data/TextControl").gameObject.GetComponent<TMP_InputField>();
-			protected virtual ISliderDescriptor SliderSettings => _prefModel.Validator as ISliderDescriptor;
-
-			public override void ModelSet()
-			{
-				_textField.onEndEdit.AddListener((UnityAction<string>)EditEnd);
-				_textField.onSelect.AddListener((UnityAction<string>)EditStart);
-
-				Slider.minValue = SliderSettings?.Min ?? 0;
-				Slider.maxValue = SliderSettings?.Max ?? 100;
-				Slider.value = Convert.ToSingle(_prefModel.ModelBoxedValue);
-				Slider.onValueChanged.AddListener((UnityAction<float>)OnValueChanged);
-				if (_prefModel.ModelBoxedValue is int or byte or short or long or sbyte or ushort or uint or ulong) 
-				{ 
-					Slider.wholeNumbers = true; 
-					_textField.contentType = TMP_InputField.ContentType.IntegerNumber;
-					_textField.text = Slider.value.ToString("F0");
-				} else 
-				{
-					Slider.wholeNumbers = false; 
-					_textField.contentType = TMP_InputField.ContentType.DecimalNumber;
-					_textField.text = Slider.value.ToString("F" + SliderSettings?.DecimalPlaces);
-				}
-				
-
-				base.ModelSet();
-			}
-
-			public void OnValueChanged(float newValue)
-			{
-				_textField.text = newValue.ToString(_textField.contentType == TMP_InputField.ContentType.IntegerNumber ? "F0" : "F" + SliderSettings?.DecimalPlaces);
-				ApplyValueToPref();
-				//Debug.Log($"Slider value changed to {newValue}", true);
-			}
-
-			public override void ApplyValueToPref()
-			{
-				_prefModel.TryApply(Convert.ChangeType(Slider.value, _prefModel.ModelBoxedValue.GetType()));
-			}
-			public virtual void EditStart(string s)
-			{
-				_textField.textComponent.fontStyle = FontStyles.Normal;
-			}
-			public virtual void EditEnd(string s)
-			{
-				_textField.textComponent.fontStyle = FontStyles.Italic;
-			
-				if (float.TryParse(s, out float result))
-				{
-					if (SliderSettings != null)
-					{
-						result = Mathf.Clamp(result, SliderSettings.Min, SliderSettings.Max);
-					}
-					Slider.value = result;
-					ApplyValueToPref();
-				}
-				else
-				{
-					Debug.Log($"Invalid input for slider: {s}", false, 2);
-					_textField.text = Slider.value.ToString(_textField.contentType == TMP_InputField.ContentType.IntegerNumber ? "F0" : "F" + SliderSettings?.DecimalPlaces);
-				}
-			}
-		}
+		
 
 
 		/// <summary>
@@ -338,7 +342,7 @@ namespace UIFramework
 
 			public Type prefEnum;
 			/// <inheritdoc/>
-			public override void ModelSet()
+			public override void SetData()
 			{
 				dropdown = this.gameObject.transform.Find("Data/DropdownControl").GetComponent<TMP_Dropdown>();
 				prefEnum = _prefModel.ModelBoxedValue.GetType();
@@ -360,8 +364,6 @@ namespace UIFramework
 				dropdown.value = _indexToValueMap.IndexOf((int)_prefModel.ModelBoxedValue);
 
 				dropdown.onValueChanged.AddListener((UnityAction<int>)OnValueChanged);
-
-				base.ModelSet();
 			}
 			/// <inheritdoc/>
 			public override void EditCheck()
