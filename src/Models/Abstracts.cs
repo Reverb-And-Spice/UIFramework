@@ -220,13 +220,13 @@ namespace UIFramework
 			protected ModelDataEntryBase(ModelCategoryItem parentCategory) : base(parentCategory) { }
 			public abstract DefaultValidator Validator { get; }
 
-			public abstract object BoxedValue {get; protected set;}
+			public abstract object ModelBoxedValue {get; protected set;}
 			public virtual bool TryApply(object value)
 			{
 				bool result = false;
 				try
 				{
-					BoxedValue = value;
+					ModelBoxedValue = value;
 					result = true;
 				}
 				catch (Exception ex)
@@ -240,7 +240,7 @@ namespace UIFramework
 			//untested AI generated codbe
 			public void SetDataValue(object newValue)
 			{
-				BoxedValue = newValue;
+				ModelBoxedValue = newValue;
 			}
 			protected GameObject _uiPrefabSource;
 			/// <summary>
@@ -267,7 +267,7 @@ namespace UIFramework
 					if(Validator is ISliderDescriptor)
 						return UI.GetPrefab(InputType.Slider);
 
-					switch (BoxedValue)
+					switch (ModelBoxedValue)
 					{
 						case bool:
 							return UI.GetPrefab(InputType.Toggle);

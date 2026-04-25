@@ -82,7 +82,7 @@ namespace UIFramework
 			public void SaveAction();
 			public void DiscardAction();
 			public string DisplayName { get; }
-			//public object BoxedValue { get; set; }
+			//public object ModelBoxedValue { get; set; }
 
 			/// <summary>
 			/// Called when the Entry has been created.

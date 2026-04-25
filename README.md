@@ -4,8 +4,7 @@
 ***Modders read this first one***
 <details><summary>New Feature: Improved MelonPreferences_Entry.Value Behavior</summary>
 
-The Value property for entries won't update anymore until the saved button is clicked.
-This also means you can now subscribe to individual entries OnEntryValueChanged event and be notified if, well it changes. It also provides parameters for old and new values
+The Value property for entries won't update anymore until the save button is clicked.
 
 </details>
 

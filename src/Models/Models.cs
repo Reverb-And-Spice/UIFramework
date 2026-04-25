@@ -165,9 +165,9 @@ namespace UIFramework
 			/// <summary>
 			/// Direct access to the PrefEntry boxedvalue property
 			/// </summary>
-			public override object BoxedValue
+			public override object ModelBoxedValue
 			{
-				get => PrefEntry.BoxedEditedValue;
+				get => PrefEntry.BoxedValue;
 				protected set => PrefEntry.BoxedEditedValue = value;
 			}
 			/// <summary>
@@ -194,14 +194,14 @@ namespace UIFramework
 			/// <inheritdoc/>
 			public override void SaveAction()
 			{
-				SavedValue = BoxedValue;
+				SavedValue = ModelBoxedValue;
 			}
 			///	<inheritdoc/>
 			public override void DiscardAction()
 			{
-				//Debug.Log($"MelonEntry discard action called. Current BoxedEditedValue: {PrefEntry.BoxedEditedValue}, actual BoxedValue: {PrefEntry.BoxedValue}", true);
+				//Debug.Log($"MelonEntry discard action called. Current BoxedEditedValue: {PrefEntry.BoxedEditedValue}, actual ModelBoxedValue: {PrefEntry.ModelBoxedValue}", true);
 				//Discard the BoxedEditedValue and reset it to the actual value of the preference
-				PrefEntry.BoxedEditedValue = PrefEntry.BoxedValue;
+				//PrefEntry.BoxedEditedValue = PrefEntry.BoxedValue;
 			}
 		}
 	}

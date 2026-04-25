@@ -137,26 +137,26 @@ namespace UIFramework
 			/// <summary>
 			/// Returns the textfield
 			/// </summary>
-			public TMP_InputField textField => this.gameObject.transform.Find("Data/Control").gameObject.GetComponent<TMP_InputField>();
+			public TMP_InputField textField => this.gameObject.transform.Find("Data/TextControl").gameObject.GetComponent<TMP_InputField>();
 			/// <summary>
 			/// Sets the placeholder text in the textField
 			/// </summary>
-			public string PlaceHolderText { set { this.gameObject.transform.Find("Data/Control/Text Area/Placeholder").gameObject.GetComponent<TextMeshProUGUI>().text = value; } }
+			public string PlaceHolderText { set { this.gameObject.transform.Find("Data/TextControl/Text Area/Placeholder").gameObject.GetComponent<TextMeshProUGUI>().text = value; } }
 			/// <inheritdoc/>
 			public override void ModelSet()
 			{
-				//textField.text = _prefModel.BoxedValue.ToString();
-				//TomletMain.TomlStringFrom(_prefModel.BoxedValue).Trim();
-				if (_prefModel.BoxedValue.GetType() == typeof(string))
+				//textField.text = _prefModel.ModelBoxedValue.ToString();
+				//TomletMain.TomlStringFrom(_prefModel.ModelBoxedValue).Trim();
+				if (_prefModel.ModelBoxedValue.GetType() == typeof(string))
 				{
-					textField.text = (string)_prefModel.BoxedValue;
+					textField.text = (string)_prefModel.ModelBoxedValue;
 				}
 				else
 				{
 					try
 					{
-						textField.text = ToTomlString(_prefModel.BoxedValue);
-						//Debug.Log(ToTomlString(_prefModel.BoxedValue), true);
+						textField.text = ToTomlString(_prefModel.ModelBoxedValue);
+						//Debug.Log(ToTomlString(_prefModel.ModelBoxedValue), true);
 					}
 					catch (Exception ex)
 					{
@@ -167,7 +167,7 @@ namespace UIFramework
 			}
 			public override void ApplyValueToPref()
 			{
-				if (_prefModel.BoxedValue.GetType() == typeof(string))
+				if (_prefModel.ModelBoxedValue.GetType() == typeof(string))
 				{
 					_prefModel.SetDataValue(textField.text);
 				}
@@ -177,8 +177,8 @@ namespace UIFramework
 					{
 						if (textField.text.Trim() != "")
 						{
-							_prefModel.SetDataValue(FromTomlString(textField.text, _prefModel.BoxedValue.GetType()));
-							//Debug.Log($"Toml data parsed {FromTomlString(textField.text, _prefModel.BoxedValue.GetType())}");
+							_prefModel.SetDataValue(FromTomlString(textField.text, _prefModel.ModelBoxedValue.GetType()));
+							//Debug.Log($"Toml data parsed {FromTomlString(textField.text, _prefModel.ModelBoxedValue.GetType())}");
 						}
 					}
 					catch (Exception ex)
@@ -190,7 +190,7 @@ namespace UIFramework
 
 			public override void EditCheck()
 			{
-				/*if(textField.text != _prefModel.PrefEntry.BoxedValue.ToString())
+				/*if(textField.text != _prefModel.PrefEntry.ModelBoxedValue.ToString())
 				{
 					EntryStatus = EntryState.Edited;
 				}*/
@@ -221,13 +221,13 @@ namespace UIFramework
 		[RegisterTypeInIl2Cpp]
 		public class PrefBool : DataEntry
 		{
-			protected Toggle toggle => this.gameObject.transform.Find("Data/Toggle").gameObject.GetComponent<Toggle>();
+			protected Toggle toggle => this.gameObject.transform.Find("Data/ToggleControl").gameObject.GetComponent<Toggle>();
 			//protected override UIFModel.ModelDataEntryBase _prefModel => (UIFModel.ModelDataEntryBase)EntryModel;
-			public bool EnteredValue => this.gameObject.transform.Find("Data/Toggle").gameObject.GetComponent<Toggle>().isOn;
+			public bool EnteredValue => this.gameObject.transform.Find("Data/ToggleControl").gameObject.GetComponent<Toggle>().isOn;
 			/// <inheritdoc/>
 			public override void ModelSet()
 			{
-				toggle.isOn = (bool)_prefModel.BoxedValue;
+				toggle.isOn = (bool)_prefModel.ModelBoxedValue;
 				toggle.onValueChanged.AddListener((UnityAction<bool>)OnValueChanged);
 
 				base.ModelSet();
@@ -261,7 +261,7 @@ namespace UIFramework
 		public class PrefSlider : DataEntry
 		{
 			protected Slider Slider => gameObject.transform.Find("Data/SliderControl").gameObject.GetComponent<UnityEngine.UI.Slider>();
-			protected TMP_InputField _textField => gameObject.transform.Find("Data/DisplayText").gameObject.GetComponent<TMP_InputField>();
+			protected TMP_InputField _textField => gameObject.transform.Find("Data/TextControl").gameObject.GetComponent<TMP_InputField>();
 			protected virtual ISliderDescriptor SliderSettings => _prefModel.Validator as ISliderDescriptor;
 
 			public override void ModelSet()
@@ -271,9 +271,9 @@ namespace UIFramework
 
 				Slider.minValue = SliderSettings?.Min ?? 0;
 				Slider.maxValue = SliderSettings?.Max ?? 100;
-				Slider.value = Convert.ToSingle(_prefModel.BoxedValue);
+				Slider.value = Convert.ToSingle(_prefModel.ModelBoxedValue);
 				Slider.onValueChanged.AddListener((UnityAction<float>)OnValueChanged);
-				if (_prefModel.BoxedValue is int or byte or short or long or sbyte or ushort or uint or ulong) 
+				if (_prefModel.ModelBoxedValue is int or byte or short or long or sbyte or ushort or uint or ulong) 
 				{ 
 					Slider.wholeNumbers = true; 
 					_textField.contentType = TMP_InputField.ContentType.IntegerNumber;
@@ -298,7 +298,7 @@ namespace UIFramework
 
 			public override void ApplyValueToPref()
 			{
-				_prefModel.TryApply(Convert.ChangeType(Slider.value, _prefModel.BoxedValue.GetType()));
+				_prefModel.TryApply(Convert.ChangeType(Slider.value, _prefModel.ModelBoxedValue.GetType()));
 			}
 			public virtual void EditStart(string s)
 			{
@@ -340,8 +340,8 @@ namespace UIFramework
 			/// <inheritdoc/>
 			public override void ModelSet()
 			{
-				dropdown = this.gameObject.transform.Find("Data/Dropdown").GetComponent<TMP_Dropdown>();
-				prefEnum = _prefModel.BoxedValue.GetType();
+				dropdown = this.gameObject.transform.Find("Data/DropdownControl").GetComponent<TMP_Dropdown>();
+				prefEnum = _prefModel.ModelBoxedValue.GetType();
 
 				//Get a list of display name attributes or the enum name if not available
 				Il2CppSystem.Collections.Generic.List<string> enumNames = new();
@@ -357,7 +357,7 @@ namespace UIFramework
 				dropdown.ClearOptions();
 				dropdown.AddOptions(enumNames);
 
-				dropdown.value = _indexToValueMap.IndexOf((int)_prefModel.BoxedValue);
+				dropdown.value = _indexToValueMap.IndexOf((int)_prefModel.ModelBoxedValue);
 
 				dropdown.onValueChanged.AddListener((UnityAction<int>)OnValueChanged);
 
@@ -388,7 +388,7 @@ namespace UIFramework
 			/// <inheritdoc/>
 			public override void ModelSet()
 			{
-				ButtonGo = this.gameObject.transform.Find("Data/Button").gameObject;
+				ButtonGo = this.gameObject.transform.Find("Data/ButtonControl").gameObject;
 				ButtonGo.GetComponent<Button>().onClick.AddListener((UnityAction)OnClickRelay);
 				base.ModelSet();
 			}
