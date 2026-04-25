@@ -130,7 +130,7 @@ namespace UIFramework
 			public override void DiscardAction()
 			{
 				PrefCat.LoadFromFile(false);
-				foreach (ModelMelonEntry entry in Entries)
+				foreach (ModelEntryItem entry in SubModels)
 				{
 					entry.DiscardAction();
 				}

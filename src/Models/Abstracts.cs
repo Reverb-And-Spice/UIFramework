@@ -166,7 +166,7 @@ namespace UIFramework
 		}
 		public abstract class ModelCategoryItem : SelectableModelBase
 		{
-			public List<ModelEntryItem> Entries => SubModels.Cast<ModelEntryItem>().ToList();
+			//public List<ModelEntryItem> Entries => SubModels.Cast<ModelEntryItem>().ToList();
 			public ModelModItem ParentMod { get; set; }
 			public abstract bool IsHidden {get; set;}
 			protected ModelCategoryItem(ModelModItem parentMod)
