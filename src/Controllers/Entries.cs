@@ -222,8 +222,8 @@ namespace UIFramework
 
 
 		[RegisterTypeInIl2Cpp]
-		public class PrefSlider : DataEntry
-		{
+		public class PrefSlider : TextInputEntry
+		{	
 			protected Slider Slider => gameObject.transform.Find("Data/SliderControl").gameObject.GetComponent<UnityEngine.UI.Slider>();
 			protected TMP_InputField _textField => gameObject.transform.Find("Data/TextControl").gameObject.GetComponent<TMP_InputField>();
 			protected virtual ISliderDescriptor SliderSettings => _prefModel.Validator as ISliderDescriptor;
