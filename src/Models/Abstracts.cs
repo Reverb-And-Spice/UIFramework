@@ -84,6 +84,7 @@ namespace UIFramework
 
 		public abstract class ModelModItem : SelectableModelBase
 		{
+			
 			public List<ModelCategoryItem> Categories => SubModels.Cast<ModelCategoryItem>().ToList();
 			public abstract MelonBase Instance { get; set; }
 			public override string Identifier => Instance.Info.Name;
@@ -165,6 +166,7 @@ namespace UIFramework
 		}
 		public abstract class ModelCategoryItem : SelectableModelBase
 		{
+			public List<ModelEntryItem> Entries => SubModels.Cast<ModelEntryItem>().ToList();
 			public ModelModItem ParentMod { get; set; }
 			public abstract bool IsHidden {get; set;}
 			protected ModelCategoryItem(ModelModItem parentMod)

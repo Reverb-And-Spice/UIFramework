@@ -93,7 +93,7 @@ namespace UIFramework
 
 		public class ModelMelonCategory : ModelCategoryItem
 		{
-			public List<ModelMelonEntry> Entries => SubModels.Cast<ModelMelonEntry>().ToList();
+			
 			/// <summary>
 			/// The MelonPreferences_Category object this adapts into the framework
 			/// </summary>
