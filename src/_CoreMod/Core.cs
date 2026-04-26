@@ -35,7 +35,7 @@ namespace UIFramework
 		internal string CurrentScene = "";
 		internal bool isFirstLoad = true;
 		internal GameObject ModUIWindow;
-
+		 
 		internal Stopwatch displayTime = new Stopwatch();
 
 		internal int inactiveTimeLimit => (Preferences.InactivityTimeout?.Value * 1000) ?? 30000;

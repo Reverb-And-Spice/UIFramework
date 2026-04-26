@@ -1,6 +1,6 @@
 {
   "name": "UIFramework",
-  "version_number": "0.7.1",
+  "version_number": "0.8.0",
   "description": "A UI For settings in Rumble VR",
   "website_url": "https://github.com/Reverb-And-Spice/UIFramework",
   "dependencies": [

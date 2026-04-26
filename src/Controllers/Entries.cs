@@ -374,12 +374,18 @@ namespace UIFramework
 		[RegisterTypeInIl2Cpp]
 		public class PrefButton : DataEntry
 		{
-			GameObject _button;
+			GameObject _buttonGo;
+			Button _buttonComponent;
 			IButtonDescriptor _buttonDescrictor => _prefModel?.Validator as IButtonDescriptor;
 			public override void SetData()
 			{
-				 _button = this.gameObject.transform.Find("Data/ButtonControl").gameObject;
-				_button.GetComponent<Button>().onClick.AddListener((UnityAction)_buttonDescrictor?.Handler);
+				 _buttonGo = this.gameObject.transform.Find("Data/ButtonControl").gameObject;
+				
+				_buttonComponent = _buttonGo.GetComponent<Button>();
+				_buttonComponent.onClick.AddListener((UnityAction)_buttonDescrictor?.Handler);
+				TextMeshProUGUI buttonText = _buttonGo.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+				buttonText.text = _buttonDescrictor?.ButtonText ?? "Button";
+
 			}
 		}
 

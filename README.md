@@ -24,7 +24,7 @@ mod's name differently on its button in UI Framework. Yes, it supports line brea
 </details>
 <details><summary>New Feature: Support IsHidden property for entries.</summary>
 
-IsHidden entries won't be listed in the preferences list anymore.
+Entries with `IsHidden` set to `true` won't be listed in the preferences list anymore.
 </details>
 
 <details><summary>New Feature: New Validator Extension System.</summary>
@@ -42,7 +42,7 @@ MySlider = Category.CreateEntry("MySlider", 0.5f, "My Slider", "Float Slider",fa
 
 <details><summary> New Feature: Add Buttons to the Entry List</summary>
 
-You can now add your own buttons as entries into UI Framework. 
+Modders can now add their own buttons as entries into UI Framework. 
 
 ```cs
 UI.CreateButtonEntry(MelonPreferences_Category category, string buttonText, string displayName, string description, Action handler)

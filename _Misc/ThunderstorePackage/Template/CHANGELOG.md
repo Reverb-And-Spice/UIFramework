@@ -1,3 +1,72 @@
+# New in 0.8.0
+
+***Modders read this first one***
+<details><summary>New Feature: Improved MelonPreferences_Entry.Value Behavior</summary>
+
+The Value property for entries won't update anymore until the save button is clicked.
+If you need to access the new value before it's been saved, you can get the EditedValue property instead. 
+</details>
+
+<details><summary>New Feature: Expanded Type Support</summary>
+
+Serialization and parsing is now handled by Tomlet. 
+Anything Tomlet supports is now technically supported by UIFramework.
+
+More details in the [Type Support](##type-support-whatever-works-with-tomlet) section
+</details> 
+
+<details><summary>New feature: Custom display name attribute</summary>
+
+Just add `[assembly: UIInfo("My Mod's Better\nDisplay Name")]` to your assembly attributes to display your 
+mod's name differently on its button in UI Framework. Yes, it supports line breaks
+
+</details>
+<details><summary>New Feature: Support IsHidden property for entries.</summary>
+
+Entries with `IsHidden` set to `true` won't be listed in the preferences list anymore.
+</details>
+
+<details><summary>New Feature: New Validator Extension System.</summary>
+
+I came up with a system to use MelonLoader's custom validator feature to add extra UI configurations for entries. The new sliders and buttons feature are implemented through this system.
+</details>
+<details><summary>New Feature: Sliders! (and maybe more eventually 👀)</summary>
+
+Modders can now implement sliders for numeric vlaues.
+```cs
+MySlider = Category.CreateEntry("MySlider", 0.5f, "My Slider", "Float Slider",false, false, new SliderDescriptor { Min = 0, Max = 1, DecimalPlaces = 3 });
+```
+
+</details>
+
+<details><summary> New Feature: Add Buttons to the Entry List</summary>
+
+Modders can now add their own buttons as entries into UI Framework. 
+
+```cs
+UI.CreateButtonEntry(MelonPreferences_Category category, string buttonText, string displayName, string description, Action handler)
+```
+
+Go to [Buttons](###buttons) for more details.
+
+</details>
+
+
+<details><summary>Bug Fix: Fixed issue with UI Framework *displaying* ModUI's window instead of hiding</summary>
+
+whoops
+</details>
+
+<details><summary>Bug Fix: Finally suppressed saved and loaded message from MelonPreferneces</summary>
+
+I somehow missed an entire boolean. Sorry Ulvak.
+
+\*<sup>This will only affect messages when you save or load through UI Framework. It will not suppress messages from melonloader itself when the game starts or closes.</sup>
+</details>
+
+
+
+
 # New in 0.7.1
 <details><summary>New setting: VR Toggle</summary>
 Toggle UI Framework window using your controllers by pressing both grips on both hands
