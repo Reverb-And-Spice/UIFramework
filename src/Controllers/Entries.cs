@@ -381,18 +381,29 @@ namespace UIFramework
 				_prefModel.SetDataValue(Enum.ToObject(prefEnum, _indexToValueMap[dropdown.value]));
 			}
 		}
-
 		[RegisterTypeInIl2Cpp]
+		public class PrefButton : DataEntry
+		{
+			GameObject _button;
+			IButtonDescriptor _buttonDescrictor => _prefModel?.Validator as IButtonDescriptor;
+			public override void SetData()
+			{
+				 _button = this.gameObject.transform.Find("Data/ButtonControl").gameObject;
+				_button.GetComponent<Button>().onClick.AddListener((UnityAction)_buttonDescrictor?.Handler);
+			}
+		}
+
+			[RegisterTypeInIl2Cpp]
 		public class ButtonEntry : Entry
 		{
 			UIFModel.ButtonEntry ButtonModel => (UIFModel.ButtonEntry)EntryModel;
 			public GameObject ButtonGo;
 			/// <inheritdoc/>
-			public override void ModelSet()
+			public override void SetData()
 			{
 				ButtonGo = this.gameObject.transform.Find("Data/ButtonControl").gameObject;
 				ButtonGo.GetComponent<Button>().onClick.AddListener((UnityAction)OnClickRelay);
-				base.ModelSet();
+				base.SetData();
 			}
 
 			public void OnClickRelay()

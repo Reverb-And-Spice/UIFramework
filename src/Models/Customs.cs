@@ -77,7 +77,12 @@ namespace UIFramework
 				OnClick += onClick;
 			}
 			/// <inheritdoc/>
-			public override GameObject GetNewUIInstance() => UI.GetPrefab(InputType.Button);
+			public override GameObject GetNewUIInstance()
+			{
+				GameObject button = GameObject.Instantiate(UI.GetPrefab(InputType.Button));
+				UIFController.ButtonEntry buttonEntry = button.GetComponent<UIFController.ButtonEntry>();
+				return button;
+			}
 			
 
 

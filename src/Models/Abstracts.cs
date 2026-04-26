@@ -11,6 +11,8 @@ using UnityEngine.Events;
 using static UIFramework.UIFController;
 using MelonLoader.Preferences;
 using UIFramework.ValidatorExtensions;
+using UnityEngine.Playables;
+using Il2CppPhoton.Pun;
 
 namespace UIFramework
 {
@@ -245,7 +247,7 @@ namespace UIFramework
 				ModelBoxedValue = newValue;
 			}
 			protected GameObject _uiPrefabSource;
-			/// <summary>
+			/*/// <summary>
 			/// Use this function to provide your own prefab for this entry. 
 			/// The prefab must have a component that implements IUIFrameworkEntry and properly handles the value changes and saving. 
 			/// If no prefab is provided, a default one will be used based on the type of the preference 
@@ -256,7 +258,7 @@ namespace UIFramework
 			public void SetUIPrefabSource(GameObject prefab)
 			{
 				_uiPrefabSource = prefab;
-			}
+			}*/
 			/// <summary>
 			/// Returns an instance of the game object associated with the MelonPreferences_Entry type.
 			/// If a custom one is provided, it will return an instance of that instead
@@ -264,11 +266,25 @@ namespace UIFramework
 			/// <returns>TODO: Move this to the UI builders as this is ui logic</returns>
 			public override GameObject GetNewUIInstance()
 			{
+				//Make the custom UI provided by the validator the first priority if it exists.	
+				if (Validator is ICustomUIProvider uiProvider)
+				{
+					if (uiProvider?.WidgetPrefab is not null)
+						return GameObject.Instantiate(uiProvider.WidgetPrefab);
+				}
+
 				if (_uiPrefabSource == null)
 				{
+					
+
 					if(Validator is ISliderDescriptor)
 						return UI.GetPrefab(InputType.Slider);
-
+					if (Validator is IButtonDescriptor)
+					{
+						GameObject button = UI.GetPrefab(InputType.Button);
+						button.AddComponent<UIFController.PrefButton>();
+						return button;
+					}
 					switch (ModelBoxedValue)
 					{
 						case bool:

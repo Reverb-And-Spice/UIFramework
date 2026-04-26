@@ -152,7 +152,7 @@ namespace UIFramework.ValidatorExtensions
 		public string ButtonText { get; set; }
 		public string DisplayName { get; set; }
 		public string Description { get; set; }
-		public EventHandler Handler { get; set; }
+		public Action Handler { get; set; }
 	}
 
 	internal class ButtonAsEntry : DefaultValidator, IButtonDescriptor
@@ -162,7 +162,7 @@ namespace UIFramework.ValidatorExtensions
 		public string ButtonText { get; set; } = "";
 		public string DisplayName { get; set; } = "";
 		public string Description { get; set; } = "";
-		public EventHandler Handler { get; set; }
+		public Action Handler { get; set; }
 	}
 
 }

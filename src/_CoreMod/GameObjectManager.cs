@@ -141,7 +141,7 @@ namespace UIFramework
 			DropDownPrefab.AddComponent<UIFController.PrefDropDown>();
 			SliderPrefab.AddComponent<UIFController.PrefSlider>();
 
-			ButtonPrefab.AddComponent<UIFController.ButtonEntry>();
+			//ButtonPrefab.AddComponent<UIFController.ButtonEntry>();
 
 
 

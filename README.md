@@ -5,10 +5,11 @@
 <details><summary>New Feature: Improved MelonPreferences_Entry.Value Behavior</summary>
 
 The Value property for entries won't update anymore until the save button is clicked.
-
+If you need to access the new value before it's been saved, you can get the EditedValue property instead. 
 </details>
 
 <details><summary>New Feature: Expanded Type Support</summary>
+
 Serialization and parsing is now handled by Tomlet. 
 Anything Tomlet supports is now technically supported by UIFramework.
 
@@ -21,25 +22,47 @@ Just add `[assembly: UIInfo("My Mod's Better\nDisplay Name")]` to your assembly 
 mod's name differently on its button in UI Framework. Yes, it supports line breaks
 
 </details>
-
-<details><summary>New Feature: Sliders! (and maybe more eventually 👀)</summary>
-
-Modders can now implement sliders for numeric vlaues. And a new system for future expansions
-
-</details>
-
 <details><summary>New Feature: Support IsHidden property for entries.</summary>
 
-Entries with IsHidden set to true won't be visible in the UI anymore
+IsHidden entries won't be listed in the preferences list anymore.
+</details>
+
+<details><summary>New Feature: New Validator Extension System.</summary>
+
+I came up with a system to use MelonLoader's custom validator feature to add extra UI configurations for entries. The new sliders and buttons feature are implemented through this system.
+</details>
+<details><summary>New Feature: Sliders! (and maybe more eventually 👀)</summary>
+
+Modders can now implement sliders for numeric vlaues.
+```cs
+MySlider = Category.CreateEntry("MySlider", 0.5f, "My Slider", "Float Slider",false, false, new SliderDescriptor { Min = 0, Max = 1, DecimalPlaces = 3 });
+```
 
 </details>
 
+<details><summary> New Feature: Add Buttons to the Entry List</summary>
+
+You can now add your own buttons as entries into UI Framework. 
+
+```cs
+UI.CreateButtonEntry(MelonPreferences_Category category, string buttonText, string displayName, string description, Action handler)
+```
+
+Go to [Buttons](###buttons) for more details.
+
+</details>
+
+
 <details><summary>Bug Fix: Fixed issue with UI Framework *displaying* ModUI's window instead of hiding</summary>
+
 whoops
 </details>
 
 <details><summary>Bug Fix: Finally suppressed saved and loaded message from MelonPreferneces</summary>
-I somehow missed an entire boolean 
+
+I somehow missed an entire boolean. Sorry Ulvak.
+
+\*<sup>This will only affect messages when you save or load through UI Framework. It will not suppress messages from melonloader itself when the game starts or closes.</sup>
 </details>
 
 
@@ -61,6 +84,7 @@ The save button writes it to the file for permanent storage. Closing your game m
 ------
 
 # For Modders 
+## Basic Registration
 Add `[assembly: MelonAdditionalDependencies("UIFramework")]` to your AssemblyInfo. This prevents your mod from calling on UIFramework before it's been initialized.
 
 [Define](#If-you-havent-used-melonpreferences-before) your MelonPreferences in `OnInitializeMelon` and then register them to the UI.
@@ -99,8 +123,14 @@ But the cast makes sure that your mod won't break when the old MelonMod registra
 ### Optional: Custom display names
 
 
-Add `[assembly: UIInfo("My Mod's Better\nDisplay Name")]` to your assembly attributesto change how the mod's name is displayed
+Add `[assembly: UIInfo("My Mod's Better\nDisplay Name")]` to your assembly attributes to change how the mod's name is displayed
 in the UI. Line breaks are supported.
+
+-----
+
+# Advanced Usage
+<details><summary>Click here for details
+</summary>
 
 ## Interaction Type Configuration
 ### Validator Extension system 
@@ -145,9 +175,10 @@ MySlider = Category.CreateEntry("MySlider", 0.5f, "My Slider", "Float Slider",fa
 
 Most interfaces haven't been implemented yet but I will list the available ones below as they get added
 
-I will also have a default concrete class for each interface that has the required members implemented 
+I will also have a default concrete class for most interfaces that has the required members implemented 
 so you can just set the properties when you create a new instance of the class instead of having to make your own validator class.
 
+-----
 ### Sliders
 #### Interface: `ISliderDescriptor`
 #### Default extended validator: `SliderDescriptor`
@@ -157,11 +188,20 @@ The UI will represent your entry with a slider if you add a validator that imple
 
 `MySlider = Category.CreateEntry("MySlider", 0.5f, "My Slider", "Float Slider",false, false, new SliderDescriptor { Min = 0, Max = 1, DecimalPlaces = 3 });`
 
-
+-----
+### Buttons
+#### Interface: `IButtonDescriptor`
+#### Default extended validator: `ButtonAsEntry` (internal)
+This is a special case. You don't need to implement this yourself. Instead, you call 
+```cs
+UI.CreateButtonEntry(MelonPreferences_Category category, string buttonText, string displayName, string description, Action handler)
+```
+This method will handle the implementation for you and it will show the button in the entries list.
 
 -----
+</details>
 
-
+-----
 
 ## If you haven't used melonpreferences before
 ### Here's instructions for basic usage as well as a link to the official documentation for MelonPreferences from the MelonLoader wiki

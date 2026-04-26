@@ -104,7 +104,7 @@ namespace UIFramework
 
 		}
 
-		public static void CreateButtonEntry(MelonPreferences_Category category, string buttonText, string displayName, string description, EventHandler handler)
+		public static void CreateButtonEntry(MelonPreferences_Category category, string buttonText, string displayName, string description, Action handler)
 			
 		{
 			ButtonAsEntry button = new ButtonAsEntry { Handler = handler, ButtonText = buttonText, DisplayName = displayName, Description = description };
