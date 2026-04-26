@@ -1,18 +1,7 @@
 ﻿using Il2CppInterop.Runtime.InteropTypes.Arrays;
-using Il2CppSystem.IO;
-using Il2CppTMPro;
 using MelonLoader;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Events;
-using static Il2CppSystem.DateTimeParse;
-using Il2CppExitGames.Client.Photon;
-using MelonLoader.TinyJSON;
 
 namespace UIFramework
 {

@@ -1,7 +1,4 @@
 using MelonLoader;
-using System.Drawing;
-using UnityEngine;
-using UnityEngine.Bindings;
 
 namespace UIFramework
 {

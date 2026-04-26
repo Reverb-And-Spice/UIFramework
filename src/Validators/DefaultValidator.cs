@@ -1,20 +1,6 @@
-using MelonLoader;
-using MelonLoader.Logging;
-using MelonLoader.Preferences;
-using MonoMod.ModInterop;
-using System.ComponentModel.DataAnnotations;
-using System.Reflection;
-using System;
-using Tomlet;
-using Tomlet.Models;
-using UnityEngine;
-
-//using System;
-/*using System.Linq;
-using System.Text;
-using System.Threading.Tasks;*/
-using static UIFramework.Debug;
 using Il2CppTMPro;
+using MelonLoader.Preferences;
+using UnityEngine;
 namespace UIFramework.ValidatorExtensions
 {
 	/// <summary>

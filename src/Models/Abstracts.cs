@@ -1,19 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using MelonLoader;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MelonLoader;
 using UnityEngine;
-using UnityEngine.Events;
 using static UIFramework.UIFController;
-using MelonLoader.Preferences;
 using UIFramework.ValidatorExtensions;
-using UnityEngine.Playables;
-using Il2CppPhoton.Pun;
-
 namespace UIFramework
 {
 

@@ -1,15 +1,8 @@
 ﻿using MelonLoader;
 using MelonLoader.Preferences;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using UIFramework.ValidatorExtensions;
 using UnityEngine;
-using UnityEngine.Events;
-using static UIFramework.UIFController;
 
 namespace UIFramework
 {

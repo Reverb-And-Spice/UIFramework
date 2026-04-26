@@ -1,24 +1,14 @@
-﻿using AssetsTools.NET.Extra;
-using Il2CppInterop.Runtime;
-using Il2CppSystem.Collections.Generic;
-using Il2CppTMPro;
+﻿using Il2CppTMPro;
 using MelonLoader;
-using MelonLoader.Logging;
-using MonoMod.ModInterop;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection;
 using Tomlet;
 using Tomlet.Models;
 using UIFramework.ValidatorExtensions;
-//using System;
-/*using System.Linq;
-using System.Text;
-using System.Threading.Tasks;*/
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
 using static UIFramework.Debug;
-using static Unity.Collections.AllocatorManager;
 namespace UIFramework
 {
 	public partial class UIFController

@@ -1,23 +1,7 @@
-﻿using AssetsTools.NET.Extra;
-using Il2CppInterop.Runtime;
-//using Il2CppSystem.Collections.Generic;
-using Il2CppTMPro;
-using MelonLoader;
-using MelonLoader.Logging;
-using MonoMod.ModInterop;
-using System;
-//using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MelonLoader;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
-//using static UI.UIFController;
-using static Unity.Collections.AllocatorManager;
 using static UIFramework.Debug;
-using System.Globalization;
-using Il2CppSystem.Threading.Tasks;
 namespace UIFramework
 {
 	/// <summary>

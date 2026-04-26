@@ -1,15 +1,5 @@
 using MelonLoader;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Bindings;
-using UnityEngine.Events;
-using UnityEngine.UI;
-using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using UIFramework.ValidatorExtensions;
 namespace UIFramework

@@ -1,12 +1,8 @@
-﻿using Il2CppInterop.Runtime.InteropTypes.Arrays;
-using Il2CppPlayFab.ClientModels;
-using Il2CppTMPro;
+﻿
 using MelonLoader;
 using UnityEngine;
-using static UIFramework.Debug;
 using System.Diagnostics;
 using UnityEngine.InputSystem;
-using UnityEngine.Jobs;
 using System.Collections;
 
 [assembly: MelonInfo(typeof(UIFramework.Core), UIFramework.BuildInfo.Name, UIFramework.BuildInfo.Version, UIFramework.BuildInfo.Author)]
