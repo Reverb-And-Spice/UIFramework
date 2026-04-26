@@ -1,17 +1,7 @@
 ﻿using Il2CppInterop.Runtime.InteropTypes.Arrays;
-using Il2CppSystem.IO;
-using Il2CppTMPro;
 using MelonLoader;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Events;
-using static Il2CppSystem.DateTimeParse;
-using Il2CppExitGames.Client.Photon;
 
 namespace UIFramework
 {
@@ -31,6 +21,8 @@ namespace UIFramework
 		/// Temporary game object storage as they're being instantiated
 		/// </summary>
 		internal static GameObject TempStorage = new GameObject("TempStorage");
+		internal static GameObject HiddenStorage = new GameObject("HiddenStorage");
+
 		public static GameObject MainCanvasSource;
 		internal static GameObject ModDisplayList;
 		internal static GameObject CatDisplayList;
@@ -43,9 +35,9 @@ namespace UIFramework
 		internal static GameObject BoolPrefab;
 		internal static GameObject IntPrefab;
 		internal static GameObject FloatPrefab;
-		internal static GameObject DoublePrefab;
+		//internal static GameObject DoublePrefab;
 		internal static GameObject DropDownPrefab;
-		
+		internal static GameObject SliderPrefab;
 
 		internal static GameObject ButtonPrefab;
 
@@ -60,11 +52,12 @@ namespace UIFramework
 			TempStorage.transform.SetParent(UIFGameObjects.transform,false);
 			TempStorage.SetActive(false);
 
+			HiddenStorage.transform.SetParent(UIFGameObjects.transform,false);
+			HiddenStorage.SetActive(false);
 			AssetBundleLoaded = GameObject.Instantiate(LoadAssetFromStream<GameObject>(Core.Instance, "UIFramework.Assets.uiframework", "UIframework"), UIFGameObjects.transform);
 			AssetBundleLoaded.name = "UIFrameworkAssets";
 
-			
-			
+
 			MainCanvasSource = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "UICanvas")?.gameObject;
 
 			ModDisplayList = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "ModRegCont")?.gameObject;
@@ -79,9 +72,10 @@ namespace UIFramework
 			
 			IntPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryInt")?.gameObject;
 			FloatPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryFloat")?.gameObject;
-			DoublePrefab = GameObject.Instantiate(FloatPrefab, AssetBundleLoaded.transform);
+			//DoublePrefab = GameObject.Instantiate(FloatPrefab, AssetBundleLoaded.transform);
 
 			DropDownPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryDropdown")?.gameObject;
+			SliderPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntrySlider")?.gameObject;
 
 			ButtonPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryButton")?.gameObject;
 
@@ -93,6 +87,31 @@ namespace UIFramework
 			DiscardButton.gameObject.SetActive(false);
 
 
+			MainCanvasSource.transform.SetParent(HiddenStorage.transform, false);
+
+			/*//skip direct children of main window
+			 * ModDisplayList.transform.SetParent(HiddenStorage.transform, false);
+			 * CatDisplayList.transform.SetParent(HiddenStorage.transform, false);
+			PrefDisplayList.transform.SetParent(HiddenStorage.transform,false);*/
+
+			ModTab.transform.SetParent(HiddenStorage.transform, false);
+			CatTab.transform.SetParent(HiddenStorage.transform, false);
+
+			TextPrefab.transform.SetParent(HiddenStorage.transform,false);
+			BoolPrefab.transform.SetParent(HiddenStorage.transform, false);
+
+			IntPrefab.transform.SetParent(HiddenStorage.transform, false);
+			FloatPrefab.transform.SetParent(HiddenStorage.transform, false);
+			//DoublePrefab.transform.SetParent(HiddenStorage.transform ,false);
+
+			DropDownPrefab.transform.SetParent(HiddenStorage.transform, false );
+			SliderPrefab.transform.SetParent(HiddenStorage.transform, false);
+
+			ButtonPrefab.transform.SetParent(HiddenStorage.transform,false );
+
+
+
+
 
 			//MainActionButton.onClick.AddListener(MainButtonClick);
 
@@ -101,16 +120,17 @@ namespace UIFramework
 			//Add the appropriate components to each prefab for later use
 			MainCanvasSource.AddComponent<UIFController.WindowController>();
 
-			TextPrefab.AddComponent<UIFController.PrefText>();
+			TextPrefab.AddComponent<UIFController.TextInputEntry>();
 			BoolPrefab.AddComponent<UIFController.PrefBool>();
 			
-			IntPrefab.AddComponent<UIFController.PrefInt>();
-			FloatPrefab.AddComponent<UIFController.PrefFloat>();
-			DoublePrefab.AddComponent<UIFController.PrefDouble>();
+			IntPrefab.AddComponent<UIFController.TextInputEntry>();
+			FloatPrefab.AddComponent<UIFController.TextInputEntry>();
+			//DoublePrefab.AddComponent<UIFController.TextInputEntry>();
 			
 			DropDownPrefab.AddComponent<UIFController.PrefDropDown>();
+			SliderPrefab.AddComponent<UIFController.PrefSlider>();
 
-			ButtonPrefab.AddComponent<UIFController.ButtonEntry>();
+			//ButtonPrefab.AddComponent<UIFController.ButtonEntry>();
 
 
 

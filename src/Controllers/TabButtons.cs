@@ -1,22 +1,8 @@
-﻿using AssetsTools.NET.Extra;
-using Il2CppInterop.Runtime;
-//using Il2CppSystem.Collections.Generic;
-using Il2CppTMPro;
+﻿using Il2CppTMPro;
 using MelonLoader;
 using MelonLoader.Logging;
-using MonoMod.ModInterop;
-using System;
-//using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
-//using static UI.UIFController;
-using static Unity.Collections.AllocatorManager;
-using static UIFramework.Debug;
-using System.Globalization;
 namespace UIFramework
 {
 
@@ -74,11 +60,8 @@ namespace UIFramework
 
 			public override void OnSelect()
 			{
-				ParentWindow.TitleButtonText.text = $"{ModModel.DisplayName}\n{ModModel.Instance.Info.Version}";
 
-				ParentWindow.CatRegistryPanel.SetModel(_model);
-				//
-				//ParentWindow.ModRegistryPanel.SelectTab((UIFModel.IHoldSubmodels)Model);
+				ParentWindow.SetSelectedMod(ModModel);
 				
 
 
@@ -94,10 +77,7 @@ namespace UIFramework
 		{
 			public override void OnSelect()
 			{
-				ParentWindow.LastCategorySelected[ParentWindow.CatRegistryPanel.Model as UIFModel.ModelMod] = Model as UIFModel.ModelCategoryItem;
-				ParentWindow.PrefRegistryPanel.SetModel(_model);
-				
-
+				ParentWindow.SetSelectedCategory((UIFModel.ModelCategoryItem)_internalModel);
 			}
 		}
 	}

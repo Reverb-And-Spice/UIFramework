@@ -1,23 +1,7 @@
-﻿using AssetsTools.NET.Extra;
-using Il2CppInterop.Runtime;
-//using Il2CppSystem.Collections.Generic;
-using Il2CppTMPro;
-using MelonLoader;
-using MelonLoader.Logging;
-using MonoMod.ModInterop;
-using System;
-//using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using MelonLoader;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.UI;
-//using static UI.UIFController;
-using static Unity.Collections.AllocatorManager;
 using static UIFramework.Debug;
-using System.Globalization;
-using Il2CppSystem.Threading.Tasks;
 namespace UIFramework
 {
 	/// <summary>
@@ -35,7 +19,7 @@ namespace UIFramework
 		public abstract class ListArea : SubModelController
 		{
 			protected UIFModel.IHoldSubmodels _model => (UIFModel.IHoldSubmodels)_internalModel;
-			
+
 			public virtual void ContainerReset()
 			{
 				Model = null;
@@ -67,6 +51,7 @@ namespace UIFramework
 					return;
 				ContainerReset();
 				Model = model;
+				_rootWindow = FindRootWindow();
 				BuildFromModelList();
 			}
 
@@ -79,10 +64,17 @@ namespace UIFramework
 				Infanticide();
 				foreach (UIFModel.IModelable model in _model.SubModels)
 				{
+					if (model.IsHidden)
+					{
+						Debug.Log($"Model {model.DisplayName} is hidden, skipping UI creation.", true);
+						continue;
+					}
+						
 					GameObject uiElement = model.GetNewUIInstance();//GameObject.Instantiate(GetUIPrefabForModel(model), this.gameObject.transform);
 					uiElement.SetActive(true);
-					uiElement.transform.SetParent(this.gameObject.transform,false);
-
+					uiElement.transform.SetParent(this.gameObject.transform, false);
+					uiElement.transform.localScale = Vector3.one;
+					uiElement.transform.localPosition = Vector3.zero;
 
 
 					IChildable ViewController;
@@ -93,17 +85,19 @@ namespace UIFramework
 					switch (model)
 					{
 						case UIFModel.IEntry entryModel:
+
 							ViewController = uiElement.GetComponent<UIFController.Entry>();
 							_rootWindow.CatRegistryPanel.SelectTab(Model as UIFModel.IHoldSubmodels);
 							break;
-						case UIFModel.IHoldSubmodels tabModel:
+						case UIFModel.SelectableModelBase tabModel:
 							ViewController = uiElement.GetComponent<UIFController.TabButtonController>();
 							try
 							{
 								_rootWindow.ModRegistryPanel.SelectTab(Model as UIFModel.IHoldSubmodels);
-							}catch (Exception ex)
+							}
+							catch (Exception ex)
 							{
-								Debug.Log(ex.Message);
+								Debug.Log($"{ex.Message}");// _rootWindow is null? {_rootWindow is null}. Model type: {Model.GetType}. Model is null? {Model is null}", true);
 							}
 							break;
 						default:
@@ -115,9 +109,9 @@ namespace UIFramework
 					{
 						ViewController.Model = model;
 					}
-
-
 				}
+				LayoutRebuilder.ForceRebuildLayoutImmediate(GetComponent<RectTransform>());
+
 			}
 			/// <summary>
 			/// 
@@ -125,10 +119,12 @@ namespace UIFramework
 			/// <param name="buttonModel"></param>
 			public void SelectTab(UIFModel.IHoldSubmodels buttonModel)
 			{
-				for(int i = 0; i < transform.childCount; i++)
+				for (int i = 0; i < transform.childCount; i++)
 				{
 					TabButtonController tabButton = transform.GetChild(i).GetComponent<TabButtonController>();
-					if(tabButton.Model == buttonModel)
+					if (tabButton is null)
+						return;
+					if (tabButton.Model == buttonModel)
 					{
 						tabButton.GetComponent<Image>().color = _rootWindow.openTabColor;
 					}
@@ -162,24 +158,6 @@ namespace UIFramework
 		[RegisterTypeInIl2Cpp]
 		public class TopBar : ListArea
 		{
-			public override void SetModel(UIFModel.IHoldSubmodels model)
-			{
-				base.SetModel(model);
-
-				UIFModel.ModelCategoryItem lastSelected = null;
-				try
-				{
-					if(_rootWindow.LastCategorySelected.ContainsKey(Model as UIFModel.ModelMod))
-						lastSelected = _rootWindow.LastCategorySelected[Model as UIFModel.ModelMod];
-				}
-				catch (Exception ex) 
-				{
-					Debug.Log(ex.Message);
-				}
-
-				_rootWindow.PrefRegistryPanel.SetModel(lastSelected ?? (UIFModel.ModelCategoryItem)_model.SubModels[0]);
-			}
-
 		}
 		/// <summary>
 		/// Main body of the UI. Lists individual preferences
@@ -196,7 +174,7 @@ namespace UIFramework
 			{
 				SelectedCategory?.SaveAction();
 
-				
+
 
 			}
 			/// <inheritdoc/>
@@ -205,7 +183,7 @@ namespace UIFramework
 				SelectedCategory.DiscardAction();
 				BuildFromModelList();
 			}
-			
+
 		}
 	}
 }

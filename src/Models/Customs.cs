@@ -1,21 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using MelonLoader;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
-using UnityEngine.Events;
-using static UIFramework.UIFController;
+﻿using UnityEngine;
+
 
 namespace UIFramework
 {
 
 	public partial class UIFModel
 	{
-		#region customs
 		/// <summary>
 		/// 
 		/// </summary>
@@ -27,13 +17,15 @@ namespace UIFramework
 			private string _identifier;
 			/// <inheritdoc/>
 			public override string Identifier => _identifier;
-
-			public EmptyCategory(string identifier, string displayName)
+			public override bool IsHidden { get; set; } = false;
+			public EmptyCategory(string identifier, string displayName, ModelModItem parentMod = null)
+				: base(parentMod)
 			{
 				_identifier = identifier;
 				_displayName = displayName;
 			}
-			public EmptyCategory(string identifier)
+			public EmptyCategory(string identifier, ModelModItem parentMod = null)
+				: base(parentMod)
 			{
 				_identifier = identifier;
 				_displayName = identifier;
@@ -54,6 +46,7 @@ namespace UIFramework
 			private string _displayName;
 			/// <inheritdoc/>
 			public override string DisplayName => _displayName;
+			public override bool IsHidden { get; set; }
 
 			/// <summary>
 			/// This is only to satisfy the contract for IEntry. 
@@ -66,7 +59,8 @@ namespace UIFramework
 			public Action<UIFController.ButtonEntry> OnClick;
 
 
-			public ButtonEntry(Action<UIFController.ButtonEntry> onClick, string name, string description = "", string displayName = "")
+			public ButtonEntry(Action<UIFController.ButtonEntry> onClick, string name, string description = "", string displayName = "", ModelCategoryItem parentCategory = null)
+				: base(parentCategory)
 			{
 				_name = name;
 				_description = description;
@@ -74,11 +68,15 @@ namespace UIFramework
 				OnClick += onClick;
 			}
 			/// <inheritdoc/>
-			public override GameObject GetNewUIInstance() => UI.GetPrefab(InputType.Button);
+			public override GameObject GetNewUIInstance()
+			{
+				GameObject button = GameObject.Instantiate(UI.GetPrefab(InputType.Button));
+				UIFController.ButtonEntry buttonEntry = button.GetComponent<UIFController.ButtonEntry>();
+				return button;
+			}
 			
 
 
 		}
-		#endregion
 	}
 }

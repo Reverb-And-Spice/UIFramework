@@ -1,34 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using MelonLoader;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using UnityEngine;
-using UnityEngine.Events;
-using static UIFramework.UIFController;
-
+﻿using UnityEngine;
 namespace UIFramework
 {
 
 	public partial class UIFModel
 	{
-		#region Interfaces
 		/// <summary>
 		/// Implemented by all models
 		/// </summary>
 		public interface IModelable
 		{
 			/// <summary>
-			/// Name for the model
+			/// DisplayName for the model
 			/// </summary>
 			public string Identifier { get; }
 			/// <summary>
 			/// User-facing display name. Should return Identifier if not assigned to a value
 			/// </summary>
 			public string DisplayName { get; }
+			public bool IsHidden {get; set;}
 			/// <summary>
 			/// Instantiates a new Game object associated with them model
 			/// </summary>
@@ -68,12 +57,12 @@ namespace UIFramework
 		{
 			
 			/// <summary>
-			/// Name/ID of the entry
+			/// DisplayName/ID of the entry
 			/// </summary>
 			public string Identifier { get; }
 			
 			/// <summary>
-			/// Description of the entry
+			/// DisplayName of the entry
 			/// </summary>
 			public string Description { get; }
 			/// <summary>
@@ -82,7 +71,7 @@ namespace UIFramework
 			public void SaveAction();
 			public void DiscardAction();
 			public string DisplayName { get; }
-			//public object BoxedValue { get; set; }
+			//public object ModelBoxedValue { get; set; }
 
 			/// <summary>
 			/// Called when the Entry has been created.
@@ -116,6 +105,5 @@ namespace UIFramework
 
 			}
 		}
-		#endregion
 	}
 }

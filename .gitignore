@@ -391,3 +391,7 @@ FodyWeavers.xsd
 /_Misc/AssetBundles/AssetBundles.manifest
 /_Misc/AssetBundles/uiframework
 /_Misc/AssetBundles/uiframework.manifest
+/_Misc/ThunderstorePackage/Template/Mods/UIFramework.dll
+/_Misc/ThunderstorePackage/Template/Mods/UIFramework.xml
+/UIFramework.xml
+/_Misc/ThunderstorePackage/Template/Mods
