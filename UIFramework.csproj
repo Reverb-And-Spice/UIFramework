@@ -26,6 +26,10 @@
 		<EmbeddedResource Include="Assets\**" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="_Misc\ThunderstorePackage\Template\Mods\" />
+	</ItemGroup>
+
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 		<!--Copy to mods folder-->
 		<Exec Command="COPY &quot;$(TargetPath)&quot; &quot;$(RumblePath)\Mods&quot;" />

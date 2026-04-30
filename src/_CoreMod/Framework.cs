@@ -2,6 +2,7 @@ using MelonLoader;
 using UnityEngine;
 using System.ComponentModel.DataAnnotations;
 using UIFramework.ValidatorExtensions;
+using UIFramework.Adapters;
 namespace UIFramework
 {
 	/// <summary>
@@ -13,7 +14,7 @@ namespace UIFramework
 		internal static UIFModel.RootModel ModelInstance = new();
 		internal static GameObject MainWindow;
 		public static bool IsVisible { get { return MainWindow.activeSelf; }  }
-		internal static UIFController.WindowController WindowInstance;
+		internal static WindowCoordinator WindowInstance;
 		/// <summary>
 		/// Registers a mod and its categories to the UI instance. 
 		/// </summary>
@@ -27,7 +28,7 @@ namespace UIFramework
 		/// Please explicitly cast your mod instance as MelonBase to prevent future incompatibility
 		/// So UI.Register((MelonBase)this, Category1, Category2,...);
 		/// </remarks>
-		/// <returns>A reference to the created Mod Model for further customization</returns>
+		/// <returns>A reference to the created ModButtonView Model for further customization</returns>
 		[Obsolete(".Register() will be a different function in the future to support plugins.\n " +
 			"When that happens, no code changes are needed but you will need to rebuild your project so the compiler can find the correct method\n" +
 			"To future-proof your mod, Explicitly cast your mod instance to MelonBase when registering")]
@@ -87,10 +88,10 @@ namespace UIFramework
 		/// </summary>
 		internal static void InitializeUIObjects()
 		{
-			MainWindow = GameObject.Instantiate(Prefabs.MainCanvasSource, Prefabs.UIFGameObjects.transform);
+			MainWindow = GameObject.Instantiate(Prefabs.MainWindowSource, Prefabs.Canvas.transform);
 			MainWindow.name = "MainWindow";
 			MainWindow.SetActive(true);
-			WindowInstance = MainWindow.GetComponent<UIFController.WindowController>();
+			WindowInstance = MainWindow.GetComponent<WindowCoordinator>();
 
 		}
 
@@ -98,7 +99,7 @@ namespace UIFramework
 			
 		{
 			ButtonAsEntry button = new ButtonAsEntry { Handler = handler, ButtonText = buttonText, DisplayName = displayName, Description = description };
-			category.CreateEntry<ButtonAsEntry>($"PlaceHolder{handler.GetHashCode().ToString().Substring(0,7)}", button, displayName, description, false, true, button);
+			category.CreateEntry<ButtonAsEntry>($"PlaceHolder{buttonText + displayName + description}", button, displayName, description, false, true, button);
 		}
 		/// <summary>
 		/// 

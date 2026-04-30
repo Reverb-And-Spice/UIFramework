@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UIFramework.Adapters;
 
 
 namespace UIFramework
@@ -56,10 +57,10 @@ namespace UIFramework
 			/// <inheritdoc/>
 			public override void SaveAction() { }
 
-			public Action<UIFController.ButtonEntry> OnClick;
+			public Action<ButtonEntryAdapter> OnClick;
 
 
-			public ButtonEntry(Action<UIFController.ButtonEntry> onClick, string name, string description = "", string displayName = "", ModelCategoryItem parentCategory = null)
+			public ButtonEntry(Action<ButtonEntryAdapter> onClick, string name, string description = "", string displayName = "", ModelCategoryItem parentCategory = null)
 				: base(parentCategory)
 			{
 				_name = name;
@@ -71,12 +72,9 @@ namespace UIFramework
 			public override GameObject GetNewUIInstance()
 			{
 				GameObject button = GameObject.Instantiate(UI.GetPrefab(InputType.Button));
-				UIFController.ButtonEntry buttonEntry = button.GetComponent<UIFController.ButtonEntry>();
+				ButtonEntryAdapter buttonEntry = button.GetComponent<ButtonEntryAdapter>();
 				return button;
 			}
-			
-
-
 		}
 	}
 }

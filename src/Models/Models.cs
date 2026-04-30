@@ -148,7 +148,7 @@ namespace UIFramework
 			/// <inheritdoc/>
 			public override string Identifier => PrefEntry.Identifier;
 			/// <inheritdoc/>
-			public override string DisplayName => PrefEntry.DisplayName.Trim() == "" ? PrefEntry.Identifier : PrefEntry.DisplayName;
+			public override string DisplayName => PrefEntry.DisplayName;
 			/// <inheritdoc/>
 			public override string Description => PrefEntry.Description;
 

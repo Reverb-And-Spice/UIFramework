@@ -1,9 +1,12 @@
 ﻿
 using MelonLoader;
-using UnityEngine;
-using System.Diagnostics;
-using UnityEngine.InputSystem;
 using System.Collections;
+using System.Diagnostics;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using UIFramework.Adapters;
+using UnityEngine.InputSystem.Controls;
+using UnityEngine.InputSystem.LowLevel;
 
 [assembly: MelonInfo(typeof(UIFramework.Core), UIFramework.BuildInfo.Name, UIFramework.BuildInfo.Version, UIFramework.BuildInfo.Author)]
 [assembly: MelonGame("Buckethead Entertainment", "RUMBLE")]
@@ -21,7 +24,7 @@ namespace UIFramework
 		/// <summary></summary>
 		public const string Author = "Reverb && Spice";
 		/// <summary></summary>
-		public const string Version = "0.8.0";
+		public const string Version = "0.8.2";
 	}
 
 
@@ -35,7 +38,8 @@ namespace UIFramework
 		internal string CurrentScene = "";
 		internal bool isFirstLoad = true;
 		internal GameObject ModUIWindow;
-		 
+		internal bool lastModUIState = false;
+
 		internal Stopwatch displayTime = new Stopwatch();
 
 		internal int inactiveTimeLimit => (Preferences.InactivityTimeout?.Value * 1000) ?? 30000;
@@ -44,9 +48,9 @@ namespace UIFramework
 #pragma warning disable CS1591
 		public override void OnInitializeMelon()
 		{
-			rightGrip.AddBinding("<XRController>{RightHand}/grip");
+			rightGrip.AddBinding("<XRController>{RightHand}/Trigger");
 			rightPrimary.AddBinding("<XRController>{RightHand}/primaryButton");
-			leftGrip.AddBinding("<XRController>{LeftHand}/grip");
+			leftGrip.AddBinding("<XRController>{LeftHand}/Trigger");
 			leftPrimary.AddBinding("<XRController>{LeftHand}/primaryButton");
 			map.Enable();
 			Instance = this;
@@ -55,7 +59,7 @@ namespace UIFramework
 
 		}
 		public override void OnLateInitializeMelon()
-		{ 
+		{
 
 		}
 
@@ -69,18 +73,75 @@ namespace UIFramework
 			AutoHideCheck();
 
 		}
+		/// <summary>
+		/// Run OnUpdate. Check if the inputs for toggling the UI have been pressed.
+		/// </summary>
 		private void UiToggleInputCheck()
 		{
-			if (!(Input.GetKeyDown(KeyCode.F9) || VRActivationAction()))
-				return;
 
+
+			if (Input.GetKeyDown(KeyCode.F9) && (Preferences.ToggleSettings.Value is ToggleOptions.Keyboard or ToggleOptions.KeyAndVR))
+			{
+				MelonCoroutines.Start(InputToggled(false));
+			}
+			else if (VRActivationAction() && (Preferences.ToggleSettings.Value is ToggleOptions.VR or ToggleOptions.KeyAndVR))
+			{
+				MelonCoroutines.Start(InputToggled(true));
+			}
+
+			if(Input.GetKeyDown(KeyCode.F10))
+			{
+				MelonCoroutines.Start(SyncModUIState());
+			}
+
+			
+		}
+		/// <summary>
+		/// The actual coroutine that toggles the UI. Has to be in a coroutine to allow for a delay if ModUI is present.
+		/// If ModUI is present, it matches UI Framework with ModUI. 
+		/// A delay is needed to make sure ModUI's new state has been apllied first before it's copied
+		/// </summary>
+		/// <param name="matchModUI"></param>
+		/// <returns></returns>
+		/// <remarks>This is for ModUI Compatibility. If ModUI is installed, it ensures that UI Framework and ModUI always stay in sync</remarks>
+		private IEnumerator InputToggled(bool matchModUI)
+		{
 			if (CurrentScene == "loader")
 			{
 				Debug.Warning("UIFramework does not work in the loader. Please finish calibrating.");
-				return;
+				yield break;
 			}
-			UI.MainWindow.SetActive(!UI.MainWindow.activeSelf);
+			if (ModUIWindow is not null && matchModUI)
+			{
+				
+				yield return new WaitForSeconds(0.04f);
+				bool uifPrevState = UI.MainWindow.activeSelf;
+				if (ModUIWindow.activeSelf == lastModUIState)
+				{
+					UI.MainWindow.SetActive(!uifPrevState);
+				}
+				else
+				{
+					UI.MainWindow.SetActive(ModUIWindow.activeSelf);
+				}
+				//save the current state of ModUI as the lastState for the next check
+				lastModUIState = ModUIWindow.activeSelf;
+			}
+			else
+			{
+				UI.MainWindow.SetActive(!UI.MainWindow.activeSelf);
+			}
 
+			UI.MainWindow.GetComponent<WindowCoordinator>().DragHandle.ClampToBounds();
+		}
+		/// <summary>
+		/// Runs after mod UI keyboard toggle to make sure lastModUIState variable is correct
+		/// </summary>
+		/// <returns></returns>
+		private IEnumerator SyncModUIState()
+		{
+			yield return null;
+			lastModUIState = ModUIWindow?.activeSelf ?? false;
 		}
 
 		#region Baumritter-generated
@@ -99,37 +160,38 @@ namespace UIFramework
 		/// Code yoinked from Baumritter's ModUI
 		/// </remarks>
 		private bool VRActivationAction()
-        {
+		{
 			if (isFirstLoad)
 				return false;
 			if (!Preferences.VrInputToggle.Value)
 				return false;
-            float High = 0.9f;
-            float Low = 0.1f;
+			float High = 0.9f;
+			float Low = 0.1f;
 			float tRightDepress = rightGrip.ReadValue<float>();
 			float pRightPress = rightPrimary.ReadValue<float>();
 			float tLeftDepress = leftGrip.ReadValue<float>();
 			float pLeftPress = rightPrimary.ReadValue<float>();
 
-/*			Debug.DiffLog($"TR: {tRightDepress}\n" +
-				$"PR: {pRightPress}\n" +
-				$"TL: {tLeftDepress}\n" +
-				$"PL: {pLeftPress}", true);*/
+			/*			Debug.DiffLog($"TR: {tRightDepress}\n" +
+							$"PR: {pRightPress}\n" +
+							$"TL: {tLeftDepress}\n" +
+							$"PL: {pLeftPress}", true);*/
 
 
 
 			if (tRightDepress >= High && pRightPress >= High && tLeftDepress >= High && pLeftPress >= High && !VRButtonsPressed)
-            {
-                VRButtonsPressed = true;
-                return true;
-            }
-            if (tRightDepress <= Low && pRightPress <= Low && tLeftDepress <= Low && pLeftPress <= Low && VRButtonsPressed)
-            {
-                VRButtonsPressed = false;
-            }
-            return false;
+			{
+				VRButtonsPressed = true;
+				return true;
+			}
+			if (tRightDepress <= Low && pRightPress <= Low && tLeftDepress <= Low && pLeftPress <= Low && VRButtonsPressed)
+			{
+				VRButtonsPressed = false;
+			}
+			return false;
 
-        }
+		}
+
 		#endregion
 		private void AutoHideCheck()
 		{
@@ -141,7 +203,7 @@ namespace UIFramework
 					displayTime.Reset();
 				return;
 			}
-			
+
 			//Stop and reset stopwatch if user has interacted with mouse or keyboard
 			if (UserInteracted())
 			{
@@ -160,7 +222,7 @@ namespace UIFramework
 			if (displayTime.ElapsedMilliseconds >= inactiveTimeLimit)
 			{
 				UI.MainWindow.SetActive(false);
-				if(Preferences.HijackModUI.Value)
+				if (Preferences.HijackModUI.Value)
 				{
 					ModUIWindow?.SetActive(false);
 				}
@@ -204,7 +266,7 @@ namespace UIFramework
 				if (UI.MainWindow.activeSelf)
 				{
 					UI.MainWindow.SetActive(!Preferences.AutoHideOnSceneLoad.Value);
-					if(Preferences.HijackModUI.Value && (ModUIWindow?.activeSelf ?? false))
+					if (Preferences.HijackModUI.Value && (ModUIWindow?.activeSelf ?? false))
 						ModUIWindow?.SetActive(!(Preferences.AutoHideOnSceneLoad.Value));
 				}
 			}
@@ -213,11 +275,14 @@ namespace UIFramework
 
 
 
-
+		/// <summary>
+		/// Called on first gymload to build the UI and find the modUI window.
+		/// </summary>
 		internal void FirstGymLoad()
 		{
 			BuildUI();
 			MelonCoroutines.Start(FindModUI());
+
 
 			isFirstLoad = false;
 		}
@@ -243,7 +308,7 @@ namespace UIFramework
 
 			Prefabs.LoadAssetBundle();
 
-			UI.InitializeUIObjects();			
+			UI.InitializeUIObjects();
 			UI.MainWindow.SetActive(false);
 			UI.BuildUI();
 
@@ -255,7 +320,6 @@ namespace UIFramework
 			GameObject uiObject = GameObject.Find("Game Instance/UI");
 			GameObject modUiWindow = uiObject.transform.Find("Mod_Setting_UI").gameObject;
 			ModUIWindow = modUiWindow;
-		
 		}
 
 		public void MelPrefsSaved(string s)
@@ -263,7 +327,7 @@ namespace UIFramework
 
 		}
 
-		public void CustomClick(UIFController.Entry button)
+		public void CustomClick(ButtonEntryAdapter button)
 		{
 			Debug.Log($"Clicked: {button.DisplayName} ");
 		}

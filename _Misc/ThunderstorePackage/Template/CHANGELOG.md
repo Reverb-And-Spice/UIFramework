@@ -1,3 +1,29 @@
+# New in 0.8.2
+<details><summary> <sup> just some backend stuff</sup>
+</summary>
+Don't worry about it
+</details>
+
+# New in 0.8.1 
+<details> <summary>New Feature: Draggable UI Window!</summary>
+
+The UI window is now draggable by the title bar. 
+</details>
+<details><summary> Bug Fix: Empty string display name support </summary>
+Buttons with empty display names will not show "Placeholder xxxx" anymore. This also applies to entries in general. Only for empty strings though. If you pass null, it will show placeholder again. 
+</details>
+<details><summary> Feature change: VR toggle behavior now follows ModUI</summary>
+
+If ModUI is enabled, and it has the VR Menu Toggle setting enabled, UI Framework will follow  ModUI's visibility.
+If ModUI is visible (when the VR toggle is pressed), UI Framework will also be visible and vice versa.
+If you don't have ModUI or the setting is off, UI Framework will toggle normally with the VR toggle.
+
+The toggle with VR buttons preference is also no longer a thing. A new preference is added for toggling with VR, keyboard, or both.
+</details>
+<details><summary> Backend enhancements</summary>
+just that lol
+</details>
+
 # New in 0.8.0
 
 ***Modders read this first one***

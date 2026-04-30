@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UIFramework.Adapters;
 namespace UIFramework
 {
 
@@ -77,7 +78,7 @@ namespace UIFramework
 			/// Called when the Entry has been created.
 			/// Useful when you wanna change specific elements after creation
 			/// </summary>
-			public Action<UIFController.Entry> OnUICreated { get; set; }
+			public Action<Entry> OnUICreated { get; set; }
 			
 			
 		}

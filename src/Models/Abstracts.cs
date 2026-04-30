@@ -1,7 +1,7 @@
 ﻿using MelonLoader;
 using UnityEngine;
-using static UIFramework.UIFController;
 using UIFramework.ValidatorExtensions;
+using UIFramework.Adapters;
 namespace UIFramework
 {
 
@@ -189,7 +189,7 @@ namespace UIFramework
 			/// <summary>
 			/// Called when the corresponding UI element is created
 			/// </summary>
-			public virtual Action<UIFController.Entry> OnUICreated { get; set; }
+			public virtual Action<Entry> OnUICreated { get; set; }
 			
 			/// <summary>
 			/// 
@@ -270,7 +270,7 @@ namespace UIFramework
 					if (Validator is IButtonDescriptor)
 					{
 						GameObject button = UI.GetPrefab(InputType.Button);
-						button.AddComponent<UIFController.PrefButton>();
+						button.AddComponent<PrefButton>();
 						return button;
 					}
 					switch (ModelBoxedValue)

@@ -1,7 +1,9 @@
 ﻿using Il2CppInterop.Runtime.InteropTypes.Arrays;
 using MelonLoader;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using UIFramework.Adapters;
 
 namespace UIFramework
 {
@@ -22,8 +24,10 @@ namespace UIFramework
 		/// </summary>
 		internal static GameObject TempStorage = new GameObject("TempStorage");
 		internal static GameObject HiddenStorage = new GameObject("HiddenStorage");
+		internal static GameObject Canvas;
 
-		public static GameObject MainCanvasSource;
+		public static GameObject MainWindowSource;
+		public static GameObject MainWindowDragHandle;
 		internal static GameObject ModDisplayList;
 		internal static GameObject CatDisplayList;
 		internal static GameObject PrefDisplayList;
@@ -49,16 +53,18 @@ namespace UIFramework
 		{
 			Debug.Log("LoadingUIFramework AssetBundle", true);
 			GameObject.DontDestroyOnLoad(UIFGameObjects);
-			TempStorage.transform.SetParent(UIFGameObjects.transform,false);
+			TempStorage.transform.SetParent(UIFGameObjects.transform, false);
 			TempStorage.SetActive(false);
 
-			HiddenStorage.transform.SetParent(UIFGameObjects.transform,false);
+			HiddenStorage.transform.SetParent(UIFGameObjects.transform, false);
 			HiddenStorage.SetActive(false);
 			AssetBundleLoaded = GameObject.Instantiate(LoadAssetFromStream<GameObject>(Core.Instance, "UIFramework.Assets.uiframework", "UIframework"), UIFGameObjects.transform);
 			AssetBundleLoaded.name = "UIFrameworkAssets";
 
+			Canvas = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "UICanvas")?.gameObject;
+			MainWindowSource = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "Root")?.gameObject;
+			MainWindowDragHandle = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "DragHandle")?.gameObject;
 
-			MainCanvasSource = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "UICanvas")?.gameObject;
 
 			ModDisplayList = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "ModRegCont")?.gameObject;
 			CatDisplayList = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "CatRegCont")?.gameObject;
@@ -69,7 +75,7 @@ namespace UIFramework
 
 			TextPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryText")?.gameObject;
 			BoolPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryBool")?.gameObject;
-			
+
 			IntPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryInt")?.gameObject;
 			FloatPrefab = AssetBundleLoaded.transform.GetComponentsInChildren<Transform>(true).FirstOrDefault(t => t.name == "PrefEntryFloat")?.gameObject;
 			//DoublePrefab = GameObject.Instantiate(FloatPrefab, AssetBundleLoaded.transform);
@@ -87,7 +93,9 @@ namespace UIFramework
 			DiscardButton.gameObject.SetActive(false);
 
 
-			MainCanvasSource.transform.SetParent(HiddenStorage.transform, false);
+
+			Canvas.transform.SetParent(UIFGameObjects.transform, false);
+			MainWindowSource.transform.SetParent(HiddenStorage.transform, false);
 
 			/*//skip direct children of main window
 			 * ModDisplayList.transform.SetParent(HiddenStorage.transform, false);
@@ -97,17 +105,17 @@ namespace UIFramework
 			ModTab.transform.SetParent(HiddenStorage.transform, false);
 			CatTab.transform.SetParent(HiddenStorage.transform, false);
 
-			TextPrefab.transform.SetParent(HiddenStorage.transform,false);
+			TextPrefab.transform.SetParent(HiddenStorage.transform, false);
 			BoolPrefab.transform.SetParent(HiddenStorage.transform, false);
 
 			IntPrefab.transform.SetParent(HiddenStorage.transform, false);
 			FloatPrefab.transform.SetParent(HiddenStorage.transform, false);
 			//DoublePrefab.transform.SetParent(HiddenStorage.transform ,false);
 
-			DropDownPrefab.transform.SetParent(HiddenStorage.transform, false );
+			DropDownPrefab.transform.SetParent(HiddenStorage.transform, false);
 			SliderPrefab.transform.SetParent(HiddenStorage.transform, false);
 
-			ButtonPrefab.transform.SetParent(HiddenStorage.transform,false );
+			ButtonPrefab.transform.SetParent(HiddenStorage.transform, false);
 
 
 
@@ -118,34 +126,40 @@ namespace UIFramework
 			//ModEntry.TestComponent test = ModDisplayList.AddComponent<ModEntry.TestComponent>();
 
 			//Add the appropriate components to each prefab for later use
-			MainCanvasSource.AddComponent<UIFController.WindowController>();
-
-			TextPrefab.AddComponent<UIFController.TextInputEntry>();
-			BoolPrefab.AddComponent<UIFController.PrefBool>();
-			
-			IntPrefab.AddComponent<UIFController.TextInputEntry>();
-			FloatPrefab.AddComponent<UIFController.TextInputEntry>();
-			//DoublePrefab.AddComponent<UIFController.TextInputEntry>();
-			
-			DropDownPrefab.AddComponent<UIFController.PrefDropDown>();
-			SliderPrefab.AddComponent<UIFController.PrefSlider>();
-
-			//ButtonPrefab.AddComponent<UIFController.ButtonEntry>();
+			MainWindowSource.AddComponent<WindowCoordinator>();
 
 
+			TextPrefab.AddComponent<TextInputEntry>();
+			BoolPrefab.AddComponent<PrefBool>();
 
-			ModTab.AddComponent<UIFController.Mod>();
+			IntPrefab.AddComponent<TextInputEntry>();
+			FloatPrefab.AddComponent<TextInputEntry>();
+			//DoublePrefab.AddComponent<   TextInputEntry>();
 
-			CatTab.AddComponent<UIFController.Category>();
+			DropDownPrefab.AddComponent<PrefDropDown>();
+			SliderPrefab.AddComponent<PrefSlider>();
+
+			//ButtonPrefab.AddComponent<   ButtonEntryAdapter>();
+
+
+
+			ModTab.AddComponent<ModButtonView>();
+
+			CatTab.AddComponent<CategoryTabView>();
 
 			//Add the component to the container sections
-			ModDisplayList.AddComponent<UIFController.Sidebar>();
-			CatDisplayList.AddComponent<UIFController.TopBar>();
-			PrefDisplayList.AddComponent<UIFController.PrefList>();
+			ModDisplayList.AddComponent<ModListAdapter>();
+			CatDisplayList.AddComponent<CategoryListAdapter>();
+			PrefDisplayList.AddComponent<PrefListAdapter>();
 
 
-			MainCanvasSource.SetActive(false);
+			DragHandle dragScript = MainWindowDragHandle.AddComponent<DragHandle>();
+			EventTrigger trigger = MainWindowDragHandle.AddComponent<EventTrigger>();
+
+
+			MainWindowSource.SetActive(false);
 		}
+
 
 		#region Ulvak Generated
 		internal static T LoadAssetFromStream<T>(MelonMod instance, string path, string assetName) where T : UnityEngine.Object
@@ -181,4 +195,91 @@ namespace UIFramework
 		}
 		#endregion
 	}
+
+
+	#region AI Generated
+	[RegisterTypeInIl2Cpp]
+	public class DragHandle : MonoBehaviour
+	{
+		public RectTransform FindRootWindow()
+		{
+			RectTransform foundRoot = null; ;
+			Transform ancestor = this.gameObject.transform.parent;
+			while (ancestor != null)
+			{
+				if (ancestor.name.Contains("MainWindow"))
+				{
+					return ancestor.GetComponent<RectTransform>();
+				}
+				ancestor = ancestor.parent;
+			}
+
+			return foundRoot;
+		}
+
+		public RectTransform targetPanel;
+
+		// This method will be called by the EventTrigger
+		public void OnDrag(BaseEventData data)
+		{
+			PointerEventData eventData = data.TryCast<PointerEventData>();
+			if (eventData == null || targetPanel == null) return;
+
+			Canvas canvas = targetPanel.GetComponentInParent<Canvas>();
+			float scale = (canvas != null) ? canvas.scaleFactor : 1.0f;
+
+			targetPanel.anchoredPosition += eventData.delta / scale;
+
+			ClampToBounds();
+
+			Preferences.UiPosition.Value = targetPanel.anchoredPosition;
+
+		}
+		public void ClampToBounds()
+		{
+			if (targetPanel == null) return;
+
+			Canvas canvas = targetPanel.GetComponentInParent<Canvas>();
+			float scale = (canvas != null) ? canvas.scaleFactor : 1.0f;
+
+			Rect pixelRect = canvas.pixelRect;
+			Vector2 screenSize = new Vector2(pixelRect.width, pixelRect.height) / scale;
+			Vector2 size = targetPanel.rect.size;
+
+			const float keepRight = 30f;
+			const float keepBottom = 30f;
+			const float keepLeft = 50f;
+
+			float minX = -(size.x - keepLeft);
+			float maxX = screenSize.x - keepRight;
+			float minY = -(screenSize.y - keepBottom);
+			float maxY = 0f;
+
+			targetPanel.anchoredPosition = new Vector2(
+				Mathf.Clamp(targetPanel.anchoredPosition.x, minX, maxX),
+				Mathf.Clamp(targetPanel.anchoredPosition.y, minY, maxY)
+			);
+
+			Preferences.UiPosition.Value = targetPanel.anchoredPosition;
+		}
+		void Start()
+		{
+			targetPanel = FindRootWindow();
+
+			EventTrigger trigger = GetComponent<EventTrigger>();
+			if (trigger == null) trigger = gameObject.AddComponent<EventTrigger>();
+
+			// Clear old entries if any (prevent double-firing if script is copied)
+			trigger.triggers.Clear();
+
+			EventTrigger.Entry entry = new EventTrigger.Entry();
+			entry.eventID = EventTriggerType.Drag;
+			entry.callback.AddListener((UnityEngine.Events.UnityAction<BaseEventData>)OnDrag);
+			trigger.triggers.Add(entry);
+
+			targetPanel.anchoredPosition = Preferences.UiPosition.Value;
+			ClampToBounds();
+		}
+	}
+	#endregion
 }
