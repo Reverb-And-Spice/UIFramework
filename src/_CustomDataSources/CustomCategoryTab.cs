@@ -12,11 +12,12 @@ using UnityEngine.UI;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using MelonLoader.Preferences;
+using UIFramework.Models;
 namespace UIFramework
 {
 	public class CustomCategoryTab
 	{
-		internal UIFModel.ModelCategoryItem CategoryModel { get; set; }
+		internal CategoryModelBase CategoryModel { get; set; }
 		public readonly List<CustomUIEntry> Entries = new List<CustomUIEntry>();
 
 		public string Identifier { get; internal set; }

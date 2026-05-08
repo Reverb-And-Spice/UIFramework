@@ -30,7 +30,7 @@ namespace UIFramework
 
 		public MelonLoader.Preferences.ValueValidator Validator { get; internal set; }
 
-		//Melon:  public Preferences.ValueValidator Validator { get; internal set; }
+		//Melon:  public Preferences.ValueValidator UiExtension { get; internal set; }
 		//Melon:  public string GetExceptionMessage(string submsg) => $"Attempted to {submsg} {DisplayName} when it is a {GetReflectedType().FullName}!";
 		public abstract Type GetReflectedType();
 

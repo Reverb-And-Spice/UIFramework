@@ -5,8 +5,10 @@ using System.Diagnostics;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UIFramework.Adapters;
+using UIFramework.Models;
 using UnityEngine.InputSystem.Controls;
 using UnityEngine.InputSystem.LowLevel;
+using UnityEngine.CrashReportHandler;
 
 [assembly: MelonInfo(typeof(UIFramework.Core), UIFramework.BuildInfo.Name, UIFramework.BuildInfo.Version, UIFramework.BuildInfo.Author)]
 [assembly: MelonGame("Buckethead Entertainment", "RUMBLE")]
@@ -24,7 +26,7 @@ namespace UIFramework
 		/// <summary></summary>
 		public const string Author = "Reverb && Spice";
 		/// <summary></summary>
-		public const string Version = "0.8.2";
+		public const string Version = "0.9.0";
 	}
 
 
@@ -45,6 +47,7 @@ namespace UIFramework
 		internal int inactiveTimeLimit => (Preferences.InactivityTimeout?.Value * 1000) ?? 30000;
 
 
+
 #pragma warning disable CS1591
 		public override void OnInitializeMelon()
 		{
@@ -60,7 +63,7 @@ namespace UIFramework
 		}
 		public override void OnLateInitializeMelon()
 		{
-
+			CrashReportHandler.enableCaptureExceptions = false;
 		}
 
 		public override void OnUpdate()
@@ -71,6 +74,7 @@ namespace UIFramework
 				return;
 			//Debug.DiffLog($"UI is Visible {UI.IsVisible}",true);
 			AutoHideCheck();
+
 
 		}
 		/// <summary>
@@ -89,12 +93,12 @@ namespace UIFramework
 				MelonCoroutines.Start(InputToggled(true));
 			}
 
-			if(Input.GetKeyDown(KeyCode.F10))
+			if (Input.GetKeyDown(KeyCode.F10))
 			{
 				MelonCoroutines.Start(SyncModUIState());
 			}
 
-			
+
 		}
 		/// <summary>
 		/// The actual coroutine that toggles the UI. Has to be in a coroutine to allow for a delay if ModUI is present.
@@ -106,6 +110,7 @@ namespace UIFramework
 		/// <remarks>This is for ModUI Compatibility. If ModUI is installed, it ensures that UI Framework and ModUI always stay in sync</remarks>
 		private IEnumerator InputToggled(bool matchModUI)
 		{
+			Prefabs.UIFGameObjects.SetActive(true);
 			if (CurrentScene == "loader")
 			{
 				Debug.Warning("UIFramework does not work in the loader. Please finish calibrating.");
@@ -113,7 +118,7 @@ namespace UIFramework
 			}
 			if (ModUIWindow is not null && matchModUI)
 			{
-				
+
 				yield return new WaitForSeconds(0.04f);
 				bool uifPrevState = UI.MainWindow.activeSelf;
 				if (ModUIWindow.activeSelf == lastModUIState)
@@ -252,7 +257,7 @@ namespace UIFramework
 
 		public override void OnSceneWasLoaded(int buildIndex, string sceneName)
 		{
-			Debug.Log($"Current buildIndex = {buildIndex} was loaded. sceneName = {sceneName}");
+			Debug.Log($"Current buildIndex = {buildIndex} was loaded. sceneName = {sceneName}", true);
 			CurrentScene = sceneName.ToNormal();
 			if (CurrentScene == "loader")
 			{
@@ -269,7 +274,9 @@ namespace UIFramework
 					if (Preferences.HijackModUI.Value && (ModUIWindow?.activeSelf ?? false))
 						ModUIWindow?.SetActive(!(Preferences.AutoHideOnSceneLoad.Value));
 				}
+				Preferences.DemoString.Value = CurrentScene;
 			}
+
 		}
 #pragma warning restore CS1591
 
@@ -290,21 +297,15 @@ namespace UIFramework
 		internal void BuildUI()
 		{
 			Preferences.InitializePrefs();
-			UIFModel.ModelMod ModModel;
+			UIFModel.ModelMod MyModel;
 
 			//Show extra categories if debug mode is enabled
-			if (!Preferences.EnableDebugMode.Value)
-			{
-				ModModel = UI.Register(this, Preferences.CatUIFramework);
-			}
 
-			else
-			{
-				ModModel = UI.Register(this, Preferences.CatUIFramework, Preferences.Experimental, Preferences.TestBooleans, Preferences.TestEmptyDisplayName);
-				UIFModel.ModelMelonCategory tester = (UIFModel.ModelMelonCategory)ModModel.GetSubmodel(Preferences.TestBooleans.Identifier);
-				UIFModel.ButtonEntry testButton = new UIFModel.ButtonEntry(CustomClick, "CustomButton", "just a test", "Custom Button");
-				tester.AddSubmodel(testButton);
-			}
+			MyModel = UI.Register(this, Preferences.CatUIFramework, Preferences.Demo, Preferences.Experimental, Preferences.TestBooleans, Preferences.TestEmptyDisplayName);
+			MelonCategoryModel tester = (MelonCategoryModel)MyModel.GetSubmodel(Preferences.TestBooleans.Identifier);
+			ButtonEntry testButton = new ButtonEntry(CustomClick, "CustomButton", "just a test", "Custom Button");
+			tester.AddSubmodel(testButton);
+
 
 			Prefabs.LoadAssetBundle();
 
@@ -327,9 +328,9 @@ namespace UIFramework
 
 		}
 
-		public void CustomClick(ButtonEntryAdapter button)
+		public void CustomClick(ButtonModelAdapter button)
 		{
-			Debug.Log($"Clicked: {button.DisplayName} ");
+			Debug.Log($"Clicked: {button.DisplayName} ", false);
 		}
 		private void SinglesaveClick()
 		{

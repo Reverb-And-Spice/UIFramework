@@ -3,15 +3,17 @@ using MelonLoader;
 using MelonLoader.Logging;
 using UnityEngine.Events;
 using UnityEngine.UI;
+using UIFramework.Models;
 namespace UIFramework.Adapters
 {
 
 	//protected override GameObject UIPrefab { get { return Prefabs.TextPrefab; } }
+	[RegisterTypeInIl2Cpp]
 	public abstract class TabButtonController : SubModelAdapter, IChildable
 	{
 
 		protected WindowCoordinator ParentWindow;
-		protected UIFModel.IHoldSubmodels _model => (UIFModel.IHoldSubmodels)_internalModel;
+		protected IHoldSubmodels _model => (IHoldSubmodels)_internalModel;
 
 		public override void ModelSet()
 		{
@@ -54,16 +56,12 @@ namespace UIFramework.Adapters
 	public class ModButtonView : TabButtonController, IChildable
 	{
 
-		protected UIFModel.ModelMod ModModel => (UIFModel.ModelMod)_internalModel;
+		protected MelonModel ModModel => (MelonModel)_internalModel;
 
 		public override void OnSelect()
 		{
 
 			ParentWindow.SetSelectedMod(ModModel);
-
-
-
-
 		}
 
 	}
@@ -74,7 +72,7 @@ namespace UIFramework.Adapters
 	{
 		public override void OnSelect()
 		{
-			ParentWindow.SetSelectedCategory((UIFModel.ModelCategoryItem)_internalModel);
+			ParentWindow.SetSelectedCategory((CategoryModelBase)_internalModel);
 		}
 	}
 

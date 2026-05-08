@@ -1,3 +1,72 @@
+# New in 0.9.0 
+<details><summary> New Feature: Reactivity Update! </summary>
+UI Framework can now refresh without the user having to press save or manually reloading the tab
+</details>
+<details><summary> New Feature: Update UI with current values.</summary>
+UI now refreshes when an entry value for a preference changes
+</details>
+
+<details><summary>New Feature: IsHidden support for categories</summary>
+UI Framework will now appropriately not show categories with the IsHidden property set to true.
+</details>
+<details><summary> New Feature: Modders can now implement an UserEditNotifier validator class.</summary>
+This can notify you when the user has edited their entry even when it hasn't been applied to their saved value yet.
+
+Combined with the previous new feature, you can now adjust your UI according to your users' inputs
+
+The following example uses it to change the visibility of certain categories based on user input without them having to hit save
+
+```cs
+//Create a method you can pass as a delegate
+internal static void UpdateCategoryVis(object newValue)
+{
+    Experimental.IsHidden = !(bool)newValue;
+    TestBooleans.IsHidden = !(bool)newValue;
+    TestEmptyDisplayName.IsHidden = !(bool)newValue;
+}
+```
+Create a new instance of `UserEditNotifier` and set this as the action for OnUserEdit
+```cs
+EnableDebugMode = CatUIFramework.CreateEntry("EnableDebugMode", false, "Enable Debug Logs", "Enables or disables debug logs for UIFramework.", false, false, new UserEditNotifier { OnUserEdit = UpdateCategoryVis });
+```
+</details>
+
+
+<details><summary> New Feature: Modders can now request the window to refresh its UI. </summary>
+
+Just call `UI.RequestRefresh(modInstance)`
+</details>
+
+<details><summary>New Feature: Dynamic dropdown support</summary>
+UI Framework now supports custom dropdown contents, not just from enums. 
+
+Create an items list
+
+```cs
+// It takes a list of DropdownItems which take a string as a display name, and a value of type object 
+List<DropdownItem> itemList = new();
+```
+Create an instance of the `DynamicDropdownDescriptor` class passing the item list as a parameter in the constructor
+```cs
+public static DynamicDropdownDescriptor DropdownDescriptor = new(itemList);
+```
+Add items with 
+```cs
+DropdownDescriptor.AddDropdownItem(new DropdownItem("Display Name", value)); 
+```
+or declare a list separately and set it with SetDropdownItems
+
+Pass it into the CreateEntry validator parameter
+```cs
+DropdownTest = Category.CreateEntry("DropdownTest", -1, "Dropdown Test", "Dynamic dropdown test.", false, false, DropdownDescriptor);
+```
+</details>
+
+<details> <summary> Bug Fix: Added Flatland support </summary>
+UI Framework now works in Flatland
+</details>
+
+
 # New in 0.8.2
 <details><summary> <sup> just some backend stuff</sup>
 </summary>

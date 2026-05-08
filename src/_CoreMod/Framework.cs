@@ -1,8 +1,10 @@
 using MelonLoader;
 using UnityEngine;
 using System.ComponentModel.DataAnnotations;
-using UIFramework.ValidatorExtensions;
+using UIFramework.UiExtensions;
 using UIFramework.Adapters;
+using UIFramework.Models;
+using System.Data;
 namespace UIFramework
 {
 	/// <summary>
@@ -11,7 +13,7 @@ namespace UIFramework
 	public static class UI
 	{
 
-		internal static UIFModel.RootModel ModelInstance = new();
+		internal static RootModel ModelInstance = new();
 		internal static GameObject MainWindow;
 		public static bool IsVisible { get { return MainWindow.activeSelf; }  }
 		internal static WindowCoordinator WindowInstance;
@@ -86,6 +88,21 @@ namespace UIFramework
 		/// <summary>
 		/// 
 		/// </summary>
+		/// <param name="melonInstance"></param>
+		/// <param name="categories"></param>
+		/// <returns></returns>
+		public static MelonModel RegisterMelon(MelonBase melonInstance, params MelonPreferences_Category[] categories)
+		{
+			MelonModel NewModModel = new(melonInstance, categories.ToList());
+			ModelInstance.AddSubmodel(NewModModel);
+			return NewModModel;
+		}
+
+
+
+		/// <summary>
+		/// 
+		/// </summary>
 		internal static void InitializeUIObjects()
 		{
 			MainWindow = GameObject.Instantiate(Prefabs.MainWindowSource, Prefabs.Canvas.transform);
@@ -109,6 +126,17 @@ namespace UIFramework
 			WindowInstance.SetModel(ModelInstance);
 
 		}
+		internal static void RequestRefresh(ModModelBase modModel)
+		{
+			Debug.Log("RefreshRequested in Framework.cs RequestRefresh(ModModelBase modModel)", true, 1);
+			WindowInstance.RequestRefresh(modModel); }
+		public static void RequestRefresh(MelonBase melonInstance)
+		{
+			Debug.Log("Refresh requested in Framework.cs RequestRefresh(MelonBase melonInstance)", true, 1);
+			ModModelBase model = ModelInstance.GetModModel(melonInstance.Info.Name);
+			WindowInstance.RequestRefresh(model);
+		}
+		
 
 		public static GameObject GetPrefab(InputType input)
 		{

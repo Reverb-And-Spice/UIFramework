@@ -19,6 +19,8 @@ using UnityEngine.UI;
 using static UIFramework.Debug;
 //using static UI.UIFController;
 using static Unity.Collections.AllocatorManager;
+using UIFramework.Models;
+using Il2CppSystem.Threading.Tasks;
 namespace UIFramework.Adapters
 {
 
@@ -33,12 +35,12 @@ namespace UIFramework.Adapters
 		/// <summary>
 		/// Reference to the model the controller works from.  
 		/// </summary>
-		public UIFModel.IModelable Model { get; set; }
+		public IModelable Model { get; set; }
 	}
 	public abstract class SubModelAdapter : MonoBehaviour
 	{
-		protected UIFModel.IModelable _internalModel;
-		public virtual UIFModel.IModelable Model
+		protected IModelable _internalModel;
+		public virtual IModelable Model
 		{
 			get
 			{
@@ -51,9 +53,9 @@ namespace UIFramework.Adapters
 			}
 		}
 
-		public WindowCoordinator _rootWindow;
+		protected WindowCoordinator _rootWindow;
 
-		public WindowCoordinator FindRootWindow()
+		protected WindowCoordinator FindRootWindow()
 		{
 			WindowCoordinator foundRoot = null; ;
 			Transform ancestor = this.gameObject.transform.parent;
@@ -93,55 +95,90 @@ namespace UIFramework.Adapters
 		public Color defaultTabColor = new Color(0.22f, 0.22f, 0.22f, 1f);
 		public Color openTabColor = new Color(0.24f, 0.17f, 0.42f, 1f);
 
-		protected UIFModel.RootModel _model;
-		public UIFModel.IModelable Model { get { return _model; } }
+		protected RootModel _model;
+		public IModelable Model { get { return _model; } }
 
-		public GameObject MainCanvas;
-		public ModListAdapter ModRegistryPanel;
-		public CategoryListAdapter CatRegistryPanel;
-		public PrefListAdapter PrefRegistryPanel;
-		public Button MainActionButton;
-		public Button DiscardActionButton;
-		public Button MinimizeButton;
-		public TextMeshProUGUI WindowTitle;
+		protected GameObject MainCanvas;
+		protected ModListAdapter ModRegistryPanel;
+		protected CategoryListAdapter CatRegistryPanel;
+		protected PrefListAdapter PrefRegistryPanel;
+		private Button MainActionButton;
+		private Button DiscardActionButton;
+		private Button MinimizeButton;
+		private TextMeshProUGUI WindowTitle;
 
-		public TextMeshProUGUI TitleButtonText;
-		public DragHandle DragHandle;
+		protected TextMeshProUGUI TitleButtonText;
+		internal DragHandle DragHandle;
 
-		public UIFModel.ModelModItem SelectedMod => _selectedMod;
-		private UIFModel.ModelModItem _selectedMod = null;
+		public ModModelBase SelectedMod => _selectedMod;
+		private ModModelBase _selectedMod = null;
 
-		public UIFModel.ModelCategoryItem SelectedCategory => _selectedCategory;
-		private UIFModel.ModelCategoryItem _selectedCategory = null;
+		public CategoryModelBase SelectedCategory => _selectedCategory;
+		private CategoryModelBase _selectedCategory = null;
 
-		public Dictionary<UIFModel.ModelModItem, UIFModel.ModelCategoryItem> LastCategorySelected = new();
+		public Dictionary<ModModelBase, CategoryModelBase> LastCategorySelected = new();
 
 
-		public void SetSelectedMod(UIFModel.ModelModItem mod)
+		internal void SetSelectedMod(ModModelBase mod)
 		{
 			_selectedMod = mod;
 			TitleButtonText.text = $"{mod.DisplayName}\n{mod.Instance.Info.Version}";
 
 			CatRegistryPanel.SetModel(mod);
 
-			UIFModel.ModelCategoryItem lastSelected = null;
-			if (LastCategorySelected.ContainsKey(mod as UIFModel.ModelModItem))
-				lastSelected = LastCategorySelected[mod as UIFModel.ModelModItem];
+			CategoryModelBase lastSelected = null;
+			if (LastCategorySelected.ContainsKey(mod as ModModelBase))
+				lastSelected = LastCategorySelected[mod as ModModelBase];
 
 
-			PrefRegistryPanel.SetModel(lastSelected ?? (UIFModel.ModelCategoryItem)mod.SubModels[0]);
+			PrefRegistryPanel.SetModel(lastSelected ?? (CategoryModelBase)mod.SubModels[0]);
+			RequestRefresh();
 
 		}
-		public void SetSelectedCategory(UIFModel.ModelCategoryItem cat)
+		public void SetSelectedCategory(CategoryModelBase cat)
 		{
 			_selectedCategory = cat;
 			PrefRegistryPanel.SetModel(cat);
 			LastCategorySelected[_selectedMod] = cat;
-
+			RequestRefresh();
 		}
 
+		public void SelectInSideBar(IHoldSubmodels model)
+		{
+			ModRegistryPanel.SelectTab(model as IHoldSubmodels);
+		}
+		public void SelectInTopBar(IHoldSubmodels model)
+		{
+			CatRegistryPanel.SelectTab(model as IHoldSubmodels);
+		}
 
-		public virtual void SetModel(UIFModel.RootModel model)
+		protected void RequestRefresh()
+		{
+			_refreshPending = true;
+		}
+
+		public virtual void RequestRefresh(ModModelBase model)
+		{
+			ModModelBase callingMod = model;
+			Log($"Refresh Requested by {model.DisplayName}", true, 1);
+
+
+			if (callingMod != _selectedMod)
+			{
+				Log("Denied. Calling mod is not selected mod", true, 1);
+				return;
+			}
+
+			if (callingMod is null)
+			{
+				Log("Denied Refresh Request. Reason: Calling mod is null", true, 1);
+				return;
+			}
+
+			RequestRefresh();
+			Log("Refresh Request approved", true, 1);
+		}
+		public virtual void SetModel(RootModel model)
 		{
 			_model = model;
 
@@ -176,7 +213,7 @@ namespace UIFramework.Adapters
 		/// <summary>
 		/// Resets the containers and build the modlist
 		/// </summary>
-		public virtual void BuildModList()
+		protected virtual void BuildModList()
 		{
 			ModRegistryPanel.ContainerReset();
 
@@ -184,6 +221,8 @@ namespace UIFramework.Adapters
 			PrefRegistryPanel.GetComponent<PrefListAdapter>().ContainerReset();
 
 			ModRegistryPanel.SetModel(_model);
+
+			RequestRefresh();
 		}
 		/// <summary>
 		/// Gets called when the save button gets clicked. 
@@ -193,37 +232,18 @@ namespace UIFramework.Adapters
 		/// But this iterates through the child controllers and call their SaveAction() method.
 		/// This allows for custom behavior before the actual category gets saved
 		/// </remarks>
-		public virtual void SaveButtonClick()
+		protected virtual void SaveButtonClick()
 		{
 
-			/*				for (int i = PrefRegistryPanel.gameObject.transform.childCount - 1; i >= 0; i--)
-							{
-								//Error handling per child to prevent breaking the whole loop.
-								try
-								{
-									Entry entry = PrefRegistryPanel.gameObject.transform.GetChild(i).gameObject.GetComponent<Entry>();
-									entry.SaveAction();
-									entry.EntryModel.SaveAction();
-								}
-								catch (Exception ex)
-								{
-									Debug.Warning($"Error in entry saving loop {PrefRegistryPanel.gameObject.transform.childCount - i}:");
-									Debug.Error(ex.Message);
-								}
-							}*/
-
 			CatRegistryPanel.Model?.SaveAction();
-			//PrefRegistryPanel.SaveAction();
-			PrefRegistryPanel.Infanticide();
-			PrefRegistryPanel.BuildFromModelList();
+			RequestRefresh();
 		}
 
-		public virtual void DiscardButtonClick()
+		protected virtual void DiscardButtonClick()
 		{
 			CatRegistryPanel.Model?.DiscardAction();
 			PrefRegistryPanel.DiscardAction();
-			PrefRegistryPanel.Infanticide();
-			PrefRegistryPanel.BuildFromModelList();
+			RequestRefresh();
 		}
 		void Update()
 		{
@@ -232,6 +252,23 @@ namespace UIFramework.Adapters
 				// Deselect the currently selected UI element
 				EventSystem.current.SetSelectedGameObject(null);
 			}
+			CheckRefresh();
+		}
+
+		private bool _refreshPending = false;
+
+		private void CheckRefresh()
+		{
+			if (!_refreshPending)
+				return;
+			
+
+			ModRegistryPanel.BuildFromModelList();
+			CatRegistryPanel.BuildFromModelList();
+			PrefRegistryPanel.BuildFromModelList();
+			_refreshPending = false;
+
+
 		}
 
 	}

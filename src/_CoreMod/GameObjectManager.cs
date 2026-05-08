@@ -129,17 +129,17 @@ namespace UIFramework
 			MainWindowSource.AddComponent<WindowCoordinator>();
 
 
-			TextPrefab.AddComponent<TextInputEntry>();
-			BoolPrefab.AddComponent<PrefBool>();
+			TextPrefab.AddComponent<TextEntryAdapter>();
+			BoolPrefab.AddComponent<BoolToggleAdapter>();
 
-			IntPrefab.AddComponent<TextInputEntry>();
-			FloatPrefab.AddComponent<TextInputEntry>();
-			//DoublePrefab.AddComponent<   TextInputEntry>();
+			IntPrefab.AddComponent<TextEntryAdapter>();
+			FloatPrefab.AddComponent<TextEntryAdapter>();
+			//DoublePrefab.AddComponent<   TextEntryAdapter>();
 
-			DropDownPrefab.AddComponent<PrefDropDown>();
-			SliderPrefab.AddComponent<PrefSlider>();
+			//DropDownPrefab.AddComponent<EnumDropdownAdapter>();
+			SliderPrefab.AddComponent<NumSliderAdapter>();
 
-			//ButtonPrefab.AddComponent<   ButtonEntryAdapter>();
+			//ButtonPrefab.AddComponent<   ButtonModelAdapter>();
 
 
 
