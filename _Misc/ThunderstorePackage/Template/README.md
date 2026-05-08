@@ -1,12 +1,4 @@
 <sup> btw: The changelog doubles as a feature list </sup>
-# Attention: Modders
-If you have the same category identifier as another mod, your preferences will have a naming collision 
-and might be displayed alongside their categories' entries. 
-Please prefix your identifiers with your mod such as `"MyMod_MyCategory1"`to avoid this.
-This is a base MelonLoader problem. Not something that can be fixed in the UI. 
-
-Naming collisions also means you might accidentally change another mod's preferences if you have the same category and entry identifiers.
-
 ### New in 0.9.0 
 <details><summary> New Feature: Reactivity Update! </summary>
 UI Framework can now refresh without the user having to press save or manually reloading the tab
@@ -29,9 +21,6 @@ The following example uses it to change the visibility of certain categories bas
 //Create a method you can pass as a delegate
 internal static void UpdateCategoryVis(object newValue)
 {
-    Debug.Log($"UpdateCategoryVis newValue = {newValue}", true);
-    
-    Debug.Log($"UpdateCategoryVis Demo.IsHidden = {Demo.IsHidden}", true);
     Experimental.IsHidden = !(bool)newValue;
     TestBooleans.IsHidden = !(bool)newValue;
     TestEmptyDisplayName.IsHidden = !(bool)newValue;
@@ -77,9 +66,6 @@ DropdownTest = Category.CreateEntry("DropdownTest", -1, "Dropdown Test", "Dynami
 <details> <summary> Bug Fix: Added Flatland support </summary>
 UI Framework now works in Flatland
 </details>
-<details><summary> Backend: Coalesced refresh system </summary>
-</details>
-
 
 -----
 
@@ -99,7 +85,7 @@ The save button writes it to the file for permanent storage. Closing your game m
 
 # For Modders 
 
-A detailed API Overview exists over at https://github.com/Reverb-And-Spice/UIFramework/blob/main/API_Overview.md
+A (more) detailed API Overview exists over at https://github.com/Reverb-And-Spice/UIFramework/blob/main/API_OverView.md
 ## Basic Registration
 Add `[assembly: MelonAdditionalDependencies("UIFramework")]` to your AssemblyInfo. This prevents your mod from calling on UIFramework before it's been initialized.
 
@@ -145,7 +131,7 @@ in the UI. Line breaks are supported.
 -----
 
 # Advanced Usage
-I moved this section the [API Overview](https://github.com/Reverb-And-Spice/UIFramework/blob/main/API_Overview.md#ui-presentation-control-validator-extensions)
+I moved this section the [API Overview](https://github.com/Reverb-And-Spice/UIFramework/blob/main/API_OverView.md#ui-presentation-control-validator-extensions)
 
 
 -----
@@ -153,7 +139,7 @@ I moved this section the [API Overview](https://github.com/Reverb-And-Spice/UIFr
 ## If you haven't used melonpreferences before
 
 I detail usage and creation here: 
-https://github.com/Reverb-And-Spice/UIFramework/blob/main/API_Overview.md#melonpreferences
+https://github.com/Reverb-And-Spice/UIFramework/blob/main/API_OverView.md#melonpreferences
 
 And the official docs are here: 
 https://melonwiki.xyz/#/modders/preferences?id=melon-preferences
