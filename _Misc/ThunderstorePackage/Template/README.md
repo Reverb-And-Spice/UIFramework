@@ -1,70 +1,84 @@
-<sup> btw: The changelog doubles as a feature list </sup> 
-### New in 0.8.0
+<sup> btw: The changelog doubles as a feature list </sup>
+# Attention: Modders
+If you have the same category identifier as another mod, your preferences will have a naming collision 
+and might be displayed alongside their categories' entries. 
+Please prefix your identifiers with your mod such as `"MyMod_MyCategory1"`to avoid this.
+This is a base MelonLoader problem. Not something that can be fixed in the UI. 
 
-***Modders read this first one***
-<details><summary>New Feature: Improved MelonPreferences_Entry.Value Behavior</summary>
+Naming collisions also means you might accidentally change another mod's preferences if you have the same category and entry identifiers.
 
-The Value property for entries won't update anymore until the save button is clicked.
-If you need to access the new value before it's been saved, you can get the EditedValue property instead. 
+### New in 0.9.0 
+<details><summary> New Feature: Reactivity Update! </summary>
+UI Framework can now refresh without the user having to press save or manually reloading the tab
+</details>
+<details><summary> New Feature: Update UI with current values.</summary>
+UI now refreshes when an entry value for a preference changes
 </details>
 
-<details><summary>New Feature: Expanded Type Support</summary>
-
-Serialization and parsing is now handled by Tomlet. 
-Anything Tomlet supports is now technically supported by UIFramework.
-
-More details in the [Type Support](##type-support-whatever-works-with-tomlet) section
-</details> 
-
-<details><summary>New feature: Custom display name attribute</summary>
-
-Just add `[assembly: UIInfo("My Mod's Better\nDisplay Name")]` to your assembly attributes to display your 
-mod's name differently on its button in UI Framework. Yes, it supports line breaks
-
+<details><summary>New Feature: IsHidden support for categories</summary>
+UI Framework will now appropriately not show categories with the IsHidden property set to true.
 </details>
-<details><summary>New Feature: Support IsHidden property for entries.</summary>
+<details><summary> New Feature: Modders can now implement an UserEditNotifier validator class.</summary>
+This can notify you when the user has edited their entry even when it hasn't been applied to their saved value yet.
 
-Entries with `IsHidden` set to `true` won't be listed in the preferences list anymore.
-</details>
+Combined with the previous new feature, you can now adjust your UI according to your users' inputs
 
-<details><summary>New Feature: New Validator Extension System.</summary>
-
-I came up with a system to use MelonLoader's custom validator feature to add extra UI configurations for entries. The new sliders and buttons feature are implemented through this system.
-</details>
-<details><summary>New Feature: Sliders! (and maybe more eventually 👀)</summary>
-
-Modders can now implement sliders for numeric vlaues.
-```cs
-MySlider = Category.CreateEntry("MySlider", 0.5f, "My Slider", "Float Slider",false, false, new SliderDescriptor { Min = 0, Max = 1, DecimalPlaces = 3 });
-```
-
-</details>
-
-<details><summary> New Feature: Add Buttons to the Entry List</summary>
-
-Modders can now add their own buttons as entries into UI Framework. 
+The following example uses it to change the visibility of certain categories based on user input without them having to hit save
 
 ```cs
-UI.CreateButtonEntry(MelonPreferences_Category category, string buttonText, string displayName, string description, Action handler)
+//Create a method you can pass as a delegate
+internal static void UpdateCategoryVis(object newValue)
+{
+    Debug.Log($"UpdateCategoryVis newValue = {newValue}", true);
+    
+    Debug.Log($"UpdateCategoryVis Demo.IsHidden = {Demo.IsHidden}", true);
+    Experimental.IsHidden = !(bool)newValue;
+    TestBooleans.IsHidden = !(bool)newValue;
+    TestEmptyDisplayName.IsHidden = !(bool)newValue;
+}
 ```
-
-Go to [Buttons](###buttons) for more details.
-
+Create a new instance of `UserEditNotifier` and set this as the action for OnUserEdit
+```cs
+EnableDebugMode = CatUIFramework.CreateEntry("EnableDebugMode", false, "Enable Debug Logs", "Enables or disables debug logs for UIFramework.", false, false, new UserEditNotifier { OnUserEdit = UpdateCategoryVis });
+```
 </details>
 
 
-<details><summary>Bug Fix: Fixed issue with UI Framework *displaying* ModUI's window instead of hiding</summary>
+<details><summary> New Feature: Modders can now request the window to refresh its UI. </summary>
 
-whoops
+Just call `UI.RequestRefresh(modInstance)`
 </details>
 
-<details><summary>Bug Fix: Finally suppressed saved and loaded message from MelonPreferneces</summary>
+<details><summary>New Feature: Dynamic dropdown support</summary>
+UI Framework now supports custom dropdown contents, not just from enums. 
 
-I somehow missed an entire boolean. Sorry Ulvak.
+Create an items list
 
-\*<sup>This will only affect messages when you save or load through UI Framework. It will not suppress messages from melonloader itself when the game starts or closes.</sup>
+```cs
+// It takes a list of DropdownItems which take a string as a display name, and a value of type object 
+List<DropdownItem> itemList = new();
+```
+Create an instance of the `DynamicDropdownDescriptor` class passing the item list as a parameter in the constructor
+```cs
+public static DynamicDropdownDescriptor DropdownDescriptor = new(itemList);
+```
+Add items with 
+```cs
+DropdownDescriptor.AddDropdownItem(new DropdownItem("Display Name", value)); 
+```
+or declare a list separately and set it with SetDropdownItems
+
+Pass it into the CreateEntry validator parameter
+```cs
+DropdownTest = Category.CreateEntry("DropdownTest", -1, "Dropdown Test", "Dynamic dropdown test.", false, false, DropdownDescriptor);
+```
 </details>
 
+<details> <summary> Bug Fix: Added Flatland support </summary>
+UI Framework now works in Flatland
+</details>
+<details><summary> Backend: Coalesced refresh system </summary>
+</details>
 
 
 -----
@@ -84,6 +98,8 @@ The save button writes it to the file for permanent storage. Closing your game m
 ------
 
 # For Modders 
+
+A detailed API Overview exists over at https://github.com/Reverb-And-Spice/UIFramework/blob/main/API_Overview.md
 ## Basic Registration
 Add `[assembly: MelonAdditionalDependencies("UIFramework")]` to your AssemblyInfo. This prevents your mod from calling on UIFramework before it's been initialized.
 
@@ -129,143 +145,20 @@ in the UI. Line breaks are supported.
 -----
 
 # Advanced Usage
-<details><summary>Click here for details
-</summary>
+I moved this section the [API Overview](https://github.com/Reverb-And-Spice/UIFramework/blob/main/API_Overview.md#ui-presentation-control-validator-extensions)
 
-## Interaction Type Configuration
-### Validator Extension system 
-
-Melonloader has a custom validator feature that you can use by inheriting the ValueValidator class.
-Here's an example of a custom validator that approves everything.
-
-```cs
-public class CustomValidator : ValueValidator
-{
-    // These two are required members
-    public override bool IsValid(object value) { return true; }
-    public override object EnsureValid(object value) { return value; }
-}
-```
-
-In UI Framework, we use this system to describe how the entry is represented in the UI. 
-This is done through implementing interfaces in the UIFramework.ValidationExtensions namespace.
-
-
-UI Framework's ValidationControls namespace contains interfaces you can implement into your validator class. 
-Each interface has required member implementations. So, if you want a slider, the declaration for your validator becomes
-```cs
-using UIFramework.ValidationExtensions;
-public class CustomValidator : ValueValidator, SliderDescriptor
-{
-    // These two are required members from MelonPreferences Value Validator. 
-    // You can implement actual validators here or just return true and return the same value
-    public override bool IsValid(object value) { return true; }
-	public override object EnsureValid(object value) { return value; }
-
-    //You can set default values or set them when you pass a new instance into the validator parameter
-    public float Min { get; set; } = 0;
-    public float Max { get; set; } = 100; 
-    public int DecimalPlaces { get; set; } = 5
-}
-```
-Now, when you create your entry, you can pass a new instance of your validator with the appropriate properties set for the slider to be represented in the UI:
-```
-MySlider = Category.CreateEntry("MySlider", 0.5f, "My Slider", "Float Slider",false, false, new SliderDescriptor { Min = 0, Max = 1, DecimalPlaces = 3 });
-```
-
-Most interfaces haven't been implemented yet but I will list the available ones below as they get added
-
-I will also have a default concrete class for most interfaces that has the required members implemented 
-so you can just set the properties when you create a new instance of the class instead of having to make your own validator class.
-
------
-### Sliders
-#### Interface: `ISliderDescriptor`
-#### Default extended validator: `SliderDescriptor`
-The UI will represent your entry with a slider if you add a validator that implements `SliderDescriptor`.
-
-
-
-`MySlider = Category.CreateEntry("MySlider", 0.5f, "My Slider", "Float Slider",false, false, new SliderDescriptor { Min = 0, Max = 1, DecimalPlaces = 3 });`
-
------
-### Buttons
-#### Interface: `IButtonDescriptor`
-#### Default extended validator: `ButtonAsEntry` (internal)
-This is a special case. You don't need to implement this yourself. Instead, you call 
-```cs
-UI.CreateButtonEntry(MelonPreferences_Category category, string buttonText, string displayName, string description, Action handler)
-```
-This method will handle the implementation for you and it will show the button in the entries list.
-
------
-</details>
 
 -----
 
 ## If you haven't used melonpreferences before
-### Here's instructions for basic usage as well as a link to the official documentation for MelonPreferences from the MelonLoader wiki
 
+I detail usage and creation here: 
+https://github.com/Reverb-And-Spice/UIFramework/blob/main/API_Overview.md#melonpreferences
 
-#### 1. Define a file location. 
-Make sure the directory exists for your mod. Otherwise, it will not fail silently and your preferences don't save at all.
-```cs
-private const string USER_DATA = "UserData/MyMod/";
-private const string CONFIG_FILE = "config.cfg";
-if (!Directory.Exists(USER_DATA))
-    Directory.CreateDirectory(USER_DATA);
-```
-#### 2. Declare MelonPreferences_Category and MelonPreferences_Entry variables
-```cs
-private MelonPreferences_Category TestCategory1;
-private MelonPreferences_Category TestCategory2;
-```
-```cs
-private MelonPreferences_Entry<string> TestEntry11;
-private MelonPreferences_Entry<int> TestEntry12;
-
-private MelonPreferences_Entry<float> TestEntry21;
-private MelonPreferences_Entry<bool> TestEntry22;
-```
-
-#### 3.  Call the CreateCategory method and set file paths
-```cs
-TestCategory1 = MelonPreferences.CreateCategory("TestCat1", "Category DisplayName 1");
-TestCategory1.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
-
-TestCategory2 = MelonPreferences.CreateCategory("TestCat2", "Category DisplayName 2");
-TestCategory2.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
-```
-
-#### 4. Create Entries by calling the .CreateEntry method on the category they go in. Parameters are `Identifier`, `Default Value`, `Display Name`, and `Description`
-```cs
-TestEntry11 = TestCategory1.CreateEntry("Entry 1-1", "Test Val", "Display Name1", "Test String");
-TestEntry12 = TestCategory1.CreateEntry("Entry 1-2", 1, "Display Name2", "Test Int");
-
-TestEntry21 = TestCategory2.CreateEntry("Entry 2-1", "0.5126", "Display Name 3", "Test float");
-TestEntry22 = TestCategory2.CreateEntry("Entry 2-2", true, "Display Name 4", "Test bool");
-```
+And the official docs are here: 
 https://melonwiki.xyz/#/modders/preferences?id=melon-preferences
 
-### Events
-- `MelonPreferences_Entry.OnEntryValueChanged`: Event that fires when the value is changed (Value is applied when you hit the save button in the UI Framework window). Provides oldValue and newValue parameters so you can monitor if it's been changed from the previous values. 
-Must be subscribed with via the `.Subscribe()` method instead of `+=`
 
------
-
-### Enum Display Names
-Enum dropdowns will now show the Display(Name) attribute. If unavailable, it will fall back to the default enum value name. 
-```cs
-using System.ComponentModel.DataAnnotations;
-public enum Example
-{
-    [Display(Name = "DisplayName")]
-    value1,
-    [Display(Name = "Other Value")]
-    value2
-}
-```
------
 
 
 

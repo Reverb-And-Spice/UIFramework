@@ -57,7 +57,7 @@ namespace UIFramework
 		/// <param name="message"></param>
 		/// <param name="debugOnly"></param>
 		/// <param name="logLevel"></param>
-		internal static void Log(string message, bool debugOnly = false, int logLevel = 0)
+		internal static void Log(string message, bool debugOnly = true, int logLevel = 0)
 		{
 			if (!debugMode && debugOnly)
 				return;
