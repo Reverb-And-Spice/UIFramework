@@ -44,6 +44,8 @@ namespace UIFramework
 
 		internal Stopwatch displayTime = new();
 
+		internal bool UserUsedVRToggle = false;
+
 		internal int inactiveTimeLimit => (Preferences.InactivityTimeout?.Value * 1000) ?? 30000;
 
 
@@ -92,7 +94,8 @@ namespace UIFramework
 			{
 				MelonCoroutines.Start(InputToggled(true));
 			}
-
+			
+			//Listen for F10 key to record if ModUI is open or closed.
 			if (Input.GetKeyDown(KeyCode.F10))
 			{
 				MelonCoroutines.Start(SyncModUIState());
@@ -116,15 +119,28 @@ namespace UIFramework
 				//Debug.Warning("UIFramework does not work in the loader. Please finish calibrating.");
 				//yield break;
 			}
+			// matchModUI is true if user activated via VR input because that it means to check if ModUI has also toggled itself and to match that if it did. If it didn't then toggle UI Framework independently.
+			//set UserUsedVRToggle to true if using VR toggle as activity indicator.
+			if(matchModUI && ModUIWindow is null)
+			{
+				UserUsedVRToggle = true;
+			}
+			UI.Unfade();
+			displayTime.Reset();
 			if (ModUIWindow is not null && matchModUI)
 			{
 
+				// If ModUI is present, give a delay to see if ModUI has changed states. 
 				yield return new WaitForSeconds(0.04f);
+				//save the current state of UI Framework
 				bool uifPrevState = UI.MainWindow.activeSelf;
+
+				//Check if ModUI's state has changed since it was last recorded. If it has not, assume ModUI doesn't have a VR Toggle on and toggle UI Framework's state independently of ModUI. 
 				if (ModUIWindow.activeSelf == lastModUIState)
 				{
 					UI.MainWindow.SetActive(!uifPrevState);
 				}
+				//IIf it did chdange, match UI Framework's state to ModUI's state.
 				else
 				{
 					UI.MainWindow.SetActive(ModUIWindow.activeSelf);
@@ -136,6 +152,7 @@ namespace UIFramework
 			{
 				UI.MainWindow.SetActive(!UI.MainWindow.activeSelf);
 			}
+		
 
 			UI.MainWindow.GetComponent<WindowCoordinator>().DragHandle.ClampToBounds();
 		}
@@ -206,6 +223,7 @@ namespace UIFramework
 				{
 					UI.Unfade();
 					displayTime.Reset();
+					displayTime.Stop();
 				}
 
 
@@ -239,8 +257,11 @@ namespace UIFramework
 				if (Preferences.HijackModUI.Value)
 				{
 					ModUIWindow?.SetActive(false);
+					displayTime.Reset();
+					displayTime.Stop();
 				}
 			}
+
 		}
 
 		private void FadeCheck()
@@ -252,6 +273,11 @@ namespace UIFramework
 		}
 		private bool UserInteracted()
 		{
+			if(UserUsedVRToggle)
+			{
+				UserUsedVRToggle = false;
+				return true;
+			}
 			if (Mouse.current != null)
 			{
 				Vector2 delta = Mouse.current.delta.ReadValue();

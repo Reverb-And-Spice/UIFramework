@@ -89,7 +89,7 @@ namespace UIFramework
 				"VR: Press both trigger and primary (A/X) buttons on both hands\n" +
 				"<sup>*If you have ModUI, VR Input matches ModUI. UI Framework will be visible when ModUI is visible\n</sup>");
 
-			HijackModUI = CatUIFramework.CreateEntry("HijackModUI", false, "Force Hide ModButtonView UI", "If enabled, UI Framework will find the ModUI object and hide it whenever UI Framework is also hidden.\n" +
+			HijackModUI = CatUIFramework.CreateEntry("HijackModUI", false, "Force Hide ModUI", "If enabled, UI Framework will find the ModUI object and hide it whenever UI Framework is also hidden.\n" +
 				"<size=75%>*Might cause unintended effects. Next ModUI Toggle will need to be done twice</size>");
 
 

@@ -1,6 +1,16 @@
 
 btw: [The changelog](https://github.com/iListen2Sound/UIFramework/blob/main/_Misc/ThunderstorePackage/Template/CHANGELOG.md) doubles as a feature list
+
 ### New in 0.10.3
+<details><summary>Bug Fix: Fixed VR Toggle not counting for activity</summary>
+Toggling the UI in VR would still make the UI time out making the user unable to pull it up.
+</details>
+<details><summary>Bug Fix: Fixed autofill typo</summary>
+Force Hide ModUI was called Force Hide ModButtonView UI
+</details>
+
+<details><summary> README changes</summary></details>
+
 <details><summary>New feature: Added Text Input Behaviour Descriptors</summary>
 
 This lets you set `ContentType`, `CharacterLimit`, and `IsReadOnly` properties.
@@ -8,8 +18,7 @@ You also get a `PasswordChar` property that you can use when you set your conten
 </details>
 
 <details><summary>New feature: Added OnSliderValueChanged event </summary>
-The ISliderDescriptor now has an OnSliderValueChanged event that you can subscribe to 
-if you wanna be notified of
+The ISliderDescriptor now has an OnSliderValueChanged event that you can subscribe to if you wanna be notified of that user interaction
 </details>
 
 ### New in 0.10.1/2
@@ -87,7 +96,6 @@ The save button writes it to the file for permanent storage. Closing your game m
 
 A (more) detailed API Overview exists over at https://github.com/Reverb-And-Spice/UIFramework/blob/main/API_OverView.md
 ## Basic Registration
-Add `[assembly: MelonAdditionalDependencies("UIFramework")]` to your AssemblyInfo. This prevents your mod from calling on UIFramework before it's been initialized.
 
 [Define](#if-you-havent-used-melonpreferences-before) your MelonPreferences in `OnInitializeMelon` and then register them to the UI.
 ```cs
