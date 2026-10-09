@@ -84,6 +84,7 @@ namespace UIFramework
 			
 			VrInputToggle = CatUIFramework.CreateEntry("VrInputToggle", false, "Toggle with VR buttons", "Toggle UI window by pressing both trigger and primary (A/X) on both hands", true);
 
+			CatUIFramework.CreateEntry("Consolas", true, "Consolas", "ᜃᜑᜒᜊᜎᜓ ᜀᜅ᜕ ᜊᜃᜒ", true, false);
 			ToggleSettings = CatUIFramework.CreateEntry("ToggleSettings", ToggleOptions.Keyboard, "Toggle Options", "Select the input method for toggling the UI.\n" +
 				"Keyboard: F9 \n" +
 				"VR: Press both trigger and primary (A/X) buttons on both hands\n" +
