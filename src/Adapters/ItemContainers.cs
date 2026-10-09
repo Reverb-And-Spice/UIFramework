@@ -7,8 +7,8 @@ namespace UIFramework.Adapters
 {
 
 	/// <summary>
-	/// Areas where UI elements are shown to the user. 
-	/// 1. ModButtonView list ModListAdapter 
+	/// Areas where UI elements are shown to the user.
+	/// 1. ModButtonView list ModListAdapter
 	/// 2. CategoryTabView tab top bar
 	/// 3. Entries Content area
 	/// </summary>
@@ -25,7 +25,7 @@ namespace UIFramework.Adapters
 
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		public void Infanticide()
 		{
@@ -110,7 +110,7 @@ namespace UIFramework.Adapters
 
 		}
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		/// <param name="buttonModel"></param>
 		public void SelectTab(IHoldSubmodels buttonModel)
@@ -133,7 +133,7 @@ namespace UIFramework.Adapters
 		public virtual void DiscardAction() { }
 
 		/// <summary>
-		/// Is called when Save ButtonGo is clicked. Override to create custom behaviour 
+		/// Is called when Save ButtonGo is clicked. Override to create custom behaviour
 		/// </summary>
 		public virtual void SaveAction() { }
 

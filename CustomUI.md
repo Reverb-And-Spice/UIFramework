@@ -1,6 +1,11 @@
 ﻿# Advanced UI Customization
 
 ## View Presentation Structure
+### Entry Model
+Won't go into too much detail here because I haven't finalized the design for this class yet.
+But this is the part of the program that actually interacts with MelonPreferences. 
+In the future, I hope to let people make their own models compatible with whatever
+data backing system they need. 
 
 ### Entry View
 Each representation of an entry in the UI is called an `EntryView`. 
@@ -13,24 +18,32 @@ doesn't know how to handle and hope that the entry can be serialized and deseria
 
 ![Basic text input view](_Misc/Images/EntryExample.png)
 
-### Entry Model
-Won't go into too much detail here because I haven't finalized the design for this class yet.
-But this is the part of the program that actually interacts with MelonPreferences. 
+
+### Entry Adapters
+This is a custom component added to the `Entry View` root panel. 
 
 An `EntryAdapter` interacts with the model to retrieve the data and present it to the user through the view
 then takes the user's input and submits it back to the model which updates the MelonPreference Entry value
 
-### EntryAdapters
-This is a custom component added to the `Entry View` root panel. 
-
 -----
 
-## Making custom Entry Views
-There's a unity package in [_Misc/TestFit.unitypackage](_Misc/TestFit.unitypackage) that contains the prefab for the 
-UI Framework window. You can add it to a unity project and build your views in 
+## Making custom Entry Views	
+### Unity Package
+There's a unity package in [_Misc/TestFit.unitypackage](_Misc/TestFit.unitypackage) that contains the prefab for the
+UI Framework window, as well as UIFramework's default views you can use as references.
 
+Use this in your unity project and export your new custom view as an asset bundle to be loaded by your mod. Ulvak added functions for loading asset bundles in the [Rumble Modding API](https://github.com/UlvakSkillz/RumbleModdingAPI)
+
+### Entry View Lifecycle
+UI Framework views are ephemeral. This means a new instance is used whenever the UI refreshes or loads it in and the old one is destroyed.
+
+The view that the user sees is *an instance* of your prefab, not the prefab itself. So references to your prefab won't be the one in the UI.
+
+Don't make references to the view instance in the UI and make sure if it subscribes to any events in your mod, that it properly unsubscribes itself in OnDestroy();
+
+View adapters are descended from `MonoBehaviour` so standard Unity lifecycle callbacks apply
 ## Making custom EntryAdapters
-Inherit the `DataEntryAdapter` class to create your own custom component that you will add to your view prefab's root panel. 
+Inherit the `DataEntryAdapter` class to create your own custom component that'll go on your View Prefab
 
 ### Name and Description Labels
 These are the game objects that should display the name and the description of the entry.
@@ -67,7 +80,6 @@ and those can pass the vaues to SubmitValue.
 This is the UI extension that you pass as the entry's validator. UI Framework will look for its `EntryViewPrefab` 
 property and instantiate that whenever the entry needs to be displayed to the user. 
 
-### EntryViewPrefab. 
 You assign your view prefab to this property assuming it already has the correct DataEntryAdapter component added
 
 More details on how to use UI extensions here: [UI Extensions](API_OverView.md#ui-presentation-control-validator-extensions)
@@ -121,36 +133,38 @@ protected override string DisplayName
 [RegisterTypeInIl2Cpp]
 public class CustomAdapter : DataEntryAdapter
 {
+	//Reference to each text input.
 	protected TMP_InputField txtLeft => this.gameObject.transform.Find("Data/Panel/txtLeft").GetComponent<TMP_InputField>();
 	protected TMP_InputField txtRight => this.gameObject.transform.Find("Data/Panel/txtRight").GetComponent<TMP_InputField>();
 
+	//Called when receiving data from model.
 	protected override void DisplayData(object boxedValue)
 	{
+		//Cast boxedValue to String
 		string value = boxedValue as string;
-
+		
+		//Split received string and display each part into the appropriate text inputs
 		txtLeft.text = value.Split(';')[0];
 		txtRight.text = value.Split(';')[1];
-
-
 	}
 
-	protected void EditEnd(string s)
-	{
-		ParseThenSubmit();
-	}
-	protected void ParseThenSubmit()
+
+	protected void ParseThenSubmit(string s)
 	{
 		string left = txtLeft.text;
 		string right = txtRight.text;
 
+		//Combine both text input's text with a semicolon
 		string submission = left + ";" + right;
+		//Submit to model
 		SubmitValue(submission);
 	}
-
+	
 	void Start()
 	{
-		txtLeft.onEndEdit.AddListener((System.Action<string>)EditEnd);
-		txtRight.onEndEdit.AddListener((System.Action<string>)EditEnd);
+		//Subscribe to each TextInput's onEndEdit event.
+		txtLeft.onEndEdit.AddListener((System.Action<string>)ParseThenSubmit);
+		txtRight.onEndEdit.AddListener((System.Action<string>)ParseThenSubmit);
 
 	}
 }
@@ -158,7 +172,7 @@ public class CustomAdapter : DataEntryAdapter
 
 ### Loading the View GameObject from the asset bundle
 ```cs
-//This asset bundle function uses RMAPI
+//This uses Rumble Modding API to load asset bundles
 customWidget = GameObject.Instantiate(AssetBundles.LoadAssetFromStream<GameObject>(this, "UIFTester2.Assets.testuis", "PrefEntryDoubleTexts"));
 //Add the loaded asset to DontDestroyOnLoad
 GameObject.DontDestroyOnLoad(customWidget);
@@ -171,6 +185,7 @@ customWidget.AddComponent<CustomAdapter>();
 
 ### Adding the entry with the CustomViewProvider
 ```cs
+//This is a MelonPreferences_Entry<string>
 TestEntryCustom = TestCategory2.CreateEntry("TestEntryCustom", "hello; world", "Test Custom Entry", "", false, false, new CustomViewProvider { EntryViewPrefab = customWidget });
 ```
 
@@ -254,16 +269,6 @@ PrefEntrySlider
 │   ├── SliderControl
 │   ├── TextControl
 │   └── Label
-├── Indicator
-└── Description
- ```
- ```
-PrefEntryDoubleTexts
-├── Data
-│   ├── Label
-│   └── Panel
-│   │   ├── txtLeft
-│   │   └── txtRight
 ├── Indicator
 └── Description
  ```

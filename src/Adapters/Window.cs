@@ -70,7 +70,7 @@ namespace UIFramework.Adapters
 	}
 
 	/// <summary>
-	/// 
+	///
 	/// </summary>
 	[RegisterTypeInIl2Cpp]
 	public class WindowCoordinator : MonoBehaviour
@@ -80,8 +80,8 @@ namespace UIFramework.Adapters
 			Log("WindowCoordinator Awake", true, 1);
 		}
 
-		public Color defaultTabColor = new Color(0.22f, 0.22f, 0.22f, 1f);
-		public Color openTabColor = new Color(0.24f, 0.17f, 0.42f, 1f);
+		public Color defaultTabColor = new(0.22f, 0.22f, 0.22f, 1f);
+		public Color openTabColor = new(0.24f, 0.17f, 0.42f, 1f);
 
 		protected RootModel _model;
 		public IModelable Model { get { return _model; } }
@@ -213,10 +213,10 @@ namespace UIFramework.Adapters
 			RequestRefresh();
 		}
 		/// <summary>
-		/// Gets called when the save button gets clicked. 
+		/// Gets called when the save button gets clicked.
 		/// </summary>
 		/// <remarks>
-		/// Generally Melonpreferences are saved by category. 
+		/// Generally Melonpreferences are saved by category.
 		/// But this iterates through the child controllers and call their PreSaveAction() method.
 		/// This allows for custom behavior before the actual category gets saved
 		/// </remarks>
@@ -249,12 +249,12 @@ namespace UIFramework.Adapters
 		{
 			if (!_refreshPending)
 				return;
-			
+			_refreshPending = false;
+
 
 			ModRegistryPanel.BuildFromModelList();
 			CatRegistryPanel.BuildFromModelList();
 			PrefRegistryPanel.BuildFromModelList();
-			_refreshPending = false;
 
 
 		}

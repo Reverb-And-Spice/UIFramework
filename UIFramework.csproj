@@ -32,6 +32,13 @@
 	  <Folder Include="_Misc\ThunderstorePackage\Template\Mods\" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <PackageReference Include="Roslynator.Analyzers" Version="4.15.0">
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	    <PrivateAssets>all</PrivateAssets>
+	  </PackageReference>
+	</ItemGroup>
+
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 		<!--Copy to mods folder-->
 		<Exec Command="COPY &quot;$(TargetPath)&quot; &quot;$(RumblePath)\Mods&quot;" />

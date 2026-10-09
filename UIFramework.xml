@@ -1,0 +1,1217 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>UIFramework</name>
+    </assembly>
+    <members>
+        <member name="P:UIFramework.Adapters.PrefEntryAdapterBase.DescriptionText">
+            <summary>
+            Sets the description text
+            </summary>
+        </member>
+        <member name="P:UIFramework.Adapters.PrefEntryAdapterBase.DisplayName">
+            <summary>
+            Sets the identifier text
+            </summary>
+        </member>
+        <member name="P:UIFramework.Adapters.PrefEntryAdapterBase.EntryModel">
+            <summary>
+            The model for the entry
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.PrefEntryAdapterBase.PreSaveAction">
+            <summary>
+            This is called when the Save button is pressed. Override to create custom behaviour.
+            </summary>
+            <remarks>Generally MelonPreferences are saved from the category, not the indivial entries.</remarks>
+        </member>
+        <member name="M:UIFramework.Adapters.PrefEntryAdapterBase.ModelSet">
+            <summary>
+            Called when the model has been set. Calls DisplayMetadata and DisplayContents in that order
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.PrefEntryAdapterBase.DisplayMetadata">
+            <summary>
+            Displays the entry model's display name and description by invoking DisplayEntryInfo.
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.PrefEntryAdapterBase.DisplayEntryInfo(System.String,System.String)">
+            <summary>
+            Displays the name and description on to the View object
+            </summary>
+            <param name="displayName"></param>
+            <param name="description"></param>
+        </member>
+        <member name="M:UIFramework.Adapters.PrefEntryAdapterBase.DisplayContents">
+            <summary>
+            Displays actual data content
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.PrefEntryAdapterBase.ToTomlString(System.Object)">
+            <summary>
+            Serializes an object into the toml string representation of that object
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:UIFramework.Adapters.PrefEntryAdapterBase.FromTomlString(System.String,System.Type)">
+            <summary>
+            Parses a toml string into an object of type with its value.
+            </summary>
+            <param name="input"></param>
+            <param name="targetType"></param>
+            <returns></returns>
+        </member>
+        <member name="T:UIFramework.Adapters.DataEntryAdapter">
+            <summary>
+            Inherit this class to create your own custom entry controllers for your own input controls.
+            </summary>
+            <remarks>Released</remarks>
+        </member>
+        <member name="P:UIFramework.Adapters.DataEntryAdapter.DataEntry">
+            <summary>
+            Model for the data entry
+            </summary>
+        </member>
+        <member name="F:UIFramework.Adapters.DataEntryAdapter.CurrentBoxedValue">
+            <summary>
+            The boxed value loaded from the model when it was first set
+            </summary>
+        </member>
+        <member name="P:UIFramework.Adapters.DataEntryAdapter.UiExtension">
+            <summary>
+            Reference to the UI Extension
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.DataEntryAdapter.PreSaveAction">
+            <inheritdoc/>
+        </member>
+        <member name="M:UIFramework.Adapters.DataEntryAdapter.DisplayContents">
+            <inheritdoc/>
+        </member>
+        <member name="M:UIFramework.Adapters.DataEntryAdapter.DisplayData(System.Object)">
+            <summary>
+            Passes the data from the model for adapting into a format displayed to the user
+            </summary>
+            <param name="boxedValue"></param>
+        </member>
+        <member name="M:UIFramework.Adapters.DataEntryAdapter.SubmitValue(System.Object)">
+            <summary>
+            Submits the value to the model
+            </summary>
+            <param name="value"></param>
+            <returns></returns>
+        </member>
+        <member name="T:UIFramework.Adapters.TextEntryAdapter">
+            <summary>
+            Base controller for text fields
+            </summary>
+        </member>
+        <member name="P:UIFramework.Adapters.TextEntryAdapter.TextField">
+            <summary>
+            Returns the textfield
+            </summary>
+        </member>
+        <member name="P:UIFramework.Adapters.TextEntryAdapter.PlaceHolderText">
+            <summary>
+            Sets the placeholder text in the TextField
+            </summary>
+        </member>
+        <member name="P:UIFramework.Adapters.TextEntryAdapter.BehaviorDescriptor">
+            <summary>
+            A reference to the UI Extension as a behavior descriptor
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.TextEntryAdapter.DisplayData(System.Object)">
+            <summary>
+            <inheritdoc/>
+            Assigns the behavior descriptor properties if present. 
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.TextEntryAdapter.ParseThenSubmit">
+            <summary>
+            Parse the contents in the text field through toml then submit it.
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.TextEntryAdapter.EditStart(System.String)">
+            <summary>
+            Sets the text to non-italicized font style when editing. 
+            Replaces the need for managing the placeholder text
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.TextEntryAdapter.EditEnd(System.String)">
+            <summary>
+            Sets the text to italicized when done editing
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.TextEntryAdapter.Start">
+            <summary>
+            Unity callback. Subscribes EditStart and EditEnd to the appropriate events
+            </summary>
+        </member>
+        <member name="T:UIFramework.Adapters.NumericEntryAdapter">
+            <summary>
+            Entry adapter for a numeric view. Derives from text inputs
+            </summary>
+        </member>
+        <member name="P:UIFramework.Adapters.NumericEntryAdapter.AddButton">
+            <summary>
+            Button for incrementing
+            </summary>
+        </member>
+        <member name="P:UIFramework.Adapters.NumericEntryAdapter.SubtractButton">
+            <summary>
+            Button for decrementing
+            </summary>
+        </member>
+        <member name="P:UIFramework.Adapters.NumericEntryAdapter.IncrementStep">
+            <summary>
+            Gets the defined numeric steps from the descriptor. 
+            If it doesn't exist, or is zero, it goes back to the default depending on the numeric type.
+            </summary>
+        </member>
+        <member name="P:UIFramework.Adapters.NumericEntryAdapter.NumericSettings">
+            <summary>
+            UI Extension as NumberboxDescriptor NumericSettings
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.NumericEntryAdapter.Start">
+            <summary>
+            <inheritdoc/>
+            Subscribes the button click events to increment/decrement specifically.
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.NumericEntryAdapter.Increment">
+            <summary>
+            Increment button event
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.NumericEntryAdapter.Decrement">
+            <summary>
+            Decerement button event
+            </summary>
+        </member>
+        <member name="T:UIFramework.Adapters.NumSliderAdapter">
+            <summary>
+            <inheritdoc/>
+            Adapter for slider entries. Inherits from Text inputs
+            </summary>
+        </member>
+        <member name="P:UIFramework.Adapters.NumSliderAdapter.Slider">
+            <summary>
+            Control component for slider
+            </summary>
+        </member>
+        <member name="P:UIFramework.Adapters.NumSliderAdapter.SliderSettings">
+             <summary>
+            UI Extension for the slider descriptor
+             </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.NumSliderAdapter.DisplayData(System.Object)">
+            <summary>
+            <inheritdoc/>
+            Gets the data from the model then set the value of the slider to match
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.NumSliderAdapter.OnValueChanged(System.Single)">
+             <summary>
+            Updates the text input with the slider's values
+             </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.NumSliderAdapter.SubmitSliderValue">
+            <summary>
+            Submits the slider's value to the model
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.NumSliderAdapter.EditStart(System.String)">
+            <summary>
+            <inheritdoc/>
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.NumSliderAdapter.EditEnd(System.String)">
+            <summary>
+            <inheritdoc/>
+            After editing the text input, apply the value in it to the slider position
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.NumSliderAdapter.AddPointerUp">
+            <summary>
+            Adds a pointer up event toe the slider which does the actual submission
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.NumSliderAdapter.PointerUP(UnityEngine.EventSystems.BaseEventData)">
+            <summary>
+            Only submit the slider value after the user stops dragging it
+            Otherwise, UI will continously try to refresh making the user only
+            able to edit one frame.
+            </summary>
+        </member>
+        <member name="T:UIFramework.Adapters.BoolToggleAdapter">
+            <summary>
+            <inheritdoc/>
+            Adapter for booleans shown as toggles
+            </summary>
+        </member>
+        <member name="P:UIFramework.Adapters.BoolToggleAdapter.Toggle">
+            <summary>
+            The actual toggle control component
+            </summary>
+        </member>
+        <member name="P:UIFramework.Adapters.BoolToggleAdapter.EnteredValue">
+            <summary>
+            Gets the value of the toggle
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.BoolToggleAdapter.DisplayData(System.Object)">
+            <inheritdoc/>
+        </member>
+        <member name="T:UIFramework.Adapters.DropDownAdapterBase">
+            <summary>
+            The base class for dropdown adapters
+            </summary>
+        </member>
+        <member name="F:UIFramework.Adapters.DropDownAdapterBase._indexToValueMap">
+            <summary>
+            List of ints serving to map the selected index to the the actual entry value of that index in the dropdown
+            </summary>
+        </member>
+        <member name="F:UIFramework.Adapters.DropDownAdapterBase.dropdown">
+            <summary>
+            The actual dropdown control
+            </summary>
+        </member>
+        <member name="P:UIFramework.Adapters.DropDownAdapterBase.EntryValue">
+            <summary>
+            The value of the model entry
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.DropDownAdapterBase.DisplayData(System.Object)">
+            <summary>
+            <inheritdoc/>
+            Sets the dropdown object and the EntryValue from the model
+            Also calls the select dropdown item method
+            Adds the OnValueChanged listener
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.DropDownAdapterBase.OnValueChanged(System.Int32)">
+            <summary>
+            Submits the dropdown selection
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.DropDownAdapterBase.SubmitDropdownValue">
+            <summary>
+            Virtual overridable method for submitting values
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.DropDownAdapterBase.GetDropdownData">
+            <summary>
+            Virtual Overridable Method for gettting dropdown data. Difference between dynamic vs enum dropdowns
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.DropDownAdapterBase.SelectDropDownItem(System.Object)">
+            <summary>
+            Virtual overridable method for selecting dropdown data. Difference between dynamic vs enum dropdowns
+            </summary>
+        </member>
+        <member name="T:UIFramework.Adapters.EnumDropdownAdapter">
+            <summary>
+            Dropdown Adapter for enums
+            </summary>
+        </member>
+        <member name="F:UIFramework.Adapters.EnumDropdownAdapter.prefEnum">
+            <summary>
+            The enum type of the model value
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.EnumDropdownAdapter.GetDropdownData">
+            <summary>
+            Gets the data from the enum to populate the dropdown
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.EnumDropdownAdapter.SelectDropDownItem(System.Object)">
+            <summary>
+            Takes the boxedValue from the model and sets the dropdown value accordingly
+            This allows for enum selections that might not be in order 4
+            or doesn't start at 0
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.EnumDropdownAdapter.SubmitDropdownValue">
+            <summary>
+            Take the int from _indexToValue map corresponding to the index of the selection of the dropdown.
+            Convert that to an enum then submit it to the model
+            </summary>
+        </member>
+        <member name="T:UIFramework.Adapters.DynamicDopdownAdapter">
+            <summary>
+            Dropdown adapter for dynamic dropdowns
+            </summary>
+        </member>
+        <member name="P:UIFramework.Adapters.DynamicDopdownAdapter.DropdownContents">
+            <summary>
+            Get the UI Extension as a dynamic dropdown descriptor
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.DynamicDopdownAdapter.GetDropdownData">
+            <summary>
+            Gets the data from the dynamic dropdown descriptor to populate the dropdown
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.DynamicDopdownAdapter.SelectDropDownItem(System.Object)">
+            <summary>
+            Select the display name from dropdown contents that corresponds to the model boxed value
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.DynamicDopdownAdapter.SubmitDropdownValue">
+            <summary>
+            Submit the value represented by the selected item in the dropdown
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.DynamicDopdownAdapter.OnDestroy">
+            <summary>
+            Unsubscribe from the dropdown descriptor when this view gets destroyed
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.ButtonModelAdapter.DisplayContents">
+            <inheritdoc/>
+        </member>
+        <member name="T:UIFramework.Adapters.EntryState">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:UIFramework.Adapters.ListAreaAdapterBase">
+            <summary>
+            Areas where UI elements are shown to the user.
+            1. ModButtonView list ModListAdapter
+            2. CategoryTabView tab top bar
+            3. Entries Content area
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.ListAreaAdapterBase.Infanticide">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.ListAreaAdapterBase.SetContainerModel(UIFramework.Models.IHoldSubmodels)">
+            <summary>
+            Sets the underlying data model for the current instance.
+            </summary>
+            <remarks>
+            Calling this method updates the internal state to reflect the provided model. Subsequent
+            operations may depend on the newly set model.
+            </remarks>
+            <param name="model">The model to associate with this instance. Cannot be null.</param>
+        </member>
+        <member name="M:UIFramework.Adapters.ListAreaAdapterBase.BuildFromModelList">
+            <summary>
+            Clears the contents and recreates them from the submodels list in Model
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.ListAreaAdapterBase.SelectTab(UIFramework.Models.IHoldSubmodels)">
+             <summary>
+            
+             </summary>
+             <param name="buttonModel"></param>
+        </member>
+        <member name="M:UIFramework.Adapters.ListAreaAdapterBase.SaveAction">
+            <summary>
+            Is called when Save ButtonGo is clicked. Override to create custom behaviour
+            </summary>
+        </member>
+        <member name="T:UIFramework.Adapters.ModListAdapter">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:UIFramework.Adapters.CategoryListAdapter">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:UIFramework.Adapters.PrefListAdapter">
+            <summary>
+            Main body of the UI. Lists individual preferences
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.PrefListAdapter.SaveAction">
+            <summary>
+            When the save button is clicked, the selected category save action will be called. The model is now in charge of what that means
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.PrefListAdapter.DiscardAction">
+            <inheritdoc/>
+        </member>
+        <member name="M:UIFramework.Adapters.TabButtonController.OnSelect">
+            <summary>
+            Runs when the button is clicked. Implement this in inheriting classes.
+            </summary>
+            <exception cref="T:System.NotImplementedException"></exception>
+            <remarks>IL2CPP does not like abstract methods 😭</remarks>
+        </member>
+        <member name="T:UIFramework.Adapters.ModButtonView">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:UIFramework.Adapters.CategoryTabView">
+            <summary>
+            </summary>
+        </member>
+        <member name="T:UIFramework.Adapters.WindowCoordinator">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.WindowCoordinator.BuildModList">
+            <summary>
+            Resets the containers and build the modlist
+            </summary>
+        </member>
+        <member name="M:UIFramework.Adapters.WindowCoordinator.SaveButtonClick">
+            <summary>
+            Gets called when the save button gets clicked.
+            </summary>
+            <remarks>
+            Generally Melonpreferences are saved by category.
+            But this iterates through the child controllers and call their PreSaveAction() method.
+            This allows for custom behavior before the actual category gets saved
+            </remarks>
+        </member>
+        <member name="P:UIFramework.Models.ModelBase.Identifier">
+            <inheritdoc/>
+        </member>
+        <member name="M:UIFramework.Models.ModelBase.GetNewUIInstance">
+            <inheritdoc/>
+        </member>
+        <member name="P:UIFramework.Models.ModelBase.DisplayName">
+            <inheritdoc/>
+        </member>
+        <member name="M:UIFramework.Models.ModelBase.SaveAction">
+            <inheritdoc/>
+        </member>
+        <member name="T:UIFramework.Models.SelectableModelBase">
+            <summary>
+            Models that represent buttons on the sidebar and topbar
+            </summary>
+        </member>
+        <member name="P:UIFramework.Models.SelectableModelBase.SubModels">
+            <summary>
+            List of submodels for the model
+            </summary>
+        </member>
+        <member name="M:UIFramework.Models.SelectableModelBase.GetSubmodel(System.String)">
+            <summary>
+            General submodel finder.
+            </summary>
+        </member>
+        <member name="M:UIFramework.Models.SelectableModelBase.AddSubmodel(UIFramework.Models.IModelable[])">
+            <summary>
+            Add a new submodel to the list
+            </summary>
+        </member>
+        <member name="M:UIFramework.Models.SelectableModelBase.DiscardAction">
+            <summary>
+            Called when the discard button is pressed
+            </summary>
+        </member>
+        <member name="M:UIFramework.Models.SelectableModelBase.SaveAction">
+            <inheritdoc/>
+        </member>
+        <member name="M:UIFramework.Models.ModModelBase.GetNewUIInstance">
+            <inheritdoc/>
+        </member>
+        <member name="M:UIFramework.Models.ModModelBase.GetModelCategory(System.String)">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:UIFramework.Models.ModModelBase.AddModelCategory(UIFramework.Models.CategoryModelBase[])">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:UIFramework.Models.ModModelBase.SaveAction">
+            <summary>
+            Calls individual category models' PreSaveAction method.
+            </summary>
+        </member>
+        <member name="E:UIFramework.Models.ModModelBase.OnModSaved">
+            <summary>
+            Subscribe to this event to run code after all the categories for the mod have been saved.
+            This will only run if your mod is the currently selelcted mod.
+            </summary>
+        </member>
+        <member name="M:UIFramework.Models.CategoryModelBase.GetNewUIInstance">
+            <inheritdoc/>
+        </member>
+        <member name="P:UIFramework.Models.EntryModelBase.Description">
+            <inheritdoc/>
+        </member>
+        <member name="P:UIFramework.Models.EntryModelBase.SaveState">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:UIFramework.Models.DataEntryModelBase">
+            <summary>
+            A model for interfacing with a piece of data.
+            </summary>
+        </member>
+        <member name="M:UIFramework.Models.DataEntryModelBase.GetNewUIInstance">
+            <summary>
+            Returns an instance of the game object associated with the MelonPreferences_Entry type.
+            If a custom one is provided, it will return an instance of that instead
+            </summary>
+            <returns>TODO: Move this to the UI builders as this is ui logic</returns>
+        </member>
+        <member name="P:UIFramework.Models.EmptyCategory.DisplayName">
+            <inheritdoc/>
+        </member>
+        <member name="P:UIFramework.Models.EmptyCategory.Identifier">
+            <inheritdoc/>
+        </member>
+        <member name="P:UIFramework.Models.ButtonEntry.Identifier">
+            <inheritdoc/>
+        </member>
+        <member name="P:UIFramework.Models.ButtonEntry.Description">
+            <inheritdoc/>
+        </member>
+        <member name="P:UIFramework.Models.ButtonEntry.DisplayName">
+            <inheritdoc/>
+        </member>
+        <member name="P:UIFramework.Models.ButtonEntry.BoxedValue">
+            <summary>
+            This is only to satisfy the contract for IEntry.
+            </summary>
+        </member>
+        <member name="M:UIFramework.Models.ButtonEntry.SaveAction">
+            <inheritdoc/>
+        </member>
+        <member name="M:UIFramework.Models.ButtonEntry.GetNewUIInstance">
+            <inheritdoc/>
+        </member>
+        <member name="T:UIFramework.Models.IModelable">
+            <summary>
+            Implemented by all models
+            </summary>
+        </member>
+        <member name="P:UIFramework.Models.IModelable.Identifier">
+            <summary>
+            DisplayName for the model
+            </summary>
+        </member>
+        <member name="P:UIFramework.Models.IModelable.DisplayName">
+            <summary>
+            User-facing display name. Should return Identifier if not assigned to a value
+            </summary>
+        </member>
+        <member name="M:UIFramework.Models.IModelable.GetNewUIInstance">
+            <summary>
+            Instantiates a new Game object associated with them model
+            </summary>
+            <returns> UI Game Object</returns>
+        </member>
+        <member name="M:UIFramework.Models.IModelable.SaveAction">
+            <summary>
+            Should be called when save button is pressed. Runs after all ancestor's save actions have been run
+            </summary>
+        </member>
+        <member name="T:UIFramework.Models.IHoldSubmodels">
+            <summary>
+            Models that contain submodels. Generally these are mods and categories representing tabs
+            </summary>
+        </member>
+        <member name="P:UIFramework.Models.IHoldSubmodels.SubModels">
+            <summary>
+            A list of submodels
+            </summary>
+        </member>
+        <member name="M:UIFramework.Models.IHoldSubmodels.GetSubmodel(System.String)">
+            <summary>
+            Finds submodel by identifier
+            </summary>
+            <param name="identifier"></param>
+            <returns></returns>
+        </member>
+        <member name="T:UIFramework.Models.IEntry">
+            <summary>
+            Goes on the main panel. Contains controls for manipulating preferences or just general UI controls
+            </summary>
+        </member>
+        <member name="P:UIFramework.Models.IEntry.Identifier">
+            <summary>
+            DisplayName/ID of the entry
+            </summary>
+        </member>
+        <member name="P:UIFramework.Models.IEntry.Description">
+            <summary>
+            DisplayName of the entry
+            </summary>
+        </member>
+        <member name="M:UIFramework.Models.IEntry.SaveAction">
+            <summary>
+            Ideally called by the controller to define a save action
+            </summary>
+        </member>
+        <member name="T:UIFramework.Models.IStorable">
+            <summary>
+            implemented by models that store data
+            </summary>
+        </member>
+        <member name="T:UIFramework.Models.RootModel">
+             <summary>
+             Models define how the UI is built. The heirarchy is simple and follows melonpreferences basic structure
+             MelonModel ->  MelonCategoryModel -> MelonEntryModel
+             Modders can use the default model just by calling UIF.Register(modInstance, categories) in their OnLateInitializeMelon.
+             The default model will use simple input methods: bools will be toggles, strings will be text input fields and so would numerics.
+             More options will eventually be available: sliders, dropdowns, multi checkboxes, radio buttons, etc.
+            
+             Those will be developed after the default model is functional
+             </summary>
+        </member>
+        <member name="F:UIFramework.Models.MelonCategoryModel.PrefCat">
+            <summary>
+            The MelonPreferences_Category object this adapts into the framework
+            </summary>
+        </member>
+        <member name="P:UIFramework.Models.MelonCategoryModel.Identifier">
+            <inheritdoc/>
+        </member>
+        <member name="P:UIFramework.Models.MelonCategoryModel.DisplayName">
+            <inheritdoc/>
+        </member>
+        <member name="M:UIFramework.Models.MelonCategoryModel.#ctor(MelonLoader.MelonPreferences_Category,UIFramework.Models.ModModelBase)">
+            <summary>
+            Creates a new instance of this class based on a MelonPreferences_Category
+            </summary>
+        </member>
+        <member name="M:UIFramework.Models.MelonCategoryModel.SaveAction">
+            <inheritdoc/>
+        </member>
+        <member name="T:UIFramework.Models.MelonEntryModel">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:UIFramework.Models.MelonEntryModel.PrefEntry">
+            <summary>
+            MelonPreferences_Entry this model is meant to adapt
+            </summary>
+        </member>
+        <member name="P:UIFramework.Models.MelonEntryModel.Identifier">
+            <inheritdoc/>
+        </member>
+        <member name="P:UIFramework.Models.MelonEntryModel.DisplayName">
+            <inheritdoc/>
+        </member>
+        <member name="P:UIFramework.Models.MelonEntryModel.Description">
+            <inheritdoc/>
+        </member>
+        <member name="P:UIFramework.Models.MelonEntryModel.ModelBoxedValue">
+            <summary>
+            Direct access to the PrefEntry boxedvalue property
+            </summary>
+        </member>
+        <member name="M:UIFramework.Models.MelonEntryModel.#ctor(MelonLoader.MelonPreferences_Entry,UIFramework.Models.CategoryModelBase)">
+            <summary>
+            Creates a new instance of this object based around a MelonPreferences_Entry object
+            </summary>
+        </member>
+        <member name="P:UIFramework.Models.MelonEntryModel.SavedValue">
+            <summary>
+            The value actually saved to the file.
+            </summary>
+        </member>
+        <member name="M:UIFramework.Models.MelonEntryModel.SaveAction">
+            <inheritdoc/>
+        </member>
+        <member name="M:UIFramework.Models.MelonEntryModel.DiscardAction">
+            <inheritdoc/>
+        </member>
+        <member name="T:UIFramework.UIFModel">
+            <summary>
+            These are shim classes to keep backwards compatibility with old models.
+            They don't do anything and just inherit from the new models so that existing mods
+            don't break using the old .Register function
+            </summary>
+        </member>
+        <member name="T:UIFramework.UiExtensions.DefaultValidator">
+            <summary>
+            Default implementation of the MelonLoader ValueValidator class.
+            This satisfies the required members but just acts as a passthrough.
+            It's the equivalent of not having a validator at all, but it allows for the use of the other descriptor interfaces without needing to implement a custom validator.
+            </summary>
+        </member>
+        <member name="T:UIFramework.UiExtensions.TextInputBehaviorDescriptor">
+            <inheritdoc cref="T:UIFramework.UiExtensions.ITextInputBehaviorDescriptor"/>
+        </member>
+        <member name="P:UIFramework.UiExtensions.TextInputBehaviorDescriptor.PasswordChar">
+            <inheritdoc/>
+        </member>
+        <member name="P:UIFramework.UiExtensions.TextInputBehaviorDescriptor.CharacterLimit">
+            <inheritdoc/>
+        </member>
+        <member name="P:UIFramework.UiExtensions.TextInputBehaviorDescriptor.IsReadOnly">
+            <inheritdoc/>
+        </member>
+        <member name="T:UIFramework.UiExtensions.TextInputAppearanceDescriptor">
+            <inheritdoc cref="T:UIFramework.UiExtensions.ITextInputAppearanceDescriptor"/>
+        </member>
+        <member name="T:UIFramework.UiExtensions.DynamicDropdownDescriptor">
+            <summary>
+            Default implementation for IDynamicDropdownDescriptor
+             </summary>
+             <see cref="T:UIFramework.UiExtensions.IDynamicDropdownDescriptor"/>
+        </member>
+        <member name="M:UIFramework.UiExtensions.DynamicDropdownDescriptor.GetDropdownItems">
+            <inheritdoc/>
+        </member>
+        <member name="M:UIFramework.UiExtensions.DynamicDropdownDescriptor.SetDropdownItems(System.Collections.Generic.List{UIFramework.UiExtensions.DropdownItem})">
+            <inheritdoc/>
+        </member>
+        <member name="M:UIFramework.UiExtensions.DynamicDropdownDescriptor.AddDropdownItem(UIFramework.UiExtensions.DropdownItem)">
+            <summary>
+            Adds an item to the dropdown item list
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="M:UIFramework.UiExtensions.DynamicDropdownDescriptor.RemoveDropdownItem(UIFramework.UiExtensions.DropdownItem)">
+            <summary>
+            Removes an item from the dropdown list
+            </summary>
+            <param name="item"></param>
+        </member>
+        <member name="M:UIFramework.UiExtensions.DynamicDropdownDescriptor.WithDropdownItemList(System.Collections.Generic.List{UIFramework.UiExtensions.DropdownItem})">
+            <summary>
+            Builder-like function that you can chain to a statement that adds a dropdown item list and returns the instance of this class
+            </summary>
+            <param name="dropdownItemList"></param>
+            <returns></returns>
+        </member>
+        <member name="M:UIFramework.UiExtensions.DynamicDropdownDescriptor.#ctor(System.Collections.Generic.List{UIFramework.UiExtensions.DropdownItem})">
+            <inheritdoc/>
+        </member>
+        <member name="M:UIFramework.UiExtensions.DynamicDropdownDescriptor.#ctor">
+            <inheritdoc/>
+        </member>
+        <member name="P:UIFramework.UiExtensions.DynamicDropdownDescriptor.OnDropdownItemsUpdated">
+            <inheritdoc/>
+        </member>
+        <member name="T:UIFramework.UiExtensions.SliderDescriptor">
+            <summary>
+            Default implementation of ISliderDescriptor. Used for numeric inputs that want to be sliders. DecimalPlaces defaults to 5, Min defaults to 0, Max defaults to 1.
+            </summary>
+            <see cref="T:UIFramework.UiExtensions.ISliderDescriptor"/>
+        </member>
+        <member name="P:UIFramework.UiExtensions.SliderDescriptor.Min">
+            <summary>
+            Minimum value. Defaults 0
+            </summary>
+        </member>
+        <member name="P:UIFramework.UiExtensions.SliderDescriptor.Max">
+            <summary>
+            Max value. Defaults 1.
+            </summary>
+        </member>
+        <member name="P:UIFramework.UiExtensions.SliderDescriptor.DecimalPlaces">
+            <summary>
+            Decimal Places. Defaults 5
+            </summary>
+        </member>
+        <member name="P:UIFramework.UiExtensions.SliderDescriptor.OnSliderValueChanged">
+            <summary>
+            Triggered when the slider value changes.
+            </summary>
+        </member>
+        <member name="P:UIFramework.UiExtensions.SliderDescriptor.OnUserEdit">
+            <inheritdoc/>
+        </member>
+        <member name="T:UIFramework.UiExtensions.NumberBoxDescriptor">
+            <inheritdoc cref="T:UIFramework.UiExtensions.INumberBoxDescriptor"/>
+        </member>
+        <member name="P:UIFramework.UiExtensions.NumberBoxDescriptor.Steps">
+            <inheritdoc/>
+        </member>
+        <member name="P:UIFramework.UiExtensions.NumberBoxDescriptor.DecimalPlaces">
+            <inheritdoc/>
+        </member>
+        <member name="T:UIFramework.UiExtensions.UserEditNotifier">
+            <summary>
+            Default implementation of IUserEditedNotifier
+            Use this if you wanna be informed of edits made by the user that aren't applied to the Value property yet
+            </summary>
+        </member>
+        <member name="P:UIFramework.UiExtensions.UserEditNotifier.OnUserEdit">
+            <inheritdoc/>
+        </member>
+        <member name="T:UIFramework.UiExtensions.RefreshInhibitor">
+            <summary>
+            Default implementation of IRefreshInhibitor
+            Prevent entry from triggering a refresh when a user edits values in the UI or when the entry value changes in code
+            Useful for making sure the UI doesn't refresh while the user is actively editing an entry
+            <br/>
+            This might be removed in a future version. Use this only if you can't find a way to prevent the UI from updating
+            when the user uses a control that has continuous triggers (e.g. sliders) and you can't find a way to defer value application
+            (e.g. using an event trigger for OnPointerUp)
+            </summary>
+            <remarks>
+            These prevent the entry from <em>causing</em> the UI to refresh
+            This does not mean the entry prevents interruptions from refreshes
+            </remarks>
+        </member>
+        <member name="P:UIFramework.UiExtensions.RefreshInhibitor.InhibitRefreshOnEdit">
+            <inheritdoc/>
+        </member>
+        <member name="P:UIFramework.UiExtensions.RefreshInhibitor.InhibitRefreshOnValueChange">
+            <inheritdoc/>
+        </member>
+        <member name="T:UIFramework.UiExtensions.CustomViewProvider">
+            <inheritdoc cref="T:UIFramework.UiExtensions.ICustomViewProvider"/>
+        </member>
+        <member name="T:UIFramework.UiExtensions.ITextInputBehaviorDescriptor">
+            <summary>
+            Describes properties for text inputs that define its behavior.
+            </summary>
+        </member>
+        <member name="P:UIFramework.UiExtensions.ITextInputBehaviorDescriptor.ContentType">
+            <summary>
+            What type of content is going into the textinput
+            Maps to TMP_InputField.contentType
+            </summary>
+            <remarks>Implemented</remarks>
+        </member>
+        <member name="P:UIFramework.UiExtensions.ITextInputBehaviorDescriptor.PasswordChar">
+            <summary>
+            Character that shows instead on password fields
+            Maps to TMP_InputField.asteriskChar
+            </summary>
+        </member>
+        <member name="P:UIFramework.UiExtensions.ITextInputBehaviorDescriptor.CharacterLimit">
+            <summary>
+            Number of characters to limit the text input to.
+            Maps to TMP_InputField.characterLimit
+            </summary>
+        </member>
+        <member name="P:UIFramework.UiExtensions.ITextInputBehaviorDescriptor.IsReadOnly">
+            <summary>
+            Sets the input field as read only
+            In slider and numeric entries, this also makes the slider and buttons uninteractable.
+            Maps to TMP_InputField.readOnly
+            </summary>
+        </member>
+        <member name="T:UIFramework.UiExtensions.ITextInputAppearanceDescriptor">
+            <summary>
+            Describes properties of text inputs that define how it looks
+            </summary>
+        </member>
+        <member name="P:UIFramework.UiExtensions.ITextInputAppearanceDescriptor.IsAutoSizing">
+            <summary>
+            Set to true to have the text auto size between AutoSizeMin and AutoSizeMax. If false, FontSize will be used as the font size.
+            </summary>
+        </member>
+        <member name="T:UIFramework.UiExtensions.IDynamicDropdownDescriptor">
+            <summary>
+            Presents the entry as a dropdown and describes the options within it.
+            Important to note that your data shouldn't be stored as dropdown items.
+            Dropdown items are just descriptions purely for UI Framework to know what to display to users in the dropdown.
+            </summary>
+            <remarks>Released</remarks>
+        </member>
+        <member name="M:UIFramework.UiExtensions.IDynamicDropdownDescriptor.GetDropdownItems">
+            <summary>
+            Returns the list of dropdown items
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:UIFramework.UiExtensions.IDynamicDropdownDescriptor.SetDropdownItems(System.Collections.Generic.List{UIFramework.UiExtensions.DropdownItem})">
+            <summary>
+            <para>Sets the items to be displayed in the dropdown. </para>
+            <para>When doing a custom implementation, make sure to fire OnDropdownItemsUpdated after storing your data</para>
+            </summary>
+            <param name="items"></param>
+        </member>
+        <member name="P:UIFramework.UiExtensions.IDynamicDropdownDescriptor.OnDropdownItemsUpdated">
+            <summary>
+            Invoking this action signals to the dropdown entry to update its dropdown list without having to update the whole UI
+            </summary>
+        </member>
+        <member name="T:UIFramework.UiExtensions.DropdownItem">
+            <summary>
+            Describes an option displayed in the dropdown. Each one has a name and a Value.
+            Note that this isn't the value type for your entry.
+            This is only used to describe what options show up in the dropdown
+            </summary>
+            <remarks>Released</remarks>
+        </member>
+        <member name="P:UIFramework.UiExtensions.DropdownItem.DisplayName">
+            <summary>
+            How the item shows in the dropdown
+            </summary>
+        </member>
+        <member name="P:UIFramework.UiExtensions.DropdownItem.Value">
+            <summary>
+            The actual value that gets stored in your entry
+            </summary>
+        </member>
+        <member name="T:UIFramework.UiExtensions.INumberBoxDescriptor">
+            <summary>
+            Describes numeric up down controls
+            </summary>
+            <remarks>Released</remarks>
+        </member>
+        <member name="P:UIFramework.UiExtensions.INumberBoxDescriptor.Steps">
+            <summary>
+            0 = default (1 for ints, 0.1 for floats).
+            </summary>
+        </member>
+        <member name="P:UIFramework.UiExtensions.INumberBoxDescriptor.DecimalPlaces">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="T:UIFramework.UiExtensions.ISliderDescriptor">
+            <summary>
+            Implementing this will present the entry as a slider in the UI
+            </summary>
+            <remarks>Released</remarks>
+        </member>
+        <member name="P:UIFramework.UiExtensions.ISliderDescriptor.Min">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:UIFramework.UiExtensions.ISliderDescriptor.Max">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:UIFramework.UiExtensions.ISliderDescriptor.DecimalPlaces">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="P:UIFramework.UiExtensions.ISliderDescriptor.OnSliderValueChanged">
+            <summary>
+            Added in 0.10.3. Defualt implementation so it doesn't break existing implementations.
+            
+            </summary>
+        </member>
+        <member name="T:UIFramework.UiExtensions.IUserEditedNotifier">
+            <summary>
+            Use this if you wanna be informed of edits made by the user that aren't applied to the Value property yet
+            </summary>
+            <remarks>Released</remarks>
+        </member>
+        <member name="P:UIFramework.UiExtensions.IUserEditedNotifier.OnUserEdit">
+            <summary>
+            Subscribe to this action the method you want to run when the edits a value in the UI.
+            It must take an object parameter for the new value
+            </summary>
+        </member>
+        <member name="T:UIFramework.UiExtensions.IRefreshInhibitor">
+             <summary>
+             Prevent entry from triggering a refresh when a user edits values in the UI or when the entry value changes in code
+             Useful for making sure the UI doesn't refresh while the user is actively editing an entry
+             This might be removed in a future version. Use this only if you can't find a way to prevent the UI from updating
+             when the user uses a control that has continuous triggers (e.g. sliders) and you can't find a way to defer value application
+             (e.g. using an event trigger for OnPointerUp)
+             </summary>
+             <remarks>
+             These prevent the entry from <em>causing</em> the UI to refresh
+             This does not mean the entry prevents interruptions from refreshes
+            
+             </remarks>
+        </member>
+        <member name="P:UIFramework.UiExtensions.IRefreshInhibitor.InhibitRefreshOnEdit">
+            <summary>
+            Prevents the UI from automatically refreshing when the user edits an entry
+            Use this when the entry involves a control that has continuous input with no easy way to detect when user input has ended
+            </summary>
+        </member>
+        <member name="P:UIFramework.UiExtensions.IRefreshInhibitor.InhibitRefreshOnValueChange">
+            <summary>
+            Prevents the UI from refreshing when the value of the entry changes in the background.
+            Use this on entries where your code might change its values while the user is using the UI
+            <remarks>
+            This also means that the entry's value won't be reflected in the UI.
+            </remarks>
+            </summary>
+        </member>
+        <member name="T:UIFramework.UiExtensions.ICustomViewProvider">
+            <summary>
+            Provide your own custom entry presentation.
+            You need to add a custom component that inherits from DataEntryAdapter
+            </summary>
+        </member>
+        <member name="P:UIFramework.UiExtensions.ICustomViewProvider.EntryViewPrefab">
+            <summary>
+            Prefab that gets instantiated by UI Framework. Make sure to assign a custom component that inherits from DataEntryAdapter to the prefab's root gameobject so the UI Framework can communicate with it.
+            </summary>
+        </member>
+        <member name="T:UIFramework.BuildInfo">
+            <summary></summary>
+        </member>
+        <member name="F:UIFramework.BuildInfo.Name">
+            <summary></summary>
+        </member>
+        <member name="F:UIFramework.BuildInfo.Author">
+            <summary></summary>
+        </member>
+        <member name="F:UIFramework.BuildInfo.Version">
+            <summary></summary>
+        </member>
+        <member name="T:UIFramework.Core">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:UIFramework.Core.UiToggleInputCheck">
+            <summary>
+            Run OnUpdate. Check if the inputs for toggling the UI have been pressed.
+            </summary>
+        </member>
+        <member name="M:UIFramework.Core.InputToggled(System.Boolean)">
+            <summary>
+            The actual coroutine that toggles the UI. Has to be in a coroutine to allow for a delay if ModUI is present.
+            If ModUI is present, it matches UI Framework with ModUI.
+            A delay is needed to make sure ModUI's new state has been apllied first before it's copied
+            </summary>
+            <param name="matchModUI"></param>
+            <returns></returns>
+            <remarks>This is for ModUI Compatibility. If ModUI is installed, it ensures that UI Framework and ModUI always stay in sync</remarks>
+        </member>
+        <member name="M:UIFramework.Core.SyncModUIState">
+            <summary>
+            Runs after mod UI keyboard Toggle to make sure lastModUIState variable is correct
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:UIFramework.Core.VRActivationAction">
+            <summary>
+            Checks if activation by VR input has been pressed
+            </summary>
+            <returns></returns>
+            <remarks>
+            Code yoinked from Baumritter's ModUI
+            </remarks>
+        </member>
+        <member name="M:UIFramework.Core.FirstGymLoad">
+            <summary>
+            Called on first gymload to build the UI and find the modUI window.
+            </summary>
+        </member>
+        <member name="M:UIFramework.Debug.DiffLog(System.String,System.Boolean,System.Int32)">
+            <summary>
+            Call in OnUpdate to monitor variables per frame but only logs if they change
+            </summary>
+            <param name="message"></param>
+            <param name="debugOnly"></param>
+            <param name="logLevel"></param>
+        </member>
+        <member name="M:UIFramework.Debug.Log(System.String,System.Boolean,System.Int32)">
+             <summary>
+            
+             </summary>
+             <param name="message"></param>
+             <param name="debugOnly"></param>
+             <param name="logLevel"></param>
+        </member>
+        <member name="T:UIFramework.UI">
+            <summary>
+            primary public facing class, modders will interact with this to register their preferences and build the UI.
+            </summary>
+        </member>
+        <member name="M:UIFramework.UI.RegisterMelon(MelonLoader.MelonBase,MelonLoader.MelonPreferences_Category[])">
+             <summary>
+             Registers a mod or plugin to UI Framework with its categories.
+             </summary>
+             <param name="melonInstance"></param>
+             <param name="categories"></param>
+             <returns></returns>
+            <remarks>Released</remarks>
+        </member>
+        <member name="M:UIFramework.UI.RegisterMelon(MelonLoader.MelonBase)">
+            <summary>
+            Registers a mod or a plugin to UI Framework with no categories. Categories need to be manually added.
+            </summary>
+            <param name="melonInstance"></param>
+            <returns></returns>
+            <remarks>Released</remarks>
+        </member>
+        <member name="M:UIFramework.UI.InitializeUIObjects">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:UIFramework.UI.CreateButtonEntry(MelonLoader.MelonPreferences_Category,System.String,System.String,System.String,System.Action)">
+            <summary>
+            Create an entry that becomes a button in the UI
+            </summary>
+            <param name="category"></param>
+            <param name="buttonText"></param>
+            <param name="displayName"></param>
+            <param name="description"></param>
+            <param name="handler"></param>
+            <remarks>Released</remarks>
+        </member>
+        <member name="M:UIFramework.UI.BuildUI">
+             <summary>
+            
+             </summary>
+        </member>
+        <member name="M:UIFramework.UI.RequestRefresh(MelonLoader.MelonBase)">
+            <summary>
+            Request A refresh from UI Framework. Refresh will happen on the next frame if your mod is selected
+            </summary>
+            <param name="melonInstance"></param>
+        </member>
+        <member name="M:UIFramework.UI.GetPrefabInstance(UIFramework.PrefabType)">
+            <summary>
+            Get a prefab instance for a View Type
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="T:UIFramework.PrefabType">
+            <summary>
+            Types of prefab
+            </summary>
+        </member>
+        <member name="F:UIFramework.Prefabs.UIFGameObjects">
+            <summary>
+            Root Game Object for all of UI in DDOL
+            </summary>
+        </member>
+        <member name="F:UIFramework.Prefabs.AssetBundleLoaded">
+            <summary>
+            UI Assets from the asset bundle
+            </summary>
+        </member>
+        <member name="F:UIFramework.Prefabs.TempStorage">
+            <summary>
+            Temporary game object storage as they're being instantiated
+            </summary>
+        </member>
+        <member name="T:UIFramework.Helpers">
+            <summary>
+            contains various helper functions
+            ToNormal: Normalizes a string
+            GetDisplayNames
+            </summary>
+        </member>
+        <member name="M:UIFramework.Helpers.ToNormal(System.String)">
+             <summary>
+             Returns a normalized version of the specified string by converting it to lowercase, trimming whitespace, and
+             removing all spaces.
+             </summary>
+             <param name="text">The string to normalize. Cannot be null.</param>
+             <returns>A normalized string with all spaces removed, trimmed, and converted to lowercase.</returns>
+            <remarks>Returns empty string if input only contains whitespace</remarks>
+        </member>
+        <member name="T:UIFramework.Preferences">
+            <summary>
+            UI's own preferences go here
+            </summary>
+        </member>
+    </members>
+</doc>

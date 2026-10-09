@@ -44,11 +44,6 @@ namespace UIFramework.Models
 		/// <param name="identifier"></param>
 		/// <returns></returns>
 		public IModelable GetSubmodel(string identifier);
-		/// <summary>
-		/// Adds a new submodel to the SubModels list
-		/// </summary>
-		/// <param name="model"></param>
-		//public void AddSubmodel(params IModelable[] model);
 	}
 	/// <summary>
 	/// Goes on the main panel. Contains controls for manipulating preferences or just general UI controls

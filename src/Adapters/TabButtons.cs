@@ -24,7 +24,7 @@ namespace UIFramework.Adapters
 		private string Label { set { gameObject.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = value; } }
 		private ColorARGB TabColor { get; set; }
 		/// <summary>
-		/// Runs when the button is clicked. Implement this in inheriting classes. 
+		/// Runs when the button is clicked. Implement this in inheriting classes.
 		/// </summary>
 		/// <exception cref="NotImplementedException"></exception>
 		/// <remarks>IL2CPP does not like abstract methods 😭</remarks>
@@ -50,7 +50,7 @@ namespace UIFramework.Adapters
 
 
 	/// <summary>
-	/// 
+	///
 	/// </summary>
 	[RegisterTypeInIl2Cpp]
 	public class ModButtonView : TabButtonController

@@ -10,7 +10,7 @@ using UnityEngine.Identifiers;
 namespace UIFramework
 {
 	/// <summary>
-	/// These are shim classes to keep backwards compatibility with old models. 
+	/// These are shim classes to keep backwards compatibility with old models.
 	/// They don't do anything and just inherit from the new models so that existing mods
 	/// don't break using the old .Register function
 	/// </summary>
@@ -50,7 +50,7 @@ namespace UIFramework
 			protected ModelCategoryItem(ModelModItem parentMod) : base(parentMod)
 			{
 			}
-			
+
 		}
 		[Obsolete("This class is just a shim for backwards compatibility and should not be used directly. Use the new models instead in UIFramework.Models")]
 		public class ModelMelonCategory : global::UIFramework.Models.MelonCategoryModel
@@ -77,7 +77,7 @@ namespace UIFramework
 		[Obsolete("This class is just a shim for backwards compatibility and should not be used directly. Use the new models instead in UIFramework.Models")]
 		public abstract class ModelEntryItem : global::UIFramework.Models.EntryModelBase
 		{
-			[Obsolete("This class is just a shim for backwards compatibility and should not be used directly. Use the new models instead in UIFramework.Models")]	
+			[Obsolete("This class is just a shim for backwards compatibility and should not be used directly. Use the new models instead in UIFramework.Models")]
 			protected ModelEntryItem(ModelCategoryItem parentCategory) : base(parentCategory)
 			{
 			}

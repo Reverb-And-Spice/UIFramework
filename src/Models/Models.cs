@@ -11,10 +11,10 @@ namespace UIFramework.Models
 	/// <summary>
 	/// Models define how the UI is built. The heirarchy is simple and follows melonpreferences basic structure
 	/// MelonModel ->  MelonCategoryModel -> MelonEntryModel
-	/// Modders can use the default model just by calling UIF.Register(modInstance, categories) in their OnLateInitializeMelon. 
+	/// Modders can use the default model just by calling UIF.Register(modInstance, categories) in their OnLateInitializeMelon.
 	/// The default model will use simple input methods: bools will be toggles, strings will be text input fields and so would numerics.
 	/// More options will eventually be available: sliders, dropdowns, multi checkboxes, radio buttons, etc.
-	/// 
+	///
 	/// Those will be developed after the default model is functional
 	/// </summary>
 
@@ -37,7 +37,7 @@ namespace UIFramework.Models
 		public void AddSubmodel(IModelable mod)
 		{
 			int index = SubModels.FindIndex(m => m.Identifier == mod.Identifier);
-			if(index == -1)
+			if (index == -1)
 				SubModels.Add(mod);
 			else
 				SubModels[index] = mod;
@@ -74,7 +74,7 @@ namespace UIFramework.Models
 				Assembly ass = type.Assembly;
 				_displayName = ass.GetCustomAttribute<UIInfoAttribute>()?.DisplayName ?? Identifier;
 			}
-			catch (Exception ex) { }
+			catch (Exception ex) { Debug.Log($"{ex.Message}\n{ex}", false, 2); }
 
 			foreach (MelonPreferences_Category cat in catList)
 			{
@@ -136,7 +136,7 @@ namespace UIFramework.Models
 	}
 
 	/// <summary>
-	/// 
+	///
 	/// </summary>
 	public class MelonEntryModel : DataEntryModelBase
 	{
@@ -188,7 +188,7 @@ namespace UIFramework.Models
 
 		}
 		/// <summary>
-		/// The value actually saved to the file. 
+		/// The value actually saved to the file.
 		/// </summary>
 		public virtual object SavedValue { get; set; }
 		/// <inheritdoc/>

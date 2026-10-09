@@ -87,14 +87,14 @@ namespace UIFramework.Models
 			return GameObject.Instantiate(Prefabs.ModTab);
 		}
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		public virtual CategoryModelBase GetModelCategory(string identifier)
 		{
 			return (CategoryModelBase)GetSubmodel(identifier);
 		}
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		public virtual void AddModelCategory(params CategoryModelBase[] categoryModel)
 		{
@@ -134,7 +134,7 @@ namespace UIFramework.Models
 		}
 		/// <summary>
 		/// Subscribe to this event to run code after all the categories for the mod have been saved.
-		/// This will only run if your mod is the currently selelcted mod. 
+		/// This will only run if your mod is the currently selelcted mod.
 		/// </summary>
 		public event Action OnModSaved;
 		public void RequestUpdateUI() => UI.RequestRefresh(this);
@@ -174,7 +174,7 @@ namespace UIFramework.Models
 		public override bool IsHidden { get; set; }
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		public virtual EntryState SaveState { get; set; }
 
@@ -268,7 +268,7 @@ namespace UIFramework.Models
 			}
 
 			if (UiExtension is ISliderDescriptor)
-			{ 
+			{
 				GameObject slider = UI.GetPrefabInstance(PrefabType.Slider);
 				slider.AddComponent<NumSliderAdapter>();
 				return slider;
@@ -280,7 +280,6 @@ namespace UIFramework.Models
 				return button;
 			}
 
-			
 
 
 			switch (ModelBoxedValue)

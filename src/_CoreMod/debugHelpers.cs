@@ -52,7 +52,7 @@ namespace UIFramework
 			}
 		}
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		/// <param name="message"></param>
 		/// <param name="debugOnly"></param>

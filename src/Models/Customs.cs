@@ -45,7 +45,7 @@ namespace UIFramework.Models
 		public override bool IsHidden { get; set; }
 
 		/// <summary>
-		/// This is only to satisfy the contract for IEntry. 
+		/// This is only to satisfy the contract for IEntry.
 		/// </summary>
 		public object BoxedValue { get; set; }
 

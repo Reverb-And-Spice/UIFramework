@@ -1,3 +1,58 @@
+### New in 0.10.3
+
+<details><summary>New feature: Added OnSliderValueChanged event </summary>
+The ISliderDescriptor now has an OnSliderValueChanged event that you can subscribe to if you wanna be notified of that user interaction
+</details>
+
+<details><summary>New feature: Added Text Input Behaviour Descriptors</summary>
+This lets you set `ContentType`, `CharacterLimit`, and `IsReadOnly` properties.
+You also get a `PasswordChar` property that you can use when you set your content type to password
+</details>
+
+<details><summary> README changes</summary></details>
+
+<details><summary>Bug Fix: Fixed VR Toggle not counting for activity</summary>
+Toggling the UI in VR would still make the UI time out making the user unable to pull it up.
+</details>
+
+<details><summary>Bug Fix: Fixed autofill typo</summary>
+Force Hide ModUI was called Force Hide ModButtonView UI
+</details>
+
+<details><summary>Bug Fix: Fixed fade out not disabling when set to 0</summary>
+</details>
+
+# New in 0.10.2
+
+<details><summary>New feature: Made UI Framework available in the loader</summary>
+UI Framework can now be used in the loader.
+</details>
+
+<details><summary>New feature: Enabled Re-registration</summary>
+Mods can now register themselves any time the game is running and re-register to change what categories they have and what order.
+</details>
+
+<details><summary>Bug fix: Null check for requestrefresh</summary>
+In case anyone assigns a value before the UI is built
+</details>
+
+# New in 0.10.1
+<details><summary>New feature: Made resize handles visible</summary>
+
+- Right handle for scale
+- Bottom handle to stretch downwards
+
+</details>
+
+<details><summary>Bug fix: Nullref error when the player doesn't have ModUI</summary>
+Wasn't really motivated to be rigorous because everybody had ModUI😅
+</details>
+
+<details><summary>Bug fix: Continuous refresh error</summary>
+Fixed the refresh method to not keep trying every frame when a part of the UI fails to build
+</details>
+
+
 # New in 0.10.0
 <details><summary>New Feature: Window is now resizable</summary>
 You can now scale the window or adjust its height. 

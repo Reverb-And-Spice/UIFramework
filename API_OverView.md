@@ -1,5 +1,5 @@
 # UI Framework API overview
-UI Framework builds a UI for modders' configuration for their mods. Particularly MelonPreferences but hopefully expanded to more
+UI Framework builds a UI for modders' configuration for their mods. Particularly MelonPreferences, but hopefully it will be expanded to more
 ## MelonPreferences
 MelonPreferences are the built-in configuration and persistent storage system in MelonLoader. 
 
@@ -7,17 +7,17 @@ MelonPreferences are the built-in configuration and persistent storage system in
 
 ### Categories
 Categories are a base MelonPreferences feature to group entries together. 
-#### Variable declarotion
+#### Variable declaration
 ```cs 
 private MelonPreferences_Category TestCategory1;
 private MelonPreferences_Category TestCategory2;
 ```
-#### Intantiation
-You can have make your categories have a different display name to its actual identifier
-Please prefix your category identifiers with your mod name
+#### Instantiation
+You can make your categories have a different display name from its actual identifier
+Please prefix your category identifiers with your mod's name
 
 ```cs
-//* Please prefix your categories with your mod's name
+// Please prefix your categories with your mod's name
 TestCategory1 = MelonPreferences.CreateCategory("MyMod_TestCat1", "DisplayName 1");
 TestCategory2 = MelonPreferences.CreateCategory("MyMod_TestCat2", "DisplayName 2");
 ```
@@ -34,9 +34,11 @@ if (!Directory.Exists(USER_DATA))
 TestCategory1.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
 TestCategory2.SetFilePath(Path.Combine(USER_DATA, CONFIG_FILE));
 ```
-<details><summary> A note on custom file paths</summary>
-Please make sure the directory exists before setting the file path. If the directory doesn't exist, it will fail silently and your settings won't save with no explanation
-</details>
+
+> [!WARNING]
+> Please make sure the directory exists before setting the file path. 
+If the directory doesn't exist, it might fail silently and your settings won't save with no explanation
+
 
 ### Entries
 Entries are the actual settings that you want to save. 
@@ -57,7 +59,7 @@ TestEntry21 = TestCategory2.CreateEntry("Entry 2-1", "0.5126", "Display Name 3",
 TestEntry22 = TestCategory2.CreateEntry("Entry 2-2", true, "Display Name 4", "Test bool");
 ```
 
-#### Acessing and modifying values:
+#### Accessing and modifying values:
 Entries are objects. You need to access their Value property to get or set the actual value. 
 ```cs
 string value1 = TestEntry11.Value;
@@ -69,6 +71,8 @@ TestEntry11.Value = "New Value";
 ### Events
 - `MelonPreferences_Entry.OnEntryValueChanged`: Event that fires when the value is changed (Value is applied when you hit the save button in the UI Framework window). Provides oldValue and newValue parameters so you can monitor if it's been changed from the previous values. 
 Must be subscribed with via the `.Subscribe()` method instead of `+=`
+- `MelonPreferences.OnPreferencesSaved`: Event that fires whenever preferences are saved.
+This fires regardless of which category triggers it. You have to filter for your file path to only respond to your category saving
 
 -----
 ## UI Framework
@@ -77,13 +81,13 @@ Must be subscribed with via the `.Subscribe()` method instead of `+=`
 Once you have your MelonPreferences set up, registering to UI Framework is simple.
 Just call 
 ```cs
-UI.RegisterMelon(MelonBase modInstance, params MelonPreferences_Category[])
+UI.RegisterMelon(modInstance, params MelonPreferences_Category[])
 ```
 So `UI.RegisterMelon(this, TestCategory1, TestCategory2);`
 if you're calling it from your main MelonMod class.
 
 Your categories will display as tabs in the order that you put them in the parameter array 
-and your entries will show in the order thatw you created them.
+and your entries will show in the order that you created them.
 
 
 **For most usage, this will be enough.**
@@ -106,6 +110,21 @@ public enum Example
 }
 ```
 -----
+
+## UI Refresh Request
+You can request a refresh from the UI through the MelonModel object which is returned by the `UI.RegisterMelon()` function and can be assigned to a variable
+```cs
+MelonModel MyModel = UI.RegisterMelon(this, myCategory1, myCategory2);
+```
+If you want to refresh the UI if, for example, you updated an EditedValue through code and you want the UI to reflect that change, you can call 
+```cs
+MyModel.RequestUpdateUI();
+```
+And this will cause UI Framework to update all the UI elements on the next `Update()` if your mod is the currently selected one.
+
+-----
+
+
 ## UI Presentation control: Validator Extensions
 
 UI Framework piggybacks off of the existing MelonPreferences custom validator system. 
@@ -134,7 +153,7 @@ public class CustomValidator : ValueValidator
     }
 }
 ```
-But UI Framework already has its own default implementation that validates everything in the `UIFramework.UiExtensions` namespace as `DevaultValidator`.
+But UI Framework already has its own default implementation that validates everything in the `UIFramework.UiExtensions` namespace as `DefaultValidator`.
 </details>
 
 -----
@@ -165,7 +184,7 @@ But you can easily combine `ISliderDescriptor` and `IUserEditedNotifier` to make
 You do that by inheriting both into your custom validator
 
 ```cs
-//Assuming you still don't wanna do validation, you can just inherit from the DefaultValidatorClass
+//Assuming you still don't want to do validation, you can just inherit from the DefaultValidatorClass
 public class NotifyingSlider : DefaultValidator, ISliderDEscriptor, IUserEditedNotifier
 {
     public float Min {get; set;}
@@ -181,6 +200,31 @@ MySlider = MyCategory.CreateEntry("MySlider", 0, "My Slider", "Example Slider", 
 
 -----
 ### Implemented Extensions
+
+### TextInput Customization (New in 0.10.3)
+#### Interface: `ITextInputBehaviorDescriptor`
+#### Default Implementation: `TextInputBehaviorDescriptor`
+This lets you control the behavior of TextInputs. Giving you control of these properties:
+- `ContentType` - Lets define the ContentType for the text input. 
+    - Standard - Accepts strings and hides the characters behind the char set with the `PasswordChar` 
+    - Password - Accepts strings and hides 
+    - Email Address - Unity Email Address Text Inputs
+     
+     <sup>The other unity content types also work. I just haven't tried them. </sup>
+
+- `CharacterLimit`
+- `IsReadOnly`
+
+```cs
+DemoTextBehavior = Demo.CreateEntry("TextBehaviorDemo", "VerySecurePassword", "Custom Behavior Demo",
+				"This tests the BehaviorDescriptor Interface", false, false,
+				new TextInputBehaviorDescriptor
+					{ ContentType = TMP_InputField.ContentType.Password, 
+                    CharacterLimit = 20, 
+                    IsReadOnly = true });
+```
+
+-----
 #### Sliders
 ##### Interface: `ISliderDescriptor`
 ##### Default Implementation: `SliderDescriptor`
@@ -192,7 +236,7 @@ MySlider = MyCategory.CreateEntry("MySlider", 0.5f, "My Slider", "Float Slider",
 ```
 
 -----
-### NumberBox
+### NumberBox (New in 0.10.0)
 ##### Interface: `INumberBoxDescriptor`
 ##### Default Implementation: `NumberBoxDescriptor`
 
@@ -202,7 +246,7 @@ MyNumBox = MyCategory.CreateEntry("MyNumBox", 0.5f, "My Number Box", "Float Numb
 ```
 
 -----
-#### Dynamically Editable Dropdowns
+#### Dynamically Editable Dropdowns (New in 0.9.0)
 #### Interface: `IDynamicDropdownDescriptor`
 #### Default Implementation: `DynamicDropdownDescriptor`
 
@@ -212,7 +256,7 @@ which is prone to errors.
 
 - DropdownItem: This is a simple class used to describe a dropdown option. It has a DisplayName and a Value property.
 The DisplayName is what the user sees in the dropdown and <u>***the Value property is the actual value that gets stored***</u> when the user
-selects that option, not the DropdownItem.
+selects that option, not the DropdownItem itself.
 - Item list: The list of `DropdownItem` objects that get displayed in the dropdown. 
 
 ***Creating a DropdownDescriptor***
@@ -249,7 +293,7 @@ DropdownTest = Category.CreateEntry("DropdownTest", "Default Value", "Dropdown T
 ```
 
 -----
-#### User Edit Notifiers
+#### User Edit Notifiers (New in 0.9.0)
 ##### Interface: `IUserEditedNotifier`
 ##### Default Implementation: `UserEditDefaultNotifier`
 This doesn't change the UIs presentation but it does notify you when the user inputs a new value into the UI e.g. when they're done editing a text input, clicked a toggle or finished moving a slider. It also provides you with the new value
@@ -277,7 +321,7 @@ UI.CreateButtonEntry(MelonPreferences_Category category, string buttonText, stri
 This method will handle the implementation for you and it will show the button in the entries list.
 
 -----
-#### Custom Entry Presentations
+#### Custom Entry Presentations (New in 0.10.0)
 ##### Interface: `ICustomViewProvider`
 ##### Default Implementation: `CustomViewProvider`
 Lets you assign a custom prefab to represent your entry in the UI through its `EntryViewPrefab` property. 

@@ -13,7 +13,7 @@ namespace UIFramework
 		/// <summary>
 		/// Root Game Object for all of UI in DDOL
 		/// </summary>
-		internal static GameObject UIFGameObjects = new GameObject("UI");
+		internal static GameObject UIFGameObjects = new("UI");
 
 		/// <summary>
 		/// UI Assets from the asset bundle
@@ -23,8 +23,8 @@ namespace UIFramework
 		/// <summary>
 		/// Temporary game object storage as they're being instantiated
 		/// </summary>
-		internal static GameObject TempStorage = new GameObject("TempStorage");
-		internal static GameObject HiddenStorage = new GameObject("HiddenStorage");
+		internal static GameObject TempStorage = new("TempStorage");
+		internal static GameObject HiddenStorage = new("HiddenStorage");
 		internal static GameObject Canvas;
 
 		public static GameObject MainWindowSource;
@@ -166,7 +166,7 @@ namespace UIFramework
 		internal static Il2CppSystem.IO.Stream ConvertToIl2CppStream(System.IO.Stream stream)
 		{
 
-			Il2CppSystem.IO.MemoryStream Il2CppStream = new Il2CppSystem.IO.MemoryStream();
+			Il2CppSystem.IO.MemoryStream Il2CppStream = new();
 
 			const int bufferSize = 4096;
 			byte[] managedBuffer = new byte[bufferSize];
@@ -235,13 +235,13 @@ namespace UIFramework
 			if (trigger == null) trigger = gameObject.AddComponent<EventTrigger>();
 			trigger.triggers.Clear();
 
-			EventTrigger.Entry entry = new EventTrigger.Entry();
+			EventTrigger.Entry entry = new();
 			entry.eventID = EventTriggerType.Drag;
 			entry.callback.AddListener(DelegateSupport.ConvertDelegate<UnityEngine.Events.UnityAction<BaseEventData>>(
 				(System.Action<BaseEventData>)OnDrag));
 			trigger.triggers.Add(entry);
 
-			EventTrigger.Entry endEntry = new EventTrigger.Entry();
+			EventTrigger.Entry endEntry = new();
 			endEntry.eventID = EventTriggerType.EndDrag;
 			endEntry.callback.AddListener(DelegateSupport.ConvertDelegate<UnityEngine.Events.UnityAction<BaseEventData>>(
 				(System.Action<BaseEventData>)OnEndDrag));
@@ -312,19 +312,19 @@ namespace UIFramework
 			if (trigger == null) trigger = gameObject.AddComponent<EventTrigger>();
 			trigger.triggers.Clear();
 
-			EventTrigger.Entry dragEntry = new EventTrigger.Entry();
+			EventTrigger.Entry dragEntry = new();
 			dragEntry.eventID = EventTriggerType.Drag;
 			dragEntry.callback.AddListener(DelegateSupport.ConvertDelegate<UnityEngine.Events.UnityAction<BaseEventData>>(
 				(System.Action<BaseEventData>)OnDrag));
 			trigger.triggers.Add(dragEntry);
 
-			EventTrigger.Entry beginEntry = new EventTrigger.Entry();
+			EventTrigger.Entry beginEntry = new();
 			beginEntry.eventID = EventTriggerType.BeginDrag;
 			beginEntry.callback.AddListener(DelegateSupport.ConvertDelegate<UnityEngine.Events.UnityAction<BaseEventData>>(
 				(System.Action<BaseEventData>)OnBeginDrag));
 			trigger.triggers.Add(beginEntry);
 
-			EventTrigger.Entry endEntry = new EventTrigger.Entry();
+			EventTrigger.Entry endEntry = new();
 			endEntry.eventID = EventTriggerType.EndDrag;
 			endEntry.callback.AddListener(DelegateSupport.ConvertDelegate<UnityEngine.Events.UnityAction<BaseEventData>>(
 				(System.Action<BaseEventData>)OnEndDrag));
@@ -420,12 +420,12 @@ namespace UIFramework
 			// Clear old entries if any (prevent double-firing if script is copied)
 			trigger.triggers.Clear();
 
-			EventTrigger.Entry entry = new EventTrigger.Entry();
+			EventTrigger.Entry entry = new();
 			entry.eventID = EventTriggerType.Drag;
 			entry.callback.AddListener(DelegateSupport.ConvertDelegate<UnityEngine.Events.UnityAction<BaseEventData>>((System.Action<BaseEventData>)OnDrag));
 			trigger.triggers.Add(entry);
 
-			EventTrigger.Entry endEntry = new EventTrigger.Entry();
+			EventTrigger.Entry endEntry = new();
 			endEntry.eventID = EventTriggerType.EndDrag;
 			endEntry.callback.AddListener(DelegateSupport.ConvertDelegate<UnityEngine.Events.UnityAction<BaseEventData>>(
 				(System.Action<BaseEventData>)OnEndDrag));

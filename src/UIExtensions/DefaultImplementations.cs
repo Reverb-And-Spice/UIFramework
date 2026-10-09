@@ -5,10 +5,10 @@ using UIFramework.Models;
 using UnityEngine;
 namespace UIFramework.UiExtensions
 {
-	
+
 	/// <summary>
 	/// Default implementation of the MelonLoader ValueValidator class.
-	/// This satisfies the required members but just acts as a passthrough. 
+	/// This satisfies the required members but just acts as a passthrough.
 	/// It's the equivalent of not having a validator at all, but it allows for the use of the other descriptor interfaces without needing to implement a custom validator.
 	/// </summary>
 	public partial class DefaultValidator : ValueValidator, IUiExtension
@@ -16,15 +16,18 @@ namespace UIFramework.UiExtensions
 		public override bool IsValid(object value) { return true; }
 		public override object EnsureValid(object value) { return value; }
 	}
-	
+
 	
 	/// <inheritdoc cref="ITextInputBehaviorDescriptor"/>
 	public class TextInputBehaviorDescriptor : DefaultValidator, ITextInputBehaviorDescriptor
 	{
 		public TMP_InputField.ContentType ContentType { get; set; } = TMP_InputField.ContentType.Standard;
+		/// <inheritdoc/>
+		public char PasswordChar { get; set; } = '•';
+		/// <inheritdoc/>
 		public int CharacterLimit { get; set; } = 0;
+		/// <inheritdoc/>
 		public bool IsReadOnly { get; set; } = false;
-		public int DecimalPlaces { get; set; } = 1;
 	}
 
 	/// <inheritdoc cref="ITextInputAppearanceDescriptor"/>
@@ -38,42 +41,61 @@ namespace UIFramework.UiExtensions
 		public bool IsRichText { get; set; } = true;
 	}
 
-
+	///<summary>
+	///Default implementation for IDynamicDropdownDescriptor
+	/// </summary>
 	/// <see cref="IDynamicDropdownDescriptor"/>
 	public class DynamicDropdownDescriptor : DefaultValidator, IDynamicDropdownDescriptor
 	{
 		private List<DropdownItem> _dropdownItems = new();
+		/// <inheritdoc/>
 		public List<DropdownItem> GetDropdownItems() { return _dropdownItems; }
+		/// <inheritdoc/>
 		public void SetDropdownItems(List<DropdownItem> items)
 		{
 			_dropdownItems = items;
 			OnDropdownItemsUpdated?.Invoke();
 		}
+		/// <summary>
+		/// Adds an item to the dropdown item list
+		/// </summary>
+		/// <param name="item"></param>
 		public void AddDropdownItem(DropdownItem item)
 		{
 			_dropdownItems.Add(item);
 			OnDropdownItemsUpdated?.Invoke();
 		}
+		/// <summary>
+		/// Removes an item from the dropdown list
+		/// </summary>
+		/// <param name="item"></param>
 		public void RemoveDropdownItem(DropdownItem item)
 		{
 			_dropdownItems?.Remove(item);
 			OnDropdownItemsUpdated?.Invoke();
 		}
 
+		/// <summary>
+		/// Builder-like function that you can chain to a statement that adds a dropdown item list and returns the instance of this class
+		/// </summary>
+		/// <param name="dropdownItemList"></param>
+		/// <returns></returns>
 		public DynamicDropdownDescriptor WithDropdownItemList(List<DropdownItem> dropdownItemList)
 		{
 			_dropdownItems = dropdownItemList;
 			return this;
 		}
-
+		/// <inheritdoc/>
 		public DynamicDropdownDescriptor(List<DropdownItem> items)
 		{
 			_dropdownItems = items;
 		}
+		/// <inheritdoc/>
 		public DynamicDropdownDescriptor()
 		{
 			_dropdownItems = new();
 		}
+		/// <inheritdoc/>
 		public Action OnDropdownItemsUpdated { get; set; }
 	}
 
@@ -96,6 +118,10 @@ namespace UIFramework.UiExtensions
 		/// Decimal Places. Defaults 5
 		/// </summary>
 		public int DecimalPlaces { get; set; } = 1;
+		/// <summary>
+		/// Triggered when the slider value changes.
+		/// </summary>
+		public Action<float> OnSliderValueChanged { get; set; }
 
 		///<inheritdoc/>
 		public Action<object> OnUserEdit { get; set;  }
@@ -116,7 +142,7 @@ namespace UIFramework.UiExtensions
 	/// Use this if you wanna be informed of edits made by the user that aren't applied to the Value property yet
 	/// </summary>
 	public class UserEditNotifier : DefaultValidator, IUserEditedNotifier
-	{ 
+	{
 		///<inheritdoc/>
 		public Action<object> OnUserEdit { get; set; }
 	}
@@ -124,7 +150,7 @@ namespace UIFramework.UiExtensions
 	/// <summary>
 	/// Default implementation of IRefreshInhibitor
 	/// Prevent entry from triggering a refresh when a user edits values in the UI or when the entry value changes in code
-	/// Useful for making sure the UI doesn't refresh while the user is actively editing an entry 
+	/// Useful for making sure the UI doesn't refresh while the user is actively editing an entry
 	/// <br/>
 	/// This might be removed in a future version. Use this only if you can't find a way to prevent the UI from updating
 	/// when the user uses a control that has continuous triggers (e.g. sliders) and you can't find a way to defer value application
@@ -136,7 +162,7 @@ namespace UIFramework.UiExtensions
 	/// </remarks>
 	public class RefreshInhibitor : DefaultValidator, IRefreshInhibitor
 	{
-		///<inheritdoc/>	
+		///<inheritdoc/>
 		public bool InhibitRefreshOnEdit {get; set;} = false;
 		///<inheritdoc/>
 		public bool InhibitRefreshOnValueChange {get; set;} = false;

@@ -1,5 +1,5 @@
-﻿
-# UI Framework
+﻿    
+# UI Framework Pre-Development proposal
 ## Default toggle button is F9
 ## End goal
 A modular UI where people can create their own instances and be interactable in VR with optional panels that can be pinned in scenes.
