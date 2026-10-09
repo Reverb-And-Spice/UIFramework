@@ -1,3 +1,27 @@
+### New in 0.10.3
+
+<details><summary>New feature: Added OnSliderValueChanged event </summary>
+The ISliderDescriptor now has an OnSliderValueChanged event that you can subscribe to if you wanna be notified of that user interaction
+</details>
+
+<details><summary>New feature: Added Text Input Behaviour Descriptors</summary>
+This lets you set `ContentType`, `CharacterLimit`, and `IsReadOnly` properties.
+You also get a `PasswordChar` property that you can use when you set your content type to password
+</details>
+
+<details><summary> README changes</summary></details>
+
+<details><summary>Bug Fix: Fixed VR Toggle not counting for activity</summary>
+Toggling the UI in VR would still make the UI time out making the user unable to pull it up.
+</details>
+
+<details><summary>Bug Fix: Fixed autofill typo</summary>
+Force Hide ModUI was called Force Hide ModButtonView UI
+</details>
+
+<details><summary>Bug Fix: Fixed fade out not disabling when set to 0</summary>
+</details>
+
 # New in 0.10.2
 
 <details><summary>New feature: Made UI Framework available in the loader</summary>

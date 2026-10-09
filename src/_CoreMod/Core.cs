@@ -140,7 +140,7 @@ namespace UIFramework
 				{
 					UI.MainWindow.SetActive(!uifPrevState);
 				}
-				//If it did chdange, match UI Framework's state to ModUI's state.
+				//If it did change, match UI Framework's state to ModUI's state.
 				else
 				{
 					UI.MainWindow.SetActive(ModUIWindow.activeSelf);
@@ -234,9 +234,11 @@ namespace UIFramework
 				if (!displayTime.IsRunning)
 					displayTime.Start();
 			}
-
-			AutoHideCheck();
-			FadeCheck();
+			if (!isFirstLoad)
+			{
+				AutoHideCheck();
+				FadeCheck();
+			}
 		}
 
 		#endregion

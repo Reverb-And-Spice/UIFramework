@@ -2,24 +2,32 @@
 btw: [The changelog](https://github.com/iListen2Sound/UIFramework/blob/main/_Misc/ThunderstorePackage/Template/CHANGELOG.md) doubles as a feature list
 
 ### New in 0.10.3
-<details><summary>Bug Fix: Fixed VR Toggle not counting for activity</summary>
-Toggling the UI in VR would still make the UI time out making the user unable to pull it up.
-</details>
-<details><summary>Bug Fix: Fixed autofill typo</summary>
-Force Hide ModUI was called Force Hide ModButtonView UI
-</details>
-
-<details><summary> README changes</summary></details>
-
-<details><summary>New feature: Added Text Input Behaviour Descriptors</summary>
-
-This lets you set `ContentType`, `CharacterLimit`, and `IsReadOnly` properties.
-You also get a `PasswordChar` property that you can use when you set your content type to password
-</details>
 
 <details><summary>New feature: Added OnSliderValueChanged event </summary>
 The ISliderDescriptor now has an OnSliderValueChanged event that you can subscribe to if you wanna be notified of that user interaction
 </details>
+
+
+
+<details><summary>New feature: Added Text Input Behaviour Descriptors</summary>
+This lets you set `ContentType`, `CharacterLimit`, and `IsReadOnly` properties.
+You also get a `PasswordChar` property that you can use when you set your content type to password
+</details>
+
+<details><summary> README changes</summary></details>
+
+<details><summary>Bug Fix: Fixed VR Toggle not counting for activity</summary>
+Toggling the UI in VR would still make the UI time out making the user unable to pull it up.
+</details>
+
+<details><summary>Bug Fix: Fixed autofill typo</summary>
+Force Hide ModUI was called Force Hide ModButtonView UI
+</details>
+
+<details><summary>Bug Fix: Fixed fade out not disabling when set to 0</summary>
+</details>
+
+
 
 ### New in 0.10.1/2
 <details><summary>New feature: Made resize handles visible</summary>
@@ -76,7 +84,11 @@ You can now use the `ICustomViewProvider` interface to be able to pass your own 
 Default implementation: `CustomViewProvider`. More details in [CustomUI](https://github.com/iListen2Sound/UIFramework/blob/main/CustomUI.md)
 </details>
 
+______
 
+#### AI Use Disclosure:
+Moving and resizing the window was mostly done with AI with me doing the tuning. The rest of the mod is written by me other than intellicode's autocomplete suggestions and search engines.
+_____
 
 # For Users
 Drop the dll in your mods folder. 
