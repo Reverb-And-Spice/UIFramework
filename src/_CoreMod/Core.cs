@@ -266,6 +266,10 @@ namespace UIFramework
 
 		private void FadeCheck()
 		{
+			if(Preferences.FadeTimer.Value <= 0)
+			{
+				return;
+			}
 			if (displayTime.ElapsedMilliseconds > Preferences.FadeTimer.Value * 1000)
 			{
 				UI.Fade();
